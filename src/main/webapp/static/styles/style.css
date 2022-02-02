@@ -1,5 +1,6 @@
 body {
 background-color:black;
+background-image:url("resource/books.png");
 color:white;
 }
 
@@ -15,6 +16,7 @@ width:50%;
 }
 
 .form-container{
+margin-top:20px;
 border: 2px solid white;
 padding: 10px;
 border-radius: 25px;
