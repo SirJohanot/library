@@ -1,0 +1,21 @@
+body {
+background-color:black;
+color:white;
+}
+
+.login-row{
+display:block;
+margin-bottom:10px;
+}
+
+.centered{
+margin-left:auto;
+margin-right:auto;
+width:50%;
+}
+
+.form-container{
+border: 2px solid white;
+padding: 10px;
+border-radius: 25px;
+}
