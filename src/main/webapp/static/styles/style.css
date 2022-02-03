@@ -4,20 +4,27 @@ background-image:url("resource/books.png");
 color:white;
 }
 
-.login-row{
-display:block;
-margin-bottom:10px;
-}
-
 .centered{
 margin-left:auto;
 margin-right:auto;
-width:50%;
 }
 
-.form-container{
-margin-top:20px;
+.login-form{
+margin-top:8%;
+padding:10px;
 border: 2px solid white;
-padding: 10px;
 border-radius: 25px;
+width:10%;
+background-color:rgba(0, 0, 0, 0.8);
+}
+
+.login-form-row{
+display:block;
+margin-bottom:15px;
+}
+
+.error-message{
+text-align:center;
+margin-top:20px;
+color:red;
 }
