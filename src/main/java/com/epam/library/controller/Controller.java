@@ -1,7 +1,7 @@
-package com.epam.webapplibrary.servlet;
+package com.epam.library.controller;
 
-import com.epam.webapplibrary.servlet.command.Command;
-import com.epam.webapplibrary.servlet.command.CommandFactory;
+import com.epam.library.command.Command;
+import com.epam.library.command.CommandFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

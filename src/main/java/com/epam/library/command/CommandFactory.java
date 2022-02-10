@@ -1,13 +1,14 @@
-package com.epam.webapplibrary.servlet.command;
+package com.epam.library.command;
 
-import com.epam.webapplibrary.servlet.service.UserServiceImpl;
+import com.epam.library.dao.DaoHelperFactory;
+import com.epam.library.service.UserServiceImpl;
 
 public class CommandFactory {
 
     public Command createCommand(String command) {
         switch (command) {
             case "login":
-                return new LoginCommand(new UserServiceImpl());
+                return new LoginCommand(new UserServiceImpl(new DaoHelperFactory()));
             default:
                 throw new IllegalArgumentException("Unknown command = " + command);
         }
