@@ -12,11 +12,6 @@ body {
     color:rgba(255, 255, 255, .87);
 }
 
-input{
-    background-color:#0d1117;
-    color:#c9d1d9;
-}
-
 .login-form{
     width:340px;
     margin:8% auto;
