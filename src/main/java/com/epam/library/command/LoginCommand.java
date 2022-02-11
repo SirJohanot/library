@@ -22,6 +22,10 @@ public class LoginCommand implements Command {
         String password = req.getParameter("password");
         try {
             Optional<User> user = userService.login(login, password);
+            if (!user.isPresent()) {
+                req.setAttribute("errorMessage", "Incorrect username or password.");
+                return "index.jsp";
+            }
             req.getSession().setAttribute("user", user.get().getLogin());
             return "WEB-INF/view/main.jsp";
         } catch (ServiceException e) {

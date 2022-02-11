@@ -11,7 +11,7 @@ public class ConnectionFactory {
 
     private static final String DATABASE_CONNECTION_PROPERTIES_PATH = "C:\\Users\\war criminal\\Documents\\GitHub\\library\\src\\main\\resources\\databaseConnection.properties";
 
-    public ProxyConnection create() throws IOException, ClassNotFoundException, SQLException {
+    public ProxyConnection create(ConnectionPool connectionPool) throws IOException, ClassNotFoundException, SQLException {
         Properties properties = new Properties(); //TODO: figure out why the properties file cannot be located with relative path reference
         FileReader fileReader = new FileReader(DATABASE_CONNECTION_PROPERTIES_PATH);
         properties.load(fileReader);
@@ -25,7 +25,6 @@ public class ConnectionFactory {
 //        String databasePassword = "";
         Class.forName(databaseDriverClass);
         Connection connection = DriverManager.getConnection(databaseConnectionUrl, databaseUsername, databasePassword);
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
         return new ProxyConnection(connection, connectionPool);
     }
 

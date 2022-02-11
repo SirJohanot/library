@@ -23,7 +23,7 @@ public class ConnectionPool {
         availableConnections = new ArrayDeque<>();
         connectionsInUse = new ArrayDeque<>();
         for (int i = 0; i < MAXIMUM_SIMULTANEOUS_CONNECTIONS; i++) {
-            ProxyConnection connection = connectionFactory.create();
+            ProxyConnection connection = connectionFactory.create(this);
             availableConnections.offer(connection);
         }
     }

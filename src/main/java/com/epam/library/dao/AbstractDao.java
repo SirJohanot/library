@@ -22,7 +22,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     protected List<T> executeQuery(String query, RowMapper<T> rowMapper, Object... parameters) throws DaoException {
         try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
-            ResultSet resultSet = preparedStatement.executeQuery(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
             List<T> entities = new ArrayList<>();
             while (resultSet.next()) {
                 T entity = rowMapper.map(resultSet);
