@@ -3,10 +3,29 @@
     <head>
         <title>Main | Library</title>
         <link rel="stylesheet" href="static/styles/style.css"/>
+        <meta name="viewport" content="width=device-width">
     </head>
     <body>
-        <div>
-            <h2>Hello, ${sessionScope.user}</h2>
+        <header>
+            <div class="page-title">
+                <img src="static/resources/white_book_symbol.png" class="app-symbol">
+                <h1>Library<h1>
+                <button class="logout-button">
+                    <img src="static/resources/logout_symbol.png">
+                </button>
+            </div>
+        </header>
+        <div class="main-content">
+            <nav>
+                <ul>
+                    <li><button>Option 1</button></li>
+                    <li><button>Option 2</button></li>
+                    <li><button>Option 3</button></li>
+                </ul>
+            </nav>
+            <main>
+                WELCOME, ${sessionScope.user}
+            </main>
         </div>
     </body>
 </html>
