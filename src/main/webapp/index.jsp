@@ -7,18 +7,18 @@
     </head>
     <body>
         <header>
-            <div class="page-title">
-                <img src="static/resources/white_book_symbol.png" class="app-symbol">
+            <div class="container">
+                <img src="static/resources/white_book_symbol.png">
                 <h1>Library<h1>
             </div>
         </header>
-        <main>
+        <section>
             <form class="login-form" method="post" action="controller?command=login">
-                <input type="text" class="login-form-input" name="login" placeholder="Login"/>
-                <input type="password" class="login-form-input" name="password" placeholder="Password"/>
-                <input class="login-form-submit" type="submit" value="Sign in"/>
+                <input type="text" name="login" placeholder="Login"/>
+                <input type="password" name="password" placeholder="Password"/>
+                <input type="submit" value="Sign in"/>
                 <div class="error-message">${errorMessage}</div>
             </form>
-        </main>
+        </section>
     </body>
 </html>

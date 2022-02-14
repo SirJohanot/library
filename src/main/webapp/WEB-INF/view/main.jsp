@@ -7,15 +7,19 @@
     </head>
     <body>
         <header>
-            <div class="page-title">
-                <img src="static/resources/white_book_symbol.png" class="app-symbol">
+            <div class="container">
+                <img src="static/resources/white_book_symbol.png">
                 <h1>Library<h1>
-                <button class="logout-button">
-                    <img src="static/resources/logout_symbol.png">
-                </button>
+                <h1 class="logout-button">
+                    <form action="controller?command=log-out">
+                        <button type="submit">
+                            <img src="static/resources/logout_symbol.png">
+                        </button>
+                    </form>
+                </h1>
             </div>
         </header>
-        <div class="main-content">
+        <section id="main-content">
             <nav>
                 <ul>
                     <li><button>Option 1</button></li>
@@ -23,9 +27,7 @@
                     <li><button>Option 3</button></li>
                 </ul>
             </nav>
-            <main>
-                WELCOME, ${sessionScope.user}
-            </main>
-        </div>
+            <p>WELCOME, ${sessionScope.user}</p>
+        </section>
     </body>
 </html>
