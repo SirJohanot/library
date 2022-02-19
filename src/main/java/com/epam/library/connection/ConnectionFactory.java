@@ -1,7 +1,7 @@
 package com.epam.library.connection;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,20 +9,20 @@ import java.util.Properties;
 
 public class ConnectionFactory {
 
-    private static final String DATABASE_CONNECTION_PROPERTIES_PATH = "C:\\Users\\war criminal\\Documents\\GitHub\\library\\src\\main\\resources\\databaseConnection.properties";
+    private static final String DATABASE_CONNECTION_PROPERTIES_FILE_NAME = "databaseConnection.properties";
+    private static final String DATABASE_DRIVER_CLASS_PROPERTY = "db.driver.class";
+    private static final String DATABASE_CONNECTION_URL_PROPERTY = "db.conn.url";
+    private static final String DATABASE_USERNAME_PROPERTY = "db.username";
+    private static final String DATABASE_PASSWORD_PROPERTY = "db.password";
 
     public ProxyConnection create(ConnectionPool connectionPool) throws IOException, ClassNotFoundException, SQLException {
-        Properties properties = new Properties(); //TODO: figure out why the properties file cannot be located with relative path reference
-        FileReader fileReader = new FileReader(DATABASE_CONNECTION_PROPERTIES_PATH);
-        properties.load(fileReader);
-        String databaseDriverClass = properties.getProperty("db.driver.class");
-        String databaseConnectionUrl = properties.getProperty("db.conn.url");
-        String databaseUsername = properties.getProperty("db.username");
-        String databasePassword = properties.getProperty("db.password");
-//        String databaseDriverClass = "com.mysql.jdbc.Driver";
-//        String databaseConnectionUrl = "jdbc:mysql://localhost:3306/library";
-//        String databaseUsername = "root";
-//        String databasePassword = "";
+        Properties properties = new Properties();
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(DATABASE_CONNECTION_PROPERTIES_FILE_NAME);
+        properties.load(inputStream);
+        String databaseDriverClass = properties.getProperty(DATABASE_DRIVER_CLASS_PROPERTY);
+        String databaseConnectionUrl = properties.getProperty(DATABASE_CONNECTION_URL_PROPERTY);
+        String databaseUsername = properties.getProperty(DATABASE_USERNAME_PROPERTY);
+        String databasePassword = properties.getProperty(DATABASE_PASSWORD_PROPERTY);
         Class.forName(databaseDriverClass);
         Connection connection = DriverManager.getConnection(databaseConnectionUrl, databaseUsername, databasePassword);
         return new ProxyConnection(connection, connectionPool);
