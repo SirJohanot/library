@@ -1,6 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:if test="${sessionScope.locale == null}">
+    <c:set var="locale" value="en_US" scope="session" />
+</c:if>
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="pageContent"/>
+<fmt:message key="general.appName" var="appName" />
+<fmt:message key="general.englishCode" var="en" />
+<fmt:message key="general.russianCode" var="ru" />
+<fmt:message key="general.belarusianCode" var="bel" />
 <html>
     <head>
         <title>${title}</title>
@@ -11,21 +20,21 @@
         <header>
             <div class="container">
                 <img src="static/resources/white_book_symbol.png">
-                <h1>${appname}<h1>
+                <h1>${appName}<h1>
                 <h1 class="right-header-buttons">
                     <form action="controller?command=log-out" class="logout-button">
                         <button type="submit">
                             <img src="static/resources/logout_symbol.png">
                         </button>
                     </form>
-                    <form action="controller?command=language-change" id="language-change">
+                    <form method="post" action="controller?command=languageChange" id="language-change">
                         <button type="button">
                             <img src="static/resources/white_globe_symbol.png">
                         </button>
                         <div class="dropdown-content">
-                            <button type="submit" form="language-change" name="language" value="en">${en}</button>
-                            <button type="submit" form="language-change" name="language" value="ru">${ru}</button>
-                            <button type="submit" form="language-change" name="language" value="by">${by}</button>
+                            <button type="submit" name="locale" value="en_US">${en}</button>
+                            <button type="submit" name="locale" value="ru_RU">${ru}</button>
+                            <button type="submit" name="locale" value="bel_BEL">${bel}</button>
                         </div>
                     </form>
                 </h1>
@@ -39,7 +48,9 @@
                     <li><button>Option 3</button></li>
                 </ul>
             </nav>
-            <p>WELCOME, ${sessionScope.user}</p>
+            <div class="container">
+                <p>WELCOME, ${sessionScope.user.login}</p>
+            </div
         </section>
     </body>
 </html>

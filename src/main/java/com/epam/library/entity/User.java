@@ -1,11 +1,12 @@
 package com.epam.library.entity;
 
-public class User implements Identifiable {
+import java.io.Serializable;
 
+public class User implements Identifiable, Serializable {
+    
     public static final String TABLE_NAME = "user";
     public static final String ID_COLUMN = "id";
     public static final String LOGIN_COLUMN = "login";
-    public static final String PASSWORD_COLUMN = "password";
     public static final String NAME_COLUMN = "name";
     public static final String SURNAME_COLUMN = "surname";
     public static final String ROLE_COLUMN = "role";
@@ -13,15 +14,13 @@ public class User implements Identifiable {
 
     private final Long id;
     private final String login;
-    private final String password;
     private final String name;
     private final String surname;
     private final UserRole role;
 
-    public User(Long id, String login, String password, String name, String surname, UserRole role) {
+    public User(Long id, String login, String name, String surname, UserRole role) {
         this.id = id;
         this.login = login;
-        this.password = password;
         this.name = name;
         this.surname = surname;
         this.role = role;
@@ -34,10 +33,6 @@ public class User implements Identifiable {
 
     public String getLogin() {
         return login;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
@@ -64,9 +59,6 @@ public class User implements Identifiable {
         if (login != null ? !login.equals(user.login) : user.login != null) {
             return false;
         }
-        if (password != null ? !password.equals(user.password) : user.password != null) {
-            return false;
-        }
         if (name != null ? !name.equals(user.name) : user.name != null) {
             return false;
         }
@@ -79,7 +71,6 @@ public class User implements Identifiable {
     @Override
     public int hashCode() {
         int result = login != null ? login.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
@@ -90,7 +81,6 @@ public class User implements Identifiable {
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", role=" + role +
