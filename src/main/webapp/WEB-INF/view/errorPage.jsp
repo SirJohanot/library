@@ -10,10 +10,8 @@
 <fmt:message key="general.englishCode" var="en" />
 <fmt:message key="general.russianCode" var="ru" />
 <fmt:message key="general.belarusianCode" var="bel" />
-<fmt:message key="authorisation.title" var="title" />
-<fmt:message key="authorisation.loginLocale" var="loginLocale" />
-<fmt:message key="authorisation.passwordLocale" var="passwordLocale" />
-<fmt:message key="authorisation.signInLocale" var="signInLocale" />
+<fmt:message key="errorPage.errorOccurred" var="errorOccurred" />
+<fmt:message key="errorPage.title" var="title" />
 <html>
     <head>
         <title>${title}</title>
@@ -39,13 +37,11 @@
                 </h1>
             </div>
         </header>
-        <section>
-            <form class="login-form" method="post" action="controller?command=login">
-                <input type="text" name="login" placeholder=${loginLocale} />
-                <input type="password" name="password" placeholder=${passwordLocale} />
-                <input type="submit" value=${signInLocale} />
-                <div class="error-message">${errorMessage}</div>
-            </form>
+        <section id="main-content">
+            <div class="container error-message">
+                <h1>${errorOccurred}</h1>
+                <p>${errorMessage}</p>
+            </div>
         </section>
     </body>
 </html>
