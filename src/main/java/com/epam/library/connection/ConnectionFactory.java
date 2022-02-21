@@ -15,7 +15,7 @@ public class ConnectionFactory {
     private static final String DATABASE_USERNAME_PROPERTY = "db.username";
     private static final String DATABASE_PASSWORD_PROPERTY = "db.password";
 
-    public ProxyConnection create(ConnectionPool connectionPool) throws IOException, ClassNotFoundException, SQLException {
+    public ProxyConnection create() throws IOException, ClassNotFoundException, SQLException {
         Properties properties = new Properties();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(DATABASE_CONNECTION_PROPERTIES_FILE_NAME);
         properties.load(inputStream);
@@ -25,7 +25,7 @@ public class ConnectionFactory {
         String databasePassword = properties.getProperty(DATABASE_PASSWORD_PROPERTY);
         Class.forName(databaseDriverClass);
         Connection connection = DriverManager.getConnection(databaseConnectionUrl, databaseUsername, databasePassword);
-        return new ProxyConnection(connection, connectionPool);
+        return new ProxyConnection(connection, ConnectionPool.getInstance());
     }
 
 }

@@ -19,13 +19,9 @@ public class ConnectionPool {
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    private ConnectionPool() throws SQLException, IOException, ClassNotFoundException {
+    private ConnectionPool() {
         availableConnections = new ArrayDeque<>();
         connectionsInUse = new ArrayDeque<>();
-        for (int i = 0; i < MAXIMUM_SIMULTANEOUS_CONNECTIONS; i++) {
-            ProxyConnection connection = connectionFactory.create(this);
-            availableConnections.offer(connection);
-        }
     }
 
     public static ConnectionPool getInstance() throws SQLException, IOException, ClassNotFoundException {
@@ -36,12 +32,20 @@ public class ConnectionPool {
                 localInstance = INSTANCE;
                 if (localInstance == null) {
                     localInstance = INSTANCE = new ConnectionPool();
+                    localInstance.initialiseConnections();
                 }
             } finally {
                 lock.unlock();
             }
         }
         return localInstance;
+    }
+
+    private void initialiseConnections() throws SQLException, IOException, ClassNotFoundException {
+        for (int i = 0; i < MAXIMUM_SIMULTANEOUS_CONNECTIONS; i++) {
+            ProxyConnection connection = connectionFactory.create();
+            availableConnections.offer(connection);
+        }
     }
 
     public ProxyConnection getConnection() {
