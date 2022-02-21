@@ -17,20 +17,15 @@ public class LoginCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        try {
-            Optional<User> user = userService.login(login, password);
-            if (!user.isPresent()) {
-                req.setAttribute("errorMessage", "Incorrect username or password.");
-                return "index.jsp";
-            }
-            req.getSession().setAttribute("user", user.get().getLogin());
-            return "WEB-INF/view/main.jsp";
-        } catch (ServiceException e) {
-            req.setAttribute("errorMessage", e.getMessage());
-            return "index.jsp";
+        Optional<User> user = userService.login(login, password);
+        if (!user.isPresent()) {
+            req.setAttribute("errorMessage", "Incorrect username or password.");
+            return CommandResult.forward("/index.jsp");
         }
+        req.getSession().setAttribute("user", user);
+        return CommandResult.forward("/WEB-INF/view/main.jsp");
     }
 }

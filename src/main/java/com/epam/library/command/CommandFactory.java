@@ -9,7 +9,7 @@ public class CommandFactory {
         switch (command) {
             case "login":
                 return new LoginCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case "language-change":
+            case "languageChange":
                 return new LanguageChangeCommand();
             default:
                 throw new IllegalArgumentException("Unknown command = " + command);
