@@ -5,7 +5,8 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.UserRowMapper;
 
 import java.sql.Connection;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
@@ -13,40 +14,24 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final String FIND_BY_LOGIN_AND_PASSWORD = "SELECT * FROM user WHERE login = ? AND password = MD5(?);";
 
     public UserDaoImpl(Connection connection) {
-        super(connection);
+        super(connection, new UserRowMapper(), User.TABLE_NAME);
     }
 
     @Override
     public Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException {
         return executeForSingleResult(
                 FIND_BY_LOGIN_AND_PASSWORD,
-                new UserRowMapper(),
                 login,
                 password);
     }
 
     @Override
-    public Optional<User> getById(Long id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<User> getAll() {
-        return null;
-    }
-
-    @Override
-    public void save(User item) {
-
-    }
-
-    @Override
-    public void removeById(Long id) {
-
-    }
-
-    @Override
-    protected String getTableName() {
-        return User.TABLE_NAME;
+    protected Map<String, Object> getMapOfColumnValues(User entity) {
+        Map<String, Object> valuesMap = new LinkedHashMap<>();
+        valuesMap.put(User.ID_COLUMN, entity.getId());
+        valuesMap.put(User.NAME_COLUMN, entity.getName());
+        valuesMap.put(User.SURNAME_COLUMN, entity.getSurname());
+        valuesMap.put(User.ROLE_COLUMN, entity.getRole().toString().toLowerCase());
+        return valuesMap;
     }
 }
