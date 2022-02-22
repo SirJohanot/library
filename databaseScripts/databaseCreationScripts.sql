@@ -26,6 +26,7 @@ genre_id int not null,
 publisher_id int not null,
 publishment_year YEAR not null,
 amount int unsigned not null,
+is_deleted boolean not null,
 foreign key (genre_id) references genre(id),
 foreign key (publisher_id) references publisher(id)
 );

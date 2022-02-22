@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public class Controller extends HttpServlet {
 
+    private static final String COMMAND_PARAMETER_NAME = "command";
+    private static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "errorMessage";
+    private static final String ERROR_PAGE_PATH = "/WEB-INF/view/errorPage.jsp";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp);
@@ -25,15 +29,15 @@ public class Controller extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String commandLine = req.getParameter("command");
+        String commandLine = req.getParameter(COMMAND_PARAMETER_NAME);
         CommandFactory commandFactory = new CommandFactory();
         Command command = commandFactory.createCommand(commandLine);
         try {
             CommandResult commandResult = command.execute(req, resp);
             processCommandResult(commandResult, req, resp);
         } catch (Exception e) {
-            req.setAttribute("errorMessage", e.getMessage());
-            processCommandResult(CommandResult.forward("/WEB-INF/view/errorPage.jsp"), req, resp);
+            req.setAttribute(ERROR_MESSAGE_ATTRIBUTE_NAME, e.getMessage());
+            processCommandResult(CommandResult.forward(ERROR_PAGE_PATH), req, resp);
         }
     }
 
