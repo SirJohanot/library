@@ -11,6 +11,7 @@
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
 <fmt:message key="mainPage.title" var="title"/>
+<fmt:message key="mainPage.greetingsMessage" var="greetingsMessage"/>
 <html>
 <head>
     <title>${title}</title>
@@ -23,9 +24,9 @@
         <img src="static/resources/white_book_symbol.png">
         <h1>${appName}</h1>
         <h1 class="right-header-buttons">
-            <form action="controller?command=log-out" class="logout-button">
+            <form method="post" action="controller?command=signOut" class="sign-out-button">
                 <button type="submit">
-                    <img src="static/resources/logout_symbol.png">
+                    <img src="static/resources/sign_out_symbol.png">
                 </button>
             </form>
             <form method="post" action="controller?command=languageChange" id="language-change">
@@ -55,8 +56,8 @@
             </li>
         </ul>
     </nav>
-    <div class="container">
-        <p>WELCOME, ${sessionScope.user.login}</p>
+    <div class="container round-bordered-subject main-page-message">
+        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
     </div>
 </section>
 </body>

@@ -13,7 +13,7 @@ body {
 }
 
 /* Global */
-button {
+button, input[type="submit"] {
     color: #f0f6fc;
     background-color: #003050;
     border-radius: 6px;
@@ -21,19 +21,24 @@ button {
     border: 1px solid #c9d1d9;
 }
 
-button:hover {
+button:hover, input[type="submit"]:hover {
     background-color: #002940;
 }
 
 .container {
     width: 95%;
     margin: auto;
-    text-align: center;
 }
 
 .error-message {
     text-align: center;
     color: red;
+}
+
+.round-bordered-subject {
+    border: 2px solid rgba(255, 255, 255, .55);
+    border-radius: 25px;
+    background-color: #161b22;
 }
 
 #main-content {
@@ -98,21 +103,21 @@ nav ul li {
 nav ul li button {
     display: block;
     width: 100%;
-    height: 60px;
+    min-height: 60px;
 }
 
 
 /* Logout Button */
-.logout-button {
+.sign-out-button {
     margin: 0;
     display: inline-block;
 }
 
-.logout-button form {
+.sign-out-button form {
     margin: 0;
 }
 
-.logout-button button {
+.sign-out-button button {
     padding: 10px;
     margin: 0;
 }
@@ -149,9 +154,6 @@ nav ul li button {
     width: 340px;
     margin: 36px auto;
     padding: 20px;
-    border: 2px solid rgba(255, 255, 255, .55);
-    border-radius: 25px;
-    background-color: #161b22;
 }
 
 .login-form input {
@@ -161,14 +163,18 @@ nav ul li button {
     display: block;
     margin: 14px auto;
     border: 1px solid #30363d;
+}
+
+.login-form input[type="text"], .login-form input[type="password"] {
     border-radius: 6px;
     color: #f0f6fc;
     background-color: #0d1117;
 }
 
-.login-form input[type=submit] {
-    cursor: pointer;
-    background-color: #003050;
+/* Main Page */
+.main-page-message {
+    text-align: center;
+    margin-top: 30px;
 }
 
 @media screen and (max-width: 480px) {

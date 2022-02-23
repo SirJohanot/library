@@ -40,7 +40,7 @@
     </div>
 </header>
 <section>
-    <form class="login-form" method="post" action="controller?command=login">
+    <form class="login-form round-bordered-subject" method="post" action="controller?command=login">
         <input type="text" name="login" placeholder=${loginLocale}/>
         <input type="password" name="password" placeholder=${passwordLocale}/>
         <input type="submit" value=${signInLocale}/>
