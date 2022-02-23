@@ -1,5 +1,7 @@
 package com.epam.library.command;
 
+import com.epam.library.command.result.CommandResult;
+import com.epam.library.constant.LibraryConstants;
 import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.UserService;
@@ -14,9 +16,6 @@ public class LoginCommand implements Command {
     private static final String PASSWORD_PARAMETER_NAME = "password";
     private static final String INVALID_CREDENTIALS_MESSAGE_ATTRIBUTE_NAME = "invalidCredentials";
     private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect username or password.";
-    private static final String LOGIN_PAGE_PATH = "/index.jsp";
-    private static final String MAIN_PAGE_PATH = "/WEB-INF/view/main.jsp";
-    private static final String USER_ATTRIBUTE_NAME = "user";
 
     private final UserService userService;
 
@@ -31,9 +30,9 @@ public class LoginCommand implements Command {
         Optional<User> user = userService.login(login, password);
         if (!user.isPresent()) {
             req.setAttribute(INVALID_CREDENTIALS_MESSAGE_ATTRIBUTE_NAME, INVALID_CREDENTIALS_MESSAGE);
-            return CommandResult.forward(LOGIN_PAGE_PATH);
+            return CommandResult.forward(LibraryConstants.SIGN_IN_PAGE_PATH);
         }
-        req.getSession().setAttribute(USER_ATTRIBUTE_NAME, user.get());
-        return CommandResult.forward(MAIN_PAGE_PATH);
+        req.getSession().setAttribute(LibraryConstants.USER_ATTRIBUTE_NAME, user.get());
+        return CommandResult.forward(LibraryConstants.MAIN_PAGE_PATH);
     }
 }

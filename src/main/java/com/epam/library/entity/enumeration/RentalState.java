@@ -1,4 +1,4 @@
-package com.epam.library.entity;
+package com.epam.library.entity.enumeration;
 
 public enum RentalState {
 

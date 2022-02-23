@@ -1,6 +1,7 @@
-package com.epam.library.command;
+package com.epam.library.command.factory;
 
-import com.epam.library.dao.DaoHelperFactory;
+import com.epam.library.command.*;
+import com.epam.library.dao.daohelper.DaoHelperFactory;
 import com.epam.library.service.UserServiceImpl;
 
 public class CommandFactory {

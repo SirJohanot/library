@@ -1,7 +1,9 @@
-package com.epam.library.dao;
+package com.epam.library.dao.daohelper;
 
 import com.epam.library.connection.ConnectionPool;
 import com.epam.library.connection.ProxyConnection;
+import com.epam.library.dao.UserDao;
+import com.epam.library.dao.UserDaoImpl;
 import com.epam.library.exception.DaoException;
 
 import java.sql.SQLException;

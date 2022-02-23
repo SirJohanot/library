@@ -1,5 +1,7 @@
 package com.epam.library.command;
 
+import com.epam.library.command.result.CommandResult;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;

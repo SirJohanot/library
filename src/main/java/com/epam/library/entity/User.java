@@ -1,9 +1,11 @@
 package com.epam.library.entity;
 
+import com.epam.library.entity.enumeration.UserRole;
+
 import java.io.Serializable;
 
 public class User implements Identifiable, Serializable {
-    
+
     public static final String TABLE_NAME = "user";
     public static final String ID_COLUMN = "id";
     public static final String LOGIN_COLUMN = "login";

@@ -1,7 +1,7 @@
 package com.epam.library.mapper;
 
 import com.epam.library.entity.User;
-import com.epam.library.entity.UserRole;
+import com.epam.library.entity.enumeration.UserRole;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

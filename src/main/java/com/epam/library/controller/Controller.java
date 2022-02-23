@@ -1,8 +1,8 @@
 package com.epam.library.controller;
 
 import com.epam.library.command.Command;
-import com.epam.library.command.CommandFactory;
-import com.epam.library.command.CommandResult;
+import com.epam.library.command.factory.CommandFactory;
+import com.epam.library.command.result.CommandResult;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;

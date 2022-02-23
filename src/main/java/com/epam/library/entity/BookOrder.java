@@ -1,5 +1,8 @@
 package com.epam.library.entity;
 
+import com.epam.library.entity.enumeration.RentalState;
+import com.epam.library.entity.enumeration.RentalType;
+
 import java.util.Date;
 
 public class BookOrder implements Identifiable {

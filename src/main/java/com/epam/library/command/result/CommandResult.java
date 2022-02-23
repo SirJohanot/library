@@ -1,4 +1,4 @@
-package com.epam.library.command;
+package com.epam.library.command.result;
 
 public class CommandResult {
 
