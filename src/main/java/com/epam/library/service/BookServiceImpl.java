@@ -1,32 +1,34 @@
 package com.epam.library.service;
 
-import com.epam.library.dao.UserDao;
+import com.epam.library.dao.BookDao;
 import com.epam.library.dao.daohelper.DaoHelper;
 import com.epam.library.dao.daohelper.DaoHelperFactory;
-import com.epam.library.entity.User;
+import com.epam.library.entity.book.Book;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 
-import java.util.Optional;
+import java.util.List;
 
-public class UserServiceImpl implements UserService {
+public class BookServiceImpl implements BookService {
 
     private final DaoHelperFactory daoHelperFactory;
 
-    public UserServiceImpl(DaoHelperFactory daoHelperFactory) {
+    public BookServiceImpl(DaoHelperFactory daoHelperFactory) {
         this.daoHelperFactory = daoHelperFactory;
     }
 
     @Override
-    public Optional<User> signIn(String login, String password) throws ServiceException {
+    public List<Book> getBooks() throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            UserDao dao = helper.createUserDao();
-            Optional<User> user = dao.findUserByLoginAndPassword(login, password);
+            BookDao dao = helper.createBookDao();
+            List<Book> bookList = dao.getAllNotDeleted();
+            //TODO: GET ASSOCIATED AUTHORS
             helper.endTransaction();
-            return user;
+            return bookList;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+
     }
 }

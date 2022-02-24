@@ -20,6 +20,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     private static final String REMOVE_BY_ID_QUERY = "UPDATE ? SET is_deleted = true WHERE id = ?";
     private static final String UPDATE_QUERY_BEGINNING = "UPDATE ? SET";
     private static final String INSERT_QUERY_BEGINNING = "INSERT INTO ? SET";
+    private static final String GET_ALL_WHERE_QUERY_BEGINNING = "SELECT * FROM ? WHERE";
 
     private final Connection connection;
     private final RowMapper<T> rowMapper;
@@ -34,12 +35,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     protected List<T> executeQuery(String query, Object... parameters) throws DaoException {
         try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<T> entities = new ArrayList<>();
-            while (resultSet.next()) {
-                T entity = rowMapper.map(resultSet);
-                entities.add(entity);
-            }
-            return entities;
+            return extractResultsFromResultSet(resultSet);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -64,6 +60,17 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         }
     }
 
+    public List<T> findIdentical(T item) throws DaoException {
+        Map<String, Object> valuesMap = getMapOfColumnValues(item);
+        String query = addNonIdValuesToQuery(valuesMap, GET_ALL_WHERE_QUERY_BEGINNING);
+        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return extractResultsFromResultSet(resultSet);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
     @Override
     public Optional<T> getById(Long id) throws DaoException {
         return executeForSingleResult(GET_BY_ID_QUERY, tableName, id);
@@ -77,8 +84,8 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     @Override
     public void save(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
-        String query = item.getId() == null ? buildInsertQuery(valuesMap) : buildUpdateQuery(valuesMap);
-        try (PreparedStatement preparedStatement = generateSavePreparedStatement(query, valuesMap)) {
+        String query = item.getId() == null ? addNonIdValuesToQuery(valuesMap, INSERT_QUERY_BEGINNING) : buildUpdateQuery(valuesMap);
+        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
             preparedStatement.executeQuery();
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -101,8 +108,8 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         return stringBuilder.toString();
     }
 
-    private String buildInsertQuery(Map<String, Object> valuesMap) {
-        StringBuilder stringBuilder = new StringBuilder(INSERT_QUERY_BEGINNING);
+    private String addNonIdValuesToQuery(Map<String, Object> valuesMap, String query) {
+        StringBuilder stringBuilder = new StringBuilder(query);
         for (String key : valuesMap.keySet()) {
             if (!key.equals("id")) {
                 stringBuilder.append(" ? = ?,");
@@ -112,7 +119,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         return stringBuilder.toString();
     }
 
-    private PreparedStatement generateSavePreparedStatement(String query, Map<String, Object> valuesMap) throws SQLException {
+    private PreparedStatement generatePreparedStatementFromValuesMap(String query, Map<String, Object> valuesMap) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         int preparedStatementIndex = 1;
         preparedStatement.setObject(preparedStatementIndex++, tableName);
@@ -126,6 +133,15 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             preparedStatement.setObject(preparedStatementIndex, valuesMap.get("id"));
         }
         return preparedStatement;
+    }
+
+    private List<T> extractResultsFromResultSet(ResultSet resultSet) throws SQLException {
+        List<T> entities = new ArrayList<>();
+        while (resultSet.next()) {
+            T entity = rowMapper.map(resultSet);
+            entities.add(entity);
+        }
+        return entities;
     }
 
     protected abstract Map<String, Object> getMapOfColumnValues(T entity);

@@ -2,6 +2,8 @@ package com.epam.library.dao.daohelper;
 
 import com.epam.library.connection.ConnectionPool;
 import com.epam.library.connection.ProxyConnection;
+import com.epam.library.dao.BookDao;
+import com.epam.library.dao.BookDaoImpl;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.UserDaoImpl;
 import com.epam.library.exception.DaoException;
@@ -18,6 +20,10 @@ public class DaoHelper implements AutoCloseable {
 
     public UserDao createUserDao() {
         return new UserDaoImpl(connection);
+    }
+
+    public BookDao createBookDao() {
+        return new BookDaoImpl(connection);
     }
 
     @Override

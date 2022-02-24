@@ -11,8 +11,12 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="mainPage.title" var="title"/>
-<fmt:message key="mainPage.greetingsMessage" var="greetingsMessage"/>
+<fmt:message key="general.search" var="search"/>
+<fmt:message key="books.title" var="title"/>
+<fmt:message key="books.authors" var="authors"/>
+<fmt:message key="books.genre" var="genre"/>
+<fmt:message key="books.publisher" var="publisher"/>
+<fmt:message key="books.publishmentYear" var="publishmentYear"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -67,8 +71,24 @@
             </c:choose>
         </form>
     </nav>
-    <div class="container round-bordered-subject main-page-message">
-        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+    <div>
+        <form method="get" action="controller?command=searchBooks">
+            <input type="text" name="searchValue" placeholder="${search}"/>
+        </form>
+        <c:forEach items="${bookList}" var="book">
+            <div class="round-bordered-subject">
+                <h1>${book.title}</h1>
+                <div class="databaseBook-parameters">
+                    <p>${authors}: <c:forEach items="${book.authorList}" var="author">
+                        ${author.name}
+                    </c:forEach>
+                    </p>
+                    <p>${genre}: ${book.genre.name}</p>
+                    <p>${publisher}: ${book.publisher.name}</p>
+                    <p>${publishmentYear}: ${book.publishmentYear}</p>
+                </div>
+            </div>
+        </c:forEach>
     </div>
 </section>
 </body>

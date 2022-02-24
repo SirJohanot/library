@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <c:if test="${sessionScope.locale == null}">
     <c:set var="locale" value="en_US" scope="session"/>
 </c:if>
@@ -38,7 +39,7 @@
     </div>
 </header>
 <section id="main-content">
-    <div class="container error-message">
+    <div class="container error-message round-bordered-subject">
         <h1>${errorOccurred}</h1>
         <p>${requestScope.errorMessage}</p>
     </div>

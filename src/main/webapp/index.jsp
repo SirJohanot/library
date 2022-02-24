@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <c:if test="${sessionScope.locale == null}">
     <c:set var="locale" value="en_US" scope="session"/>
 </c:if>
@@ -40,11 +41,11 @@
     </div>
 </header>
 <section>
-    <form class="login-form round-bordered-subject" method="post" action="controller?command=login">
-        <input type="text" name="login" placeholder=${loginLocale}/>
-        <input type="password" name="password" placeholder=${passwordLocale}/>
-        <input type="submit" value=${signInLocale}/>
-        <div class="error-message">${requestScope.invalidCredentials}</div>
+    <form class="login-form round-bordered-subject" method="post" action="controller?command=signIn" autocomplete="on">
+        <input type="text" name="login" placeholder="${loginLocale}"/>
+        <input type="password" name="password" placeholder="${passwordLocale}"/>
+        <input type="submit" value="${signInLocale}"/>
+        <div class="error-message">${requestScope.signInErrorMessage}</div>
     </form>
 </section>
 </body>

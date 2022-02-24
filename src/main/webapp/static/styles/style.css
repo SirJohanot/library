@@ -88,24 +88,18 @@ nav {
     flex: 0 0 130px;
 }
 
-nav ul {
-    list-style-type: none;
+nav form {
     margin: 0;
     padding: 0;
 }
 
-nav ul li {
+nav form button {
     margin: 0;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-nav ul li button {
+    font-size: 24px;
     display: block;
     width: 100%;
     min-height: 60px;
 }
-
 
 /* Logout Button */
 .sign-out-button {
@@ -175,6 +169,31 @@ nav ul li button {
 .main-page-message {
     text-align: center;
     margin-top: 30px;
+}
+
+/* Books Page */
+.book-container {
+    margin: 8px auto;
+}
+
+.book-container h1, .book-container p {
+    overflow: auto;
+}
+
+.book-container h1 {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+}
+
+.book-container .book-parameters {
+    display: flex;
+    width: 100%;
+}
+
+.book-parameters * {
+    display: inline-block;
+    flex-grow: 1;
 }
 
 @media screen and (max-width: 480px) {
