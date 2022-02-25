@@ -191,11 +191,12 @@ nav form button {
 
 /* Books Page */
 .book-container {
+    height: max-content;
     width: 100%;
     margin: 8px auto;
 }
 
-.book-container h1, .book-container p, .singular-book-container * {
+.book-container h1, .book-container p {
     overflow: auto;
     margin: 10px auto;
 }
@@ -216,16 +217,6 @@ nav form button {
 .book-parameters * {
     display: inline-block;
     flex-grow: 1;
-    width: 100%;
-}
-
-.singular-book-container {
-    margin: 8px auto;
-}
-
-.singular-book-container * {
-    display: block;
-    height: auto;
     width: 100%;
 }
 

@@ -72,18 +72,36 @@
             </c:choose>
         </form>
     </nav>
-    <div class="round-bordered-subject singular-book-container">
-        <h1>${bookTitle}: ${requestScope.book.title}</h1>
-        <p>${authors}:
-            <c:forEach items="${requestScope.book.authorList}" var="author">
-                ${author.name}
-            </c:forEach>
-        <p>${genre}: ${requestScope.book.genre.name}</p>
-        <p>${publisher}: ${requestScope.book.publisher}</p>
-        <p>${publishmentYear}: ${requestScope.book.publishmentYear}</p>
-        <c:if test="${sessionScope.user.role != 'READER'}">
-            <p>${inStock}: ${requestScope.book.amount}</p>
-        </c:if>
+    <div>
+        <div class="round-bordered-subject book-container">
+            <h1>${bookTitle}: ${requestScope.book.title}</h1>
+            <p>${authors}:
+                <c:forEach items="${requestScope.book.authorList}" var="author">
+                    ${author.name}
+                </c:forEach>
+            <p>${genre}: ${requestScope.book.genre.name}</p>
+            <p>${publisher}: ${requestScope.book.publisher.name}</p>
+            <p>${publishmentYear}: ${requestScope.book.publishmentYear}</p>
+            <c:if test="${sessionScope.user.role != 'READER'}">
+                <p>${inStock}: ${requestScope.book.amount}</p>
+            </c:if>
+        </div>
+        <div class="book-buttons-container">
+            <form method="post" action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
+                <c:choose>
+                    <c:when test="${sessionScope.user.role == 'ADMIN'}">
+                        <button type="submit" name="command" value="editBookPage">${edit}</button>
+                        <button type="submit" name="command" value="deleteBook">${delete}</button>
+                    </c:when>
+                    <c:when test="${sessionScope.user.role == 'READER'}">
+                        <button type="submit" name="command"
+                                value="orderToReadingHallPage">${orderToReadingHall}</button>
+                        <button type="submit" name="command"
+                                value="orderOnSubscriptionPage">${orderOnSubscription}</button>
+                    </c:when>
+                </c:choose>
+            </form>
+        </div>
     </div>
 </section>
 </body>
