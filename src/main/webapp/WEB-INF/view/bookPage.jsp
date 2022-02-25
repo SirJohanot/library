@@ -18,6 +18,10 @@
 <fmt:message key="books.publisher" var="publisher"/>
 <fmt:message key="books.publishmentYear" var="publishmentYear"/>
 <fmt:message key="books.inStock" var="inStock"/>
+<fmt:message key="books.edit" var="edit"/>
+<fmt:message key="books.delete" var="delete"/>
+<fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
+<fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -76,8 +80,9 @@
         <div class="round-bordered-subject book-container">
             <h1>${bookTitle}: ${requestScope.book.title}</h1>
             <p>${authors}:
-                <c:forEach items="${requestScope.book.authorList}" var="author">
+                <c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">
                     ${author.name}
+                <c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
             <p>${genre}: ${requestScope.book.genre.name}</p>
             <p>${publisher}: ${requestScope.book.publisher.name}</p>
@@ -86,22 +91,21 @@
                 <p>${inStock}: ${requestScope.book.amount}</p>
             </c:if>
         </div>
-        <div class="book-buttons-container">
-            <form method="post" action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
-                <c:choose>
-                    <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                        <button type="submit" name="command" value="editBookPage">${edit}</button>
-                        <button type="submit" name="command" value="deleteBook">${delete}</button>
-                    </c:when>
-                    <c:when test="${sessionScope.user.role == 'READER'}">
-                        <button type="submit" name="command"
-                                value="orderToReadingHallPage">${orderToReadingHall}</button>
-                        <button type="submit" name="command"
-                                value="orderOnSubscriptionPage">${orderOnSubscription}</button>
-                    </c:when>
-                </c:choose>
-            </form>
-        </div>
+        <form class="book-buttons-container" method="post"
+              action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
+            <c:choose>
+                <c:when test="${sessionScope.user.role == 'ADMIN'}">
+                    <button type="submit" name="command" value="editBookPage">${edit}</button>
+                    <button type="submit" name="command" value="deleteBook">${delete}</button>
+                </c:when>
+                <c:when test="${sessionScope.user.role == 'READER'}">
+                    <button type="submit" name="command"
+                            value="orderToReadingHallPage">${orderToReadingHall}</button>
+                    <button type="submit" name="command"
+                            value="orderOnSubscriptionPage">${orderOnSubscription}</button>
+                </c:when>
+            </c:choose>
+        </form>
     </div>
 </section>
 </body>

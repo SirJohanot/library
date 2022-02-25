@@ -27,6 +27,14 @@ public class Genre implements Identifiable, Serializable {
         return name;
     }
 
+    public static Genre ofId(Long id) {
+        return new Genre(id, null);
+    }
+
+    public static Genre ofName(String name) {
+        return new Genre(null, name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -27,6 +27,14 @@ public class Publisher implements Identifiable, Serializable {
         return name;
     }
 
+    public static Publisher ofId(Long id) {
+        return new Publisher(id, null);
+    }
+
+    public static Publisher ofName(String name) {
+        return new Publisher(null, name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

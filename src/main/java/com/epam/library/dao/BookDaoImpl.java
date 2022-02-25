@@ -5,9 +5,8 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.BookRowMapper;
 
 import java.sql.Connection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
@@ -32,13 +31,18 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
     }
 
     @Override
-    protected Map<String, Object> getMapOfColumnValues(Book entity) {
-        Map<String, Object> valuesMap = new HashMap<>();
+    public void saveBook(Book b) throws DaoException {
+        save(b);
+    }
+
+    @Override
+    protected LinkedHashMap<String, Object> getMapOfColumnValues(Book entity) {
+        LinkedHashMap<String, Object> valuesMap = new LinkedHashMap<>();
         valuesMap.put(Book.ID_COLUMN, entity.getId());
         valuesMap.put(Book.TITLE_COLUMN, entity.getTitle());
         valuesMap.put(Book.GENRE_ID_COLUMN, entity.getGenre().getId());
         valuesMap.put(Book.PUBLISHER_ID_COLUMN, entity.getPublisher().getId());
-        valuesMap.put(Book.PUBLISHMENT_YEAR_COLUMN, entity.getPublishmentYear());
+        valuesMap.put(Book.PUBLISHMENT_YEAR_COLUMN, entity.getPublishmentYear().getValue());
         valuesMap.put(Book.AMOUNT_COLUMN, entity.getAmount());
         return valuesMap;
     }

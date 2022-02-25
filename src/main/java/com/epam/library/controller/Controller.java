@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Controller extends HttpServlet {
 
@@ -36,7 +38,10 @@ public class Controller extends HttpServlet {
             CommandResult commandResult = command.execute(req, resp);
             processCommandResult(commandResult, req, resp);
         } catch (Exception e) {
-            req.setAttribute(ERROR_MESSAGE_ATTRIBUTE_NAME, e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            req.setAttribute(ERROR_MESSAGE_ATTRIBUTE_NAME, sw.toString());
             processCommandResult(CommandResult.forward(ERROR_PAGE_PATH), req, resp);
         }
     }

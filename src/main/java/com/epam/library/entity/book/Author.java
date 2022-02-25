@@ -27,6 +27,14 @@ public class Author implements Identifiable, Serializable {
         return name;
     }
 
+    public static Author ofId(Long id) {
+        return new Author(id, null);
+    }
+
+    public static Author ofName(String name) {
+        return new Author(null, name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

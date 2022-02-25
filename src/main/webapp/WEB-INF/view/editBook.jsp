@@ -12,11 +12,18 @@
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
 <fmt:message key="general.search" var="search"/>
-<fmt:message key="books.title" var="title"/>
+<fmt:message key="general.cancel" var="cancel"/>
+<fmt:message key="general.commitChanges" var="commitChanges"/>
+<fmt:message key="books.bookTitle" var="bookTitle"/>
 <fmt:message key="books.authors" var="authors"/>
 <fmt:message key="books.genre" var="genre"/>
 <fmt:message key="books.publisher" var="publisher"/>
 <fmt:message key="books.publishmentYear" var="publishmentYear"/>
+<fmt:message key="books.inStock" var="inStock"/>
+<fmt:message key="books.edit" var="edit"/>
+<fmt:message key="books.delete" var="delete"/>
+<fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
+<fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -25,7 +32,7 @@
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${requestScope.book.title} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -72,26 +79,29 @@
         </form>
     </nav>
     <div>
-        <form method="post" action="controller?command=searchBooks" class="search-field">
-            <input type="text" name="searchValue" placeholder="${search}"/>
+        <form id="bookChanges" class="round-bordered-subject book-container" method="post"
+              action="controller?command=editBook&bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
+            <label for="title">${bookTitle}:</label>
+            <input id="title" name="title" type="text" value="${requestScope.book.title}"/>
+            <label for="authors">${authors}:</label>
+            <input id="authors" name="authors" type="text"
+                   value="<c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">${author.name}<c:if test="${!loop.last}">, </c:if></c:forEach>"/>
+            <label for="genre">${genre}:</label>
+            <input id="genre" name="genre" type="text" value="${requestScope.book.genre.name}"/>
+            <label for="publisher">${publisher}:</label>
+            <input id="publisher" name="publisher" type="text" value="${requestScope.book.publisher.name}"/>
+            <label for="publishmentYear">${publishmentYear}:</label>
+            <input id="publishmentYear" name="publishmentYear" type="number" min="1" max="2022" step="1"
+                   value="${requestScope.book.publishmentYear}"/>
+            <label for="amount">${inStock}:</label>
+            <input id="amount" name="amount" type="number" min="0" step="1" value="${requestScope.book.amount}"/>
         </form>
-        <form method="post" action="controller?command=viewBook">
-            <c:forEach items="${requestScope.bookList}" var="book">
-                <button type="submit" name="bookId" value="${book.id}" class="book-container round-bordered-subject">
-                    <h1>${book.title}</h1>
-                    <div class="book-parameters">
-                        <p>${authors}: <c:forEach items="${book.authorList}" var="author" varStatus="loop">
-                            ${author.name}
-                            <c:if test="${!loop.last}">,</c:if>
-                        </c:forEach>
-                        </p>
-                        <p>${genre}: ${book.genre.name}</p>
-                        <p>${publisher}: ${book.publisher.name}</p>
-                        <p>${publishmentYear}: ${book.publishmentYear}</p>
-                    </div>
-                </button>
-            </c:forEach>
-        </form>
+        <div class="book-buttons-container">
+            <form method="post" action="controller?command=booksPage">
+                <button type="submit">${cancel}</button>
+            </form>
+            <button type="submit" form="bookChanges">${commitChanges}</button>
+        </div>
     </div>
 </section>
 </body>

@@ -9,21 +9,19 @@ import com.epam.library.service.BookService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ViewBookPageCommand implements Command {
-
-    private static final String BOOK_ID_PARAMETER_NAME = "bookId";
+public class EditBookPageCommand implements Command {
 
     private final BookService bookService;
 
-    public ViewBookPageCommand(BookService bookService) {
+    public EditBookPageCommand(BookService bookService) {
         this.bookService = bookService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long id = Long.parseLong(req.getParameter(BOOK_ID_PARAMETER_NAME));
-        Book requestedBook = bookService.getBookById(id);
-        req.setAttribute(LibraryConstants.BOOK_ATTRIBUTE_NAME, requestedBook);
-        return CommandResult.forward(LibraryConstants.VIEW_BOOK_PAGE_PATH);
+        Long bookId = Long.parseLong(req.getParameter(LibraryConstants.BOOK_ID_PARAMETER_NAME));
+        Book book = bookService.getBookById(bookId);
+        req.setAttribute(LibraryConstants.BOOK_ATTRIBUTE_NAME, book);
+        return CommandResult.forward(LibraryConstants.EDIT_BOOK_PAGE_PATH);
     }
 }

@@ -22,8 +22,8 @@ public class BookRowMapper implements RowMapper<Book> {
         String yearLine = resultSet.getString(Book.PUBLISHMENT_YEAR_COLUMN).split(NON_DIGIT_REGEX)[0];
         Year publishmentYear = Year.parse(yearLine);
         int amount = resultSet.getInt(Book.AMOUNT_COLUMN);
-        Genre genre = new Genre(genreId, null);
-        Publisher publisher = new Publisher(publisherId, null);
+        Genre genre = Genre.ofId(genreId);
+        Publisher publisher = Publisher.ofId(publisherId);
         return new Book(id, title, new ArrayList<>(), genre, publisher, publishmentYear, amount);
     }
 }

@@ -11,4 +11,6 @@ public interface BookDao {
     List<Book> getAllNotDeleted() throws DaoException;
 
     Optional<Book> getNotDeletedBookById(Long id) throws DaoException;
+
+    void saveBook(Book b) throws DaoException;
 }

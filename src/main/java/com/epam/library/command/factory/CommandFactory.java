@@ -14,6 +14,8 @@ public class CommandFactory {
     private static final String MAIN_PAGE_COMMAND = "mainPage";
     private static final String BOOKS_PAGE_COMMAND = "booksPage";
     private static final String VIEW_BOOK_PAGE_COMMAND = "viewBook";
+    private static final String EDIT_BOOK_PAGE_COMMAND = "editBookPage";
+    private static final String EDIT_BOOK_COMMAND = "editBook";
     private static final String ADD_A_BOOK_PAGE_COMMAND = "addABookPage";
     private static final String USERS_PAGE_COMMAND = "usersPage";
     private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
@@ -35,6 +37,10 @@ public class CommandFactory {
                 return new BooksPageCommand(new BookServiceImpl(new DaoHelperFactory()));   //TODO: create proper commands
             case VIEW_BOOK_PAGE_COMMAND:
                 return new ViewBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
+            case EDIT_BOOK_PAGE_COMMAND:
+                return new EditBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
+            case EDIT_BOOK_COMMAND:
+                return new EditBookCommand(new BookServiceImpl(new DaoHelperFactory()));
             case ADD_A_BOOK_PAGE_COMMAND:
                 return new MainPageCommand();
             case USERS_PAGE_COMMAND:
