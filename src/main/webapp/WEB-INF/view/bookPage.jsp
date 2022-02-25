@@ -11,8 +11,13 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="mainPage.title" var="title"/>
-<fmt:message key="mainPage.greetingsMessage" var="greetingsMessage"/>
+<fmt:message key="general.search" var="search"/>
+<fmt:message key="books.bookTitle" var="bookTitle"/>
+<fmt:message key="books.authors" var="authors"/>
+<fmt:message key="books.genre" var="genre"/>
+<fmt:message key="books.publisher" var="publisher"/>
+<fmt:message key="books.publishmentYear" var="publishmentYear"/>
+<fmt:message key="books.inStock" var="inStock"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -21,7 +26,7 @@
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${requestScope.book.title} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -67,8 +72,18 @@
             </c:choose>
         </form>
     </nav>
-    <div class="container round-bordered-subject main-page-message">
-        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+    <div class="round-bordered-subject singular-book-container">
+        <h1>${bookTitle}: ${requestScope.book.title}</h1>
+        <p>${authors}:
+            <c:forEach items="${requestScope.book.authorList}" var="author">
+                ${author.name}
+            </c:forEach>
+        <p>${genre}: ${requestScope.book.genre.name}</p>
+        <p>${publisher}: ${requestScope.book.publisher}</p>
+        <p>${publishmentYear}: ${requestScope.book.publishmentYear}</p>
+        <c:if test="${sessionScope.user.role != 'READER'}">
+            <p>${inStock}: ${requestScope.book.amount}</p>
+        </c:if>
     </div>
 </section>
 </body>

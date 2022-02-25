@@ -8,10 +8,12 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
-    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM ? WHERE id_deleted=false";
+    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM %s WHERE is_deleted=false ;";
+    private static final String GET_NOT_DELETED_BY_ID_QUERY = "SELECT * FROM %s WHERE is_deleted=false AND id = ? ;";
 
     public BookDaoImpl(Connection connection) {
         super(connection, new BookRowMapper(), Book.TABLE_NAME);
@@ -19,7 +21,14 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
     @Override
     public List<Book> getAllNotDeleted() throws DaoException {
-        return executeQuery(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
+        String query = String.format(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
+        return executeQuery(query);
+    }
+
+    @Override
+    public Optional<Book> getNotDeletedBookById(Long id) throws DaoException {
+        String query = String.format(GET_NOT_DELETED_BY_ID_QUERY, Book.TABLE_NAME);
+        return executeForSingleResult(query, id);
     }
 
     @Override

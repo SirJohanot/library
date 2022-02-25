@@ -15,12 +15,12 @@ import java.util.Optional;
 
 public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM ? WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM ?";
-    private static final String REMOVE_BY_ID_QUERY = "UPDATE ? SET is_deleted = true WHERE id = ?";
-    private static final String UPDATE_QUERY_BEGINNING = "UPDATE ? SET";
-    private static final String INSERT_QUERY_BEGINNING = "INSERT INTO ? SET";
-    private static final String GET_ALL_WHERE_QUERY_BEGINNING = "SELECT * FROM ? WHERE";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = ? ;";
+    private static final String GET_ALL_QUERY = "SELECT * FROM %s ;";
+    private static final String REMOVE_BY_ID_QUERY = "UPDATE %s SET is_deleted = true WHERE id = ? ;";
+    private static final String UPDATE_QUERY_BEGINNING = "UPDATE %s SET";
+    private static final String INSERT_QUERY_BEGINNING = "INSERT INTO %s SET";
+    private static final String GET_ALL_WHERE_QUERY_BEGINNING = "SELECT * FROM %s WHERE";
 
     private final Connection connection;
     private final RowMapper<T> rowMapper;
@@ -62,7 +62,8 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     public List<T> findIdentical(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
-        String query = addNonIdValuesToQuery(valuesMap, GET_ALL_WHERE_QUERY_BEGINNING);
+        String getAllWhereQueryWithTableName = String.format(GET_ALL_WHERE_QUERY_BEGINNING, tableName);
+        String query = addNonIdValuesToQuery(valuesMap, getAllWhereQueryWithTableName);
         try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
@@ -73,12 +74,14 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     @Override
     public Optional<T> getById(Long id) throws DaoException {
-        return executeForSingleResult(GET_BY_ID_QUERY, tableName, id);
+        String query = String.format(GET_BY_ID_QUERY, tableName);
+        return executeForSingleResult(query, id);
     }
 
     @Override
     public List<T> getAll() throws DaoException {
-        return executeQuery(GET_ALL_QUERY, tableName);
+        String query = String.format(GET_ALL_QUERY, tableName);
+        return executeQuery(query);
     }
 
     @Override
@@ -94,17 +97,19 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     @Override
     public void removeById(Long id) throws DaoException {
-        executeQuery(REMOVE_BY_ID_QUERY, tableName, id);
+        String query = String.format(REMOVE_BY_ID_QUERY, tableName);
+        executeQuery(query, id);
     }
 
     private String buildUpdateQuery(Map<String, Object> valuesMap) {
-        StringBuilder stringBuilder = new StringBuilder(UPDATE_QUERY_BEGINNING);
+        String updateQueryBeginningWithTableName = String.format(UPDATE_QUERY_BEGINNING, tableName);
+        StringBuilder stringBuilder = new StringBuilder(updateQueryBeginningWithTableName);
         for (String key : valuesMap.keySet()) {
             if (!key.equals("id")) {
                 stringBuilder.append(" ? = ?,");
             }
         }
-        stringBuilder.append(" WHERE id = ?");
+        stringBuilder.append(" WHERE id = ? ;");
         return stringBuilder.toString();
     }
 
@@ -116,13 +121,13 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             }
         }
         stringBuilder.setLength(stringBuilder.length() - 1);
+        stringBuilder.append(" ;");
         return stringBuilder.toString();
     }
 
     private PreparedStatement generatePreparedStatementFromValuesMap(String query, Map<String, Object> valuesMap) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         int preparedStatementIndex = 1;
-        preparedStatement.setObject(preparedStatementIndex++, tableName);
         for (String key : valuesMap.keySet()) {
             if (!key.equals("id")) {
                 preparedStatement.setObject(preparedStatementIndex++, key);

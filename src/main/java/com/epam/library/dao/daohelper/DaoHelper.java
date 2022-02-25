@@ -2,10 +2,7 @@ package com.epam.library.dao.daohelper;
 
 import com.epam.library.connection.ConnectionPool;
 import com.epam.library.connection.ProxyConnection;
-import com.epam.library.dao.BookDao;
-import com.epam.library.dao.BookDaoImpl;
-import com.epam.library.dao.UserDao;
-import com.epam.library.dao.UserDaoImpl;
+import com.epam.library.dao.*;
 import com.epam.library.exception.DaoException;
 
 import java.sql.SQLException;
@@ -22,8 +19,20 @@ public class DaoHelper implements AutoCloseable {
         return new UserDaoImpl(connection);
     }
 
+    public AuthorDao createAuthorDao() {
+        return new AuthorDaoImpl(connection);
+    }
+
     public BookDao createBookDao() {
         return new BookDaoImpl(connection);
+    }
+
+    public GenreDao createGenreDao() {
+        return new GenreDaoImpl(connection);
+    }
+
+    public PublisherDao createPublisherDao() {
+        return new PublisherDaoImpl(connection);
     }
 
     @Override

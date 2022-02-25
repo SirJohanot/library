@@ -47,6 +47,24 @@ button:hover, input[type="submit"]:hover {
     height: 100%;
 }
 
+#main-content div {
+    width: 100%;
+    padding: 5px;
+}
+
+.search-field {
+}
+
+.search-field input {
+    width: 100%;
+    line-height: 20px;
+    font-size: 20px;
+    border-radius: 6px;
+    color: #f0f6fc;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+}
+
 /* Header*/
 header {
     background-color: #161b22;
@@ -173,17 +191,21 @@ nav form button {
 
 /* Books Page */
 .book-container {
+    width: 100%;
     margin: 8px auto;
 }
 
-.book-container h1, .book-container p {
+.book-container h1, .book-container p, .singular-book-container * {
     overflow: auto;
+    margin: 10px auto;
 }
 
 .book-container h1 {
     display: block;
     text-align: center;
     font-weight: bold;
+    font-size: 32px;
+    margin: 10px auto;
 }
 
 .book-container .book-parameters {
@@ -194,6 +216,17 @@ nav form button {
 .book-parameters * {
     display: inline-block;
     flex-grow: 1;
+    width: 100%;
+}
+
+.singular-book-container {
+    margin: 8px auto;
+}
+
+.singular-book-container * {
+    display: block;
+    height: auto;
+    width: 100%;
 }
 
 @media screen and (max-width: 480px) {

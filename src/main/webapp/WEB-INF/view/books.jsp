@@ -55,7 +55,7 @@
 </header>
 <section id="main-content">
     <nav>
-        <form method="get" action="controller?">
+        <form method="post" action="controller?">
             <button type="submit" name="command" value="booksPage">${books}</button>
             <c:choose>
                 <c:when test="${sessionScope.user.role == 'ADMIN'}">
@@ -72,23 +72,25 @@
         </form>
     </nav>
     <div>
-        <form method="get" action="controller?command=searchBooks">
+        <form method="post" action="controller?command=searchBooks" class="search-field">
             <input type="text" name="searchValue" placeholder="${search}"/>
         </form>
-        <c:forEach items="${bookList}" var="book">
-            <div class="round-bordered-subject">
-                <h1>${book.title}</h1>
-                <div class="databaseBook-parameters">
-                    <p>${authors}: <c:forEach items="${book.authorList}" var="author">
-                        ${author.name}
-                    </c:forEach>
-                    </p>
-                    <p>${genre}: ${book.genre.name}</p>
-                    <p>${publisher}: ${book.publisher.name}</p>
-                    <p>${publishmentYear}: ${book.publishmentYear}</p>
-                </div>
-            </div>
-        </c:forEach>
+        <form method="post" action="controller?command=viewBook">
+            <c:forEach items="${requestScope.bookList}" var="book">
+                <button type="submit" name="bookId" value="${book.id}" class="book-container round-bordered-subject">
+                    <h1>${book.title}</h1>
+                    <div class="book-parameters">
+                        <p>${authors}: <c:forEach items="${book.authorList}" var="author">
+                            ${author.name}
+                        </c:forEach>
+                        </p>
+                        <p>${genre}: ${book.genre.name}</p>
+                        <p>${publisher}: ${book.publisher.name}</p>
+                        <p>${publishmentYear}: ${book.publishmentYear}</p>
+                    </div>
+                </button>
+            </c:forEach>
+        </form>
     </div>
 </section>
 </body>

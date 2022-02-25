@@ -2,10 +2,11 @@ package com.epam.library.entity.book;
 
 import com.epam.library.entity.Identifiable;
 
+import java.io.Serializable;
 import java.time.Year;
 import java.util.List;
 
-public class Book implements Identifiable {
+public class Book implements Identifiable, Serializable {
 
     public static final String TABLE_NAME = "book";
     public static final String ID_COLUMN = "id";
