@@ -12,5 +12,4 @@ public interface BookDao extends Dao<Book> {
 
     List<Book> getAllNotDeleted() throws DaoException;
 
-
 }

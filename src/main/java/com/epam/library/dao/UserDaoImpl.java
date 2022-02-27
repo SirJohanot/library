@@ -32,6 +32,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         valuesMap.put(User.NAME_COLUMN, entity.getName());
         valuesMap.put(User.SURNAME_COLUMN, entity.getSurname());
         valuesMap.put(User.ROLE_COLUMN, entity.getRole().toString().toLowerCase());
+        valuesMap.put(User.BLOCKED_COLUMN, entity.isBlocked());
         return valuesMap;
     }
 }

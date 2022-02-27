@@ -12,7 +12,6 @@
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
 <fmt:message key="general.search" var="search"/>
-<fmt:message key="books.title" var="title"/>
 <fmt:message key="books.authors" var="authors"/>
 <fmt:message key="books.genre" var="genre"/>
 <fmt:message key="books.publisher" var="publisher"/>
@@ -25,7 +24,7 @@
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${books} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -77,9 +76,9 @@
         </form>
         <form method="post" action="controller?command=viewBook">
             <c:forEach items="${requestScope.bookList}" var="book">
-                <button type="submit" name="bookId" value="${book.id}" class="book-container round-bordered-subject">
+                <button type="submit" name="bookId" value="${book.id}" class="block-container round-bordered-subject">
                     <h1>${book.title}</h1>
-                    <div class="book-parameters">
+                    <div class="block-parameters">
                         <p>${authors}: <c:forEach items="${book.authorList}" var="author" varStatus="loop">
                             ${author.name}
                             <c:if test="${!loop.last}">,</c:if>

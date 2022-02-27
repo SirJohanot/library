@@ -7,5 +7,8 @@ public final class PagePathConstants {
     public static final String BOOKS = "/WEB-INF/view/books.jsp";
     public static final String VIEW_BOOK = "/WEB-INF/view/bookPage.jsp";
     public static final String EDIT_BOOK = "/WEB-INF/view/editBook.jsp";
+    public static final String ADD_A_BOOK = "/WEB-INF/view/addBook.jsp";
+    public static final String USERS = "/WEB-INF/view/users.jsp";
+    public static final String VIEW_USER = "/WEB-INF/view/userPage.jsp";
     public static final String ERROR = "/WEB-INF/view/errorPage.jsp";
 }

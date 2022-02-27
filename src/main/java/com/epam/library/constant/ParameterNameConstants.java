@@ -13,5 +13,7 @@ public final class ParameterNameConstants {
     public static final String BOOK_PUBLISHER = "publisher";
     public static final String BOOK_PUBLISHMENT_YEAR = "publishmentYear";
     public static final String BOOK_AMOUNT = "amount";
+    public static final String USER_ID = "userId";
+    public static final String REQUESTER_ID = "requesterId";
 
 }

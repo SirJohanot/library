@@ -9,17 +9,18 @@ import com.epam.library.service.BookService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class EditBookCommand implements Command {
+public class SaveBookCommand implements Command {
 
     private final BookService bookService;
 
-    public EditBookCommand(BookService bookService) {
+    public SaveBookCommand(BookService bookService) {
         this.bookService = bookService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long bookId = Long.parseLong(req.getParameter(ParameterNameConstants.BOOK_ID));
+        String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
+        Long bookId = bookIdLine == null ? null : Long.parseLong(bookIdLine);
         String title = req.getParameter(ParameterNameConstants.BOOK_TITLE);
         String authors = req.getParameter(ParameterNameConstants.BOOK_AUTHORS);
         String genre = req.getParameter(ParameterNameConstants.BOOK_GENRE);

@@ -197,19 +197,19 @@ nav form button {
     margin-top: 30px;
 }
 
-/* Books Page */
-.book-container {
+/* Books, Users, Orders Page */
+.block-container {
     height: max-content;
     width: 100%;
     margin: 8px auto;
 }
 
-.book-container h1, .book-container p {
+.block-container h1, .block-container p {
     overflow: auto;
     margin: 10px auto;
 }
 
-.book-container h1 {
+.block-container h1 {
     display: block;
     text-align: center;
     font-weight: bold;
@@ -217,25 +217,25 @@ nav form button {
     margin: 10px auto;
 }
 
-.book-container .book-parameters {
+.block-container .block-parameters {
     display: flex;
     width: 100%;
 }
 
-.book-parameters * {
+.block-parameters * {
     display: inline-block;
     flex-grow: 1;
     width: 100%;
 }
 
-.book-buttons-container {
+.buttons-container {
     width: 100%;
     display: flex;
     align-items: center;
     margin: 10px auto;
 }
 
-.book-buttons-container button {
+.buttons-container button {
     min-width: 25%;
     min-height: 60px;
     margin: 10px auto;

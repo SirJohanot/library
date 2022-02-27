@@ -12,6 +12,7 @@ public class User implements Identifiable, Serializable {
     public static final String NAME_COLUMN = "name";
     public static final String SURNAME_COLUMN = "surname";
     public static final String ROLE_COLUMN = "role";
+    public static final String BLOCKED_COLUMN = "is_blocked";
 
 
     private final Long id;
@@ -19,13 +20,15 @@ public class User implements Identifiable, Serializable {
     private final String name;
     private final String surname;
     private final UserRole role;
+    private final boolean blocked;
 
-    public User(Long id, String login, String name, String surname, UserRole role) {
+    public User(Long id, String login, String name, String surname, UserRole role, boolean blocked) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.surname = surname;
         this.role = role;
+        this.blocked = blocked;
     }
 
     @Override
@@ -49,6 +52,10 @@ public class User implements Identifiable, Serializable {
         return role;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -57,7 +64,15 @@ public class User implements Identifiable, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         User user = (User) o;
+
+        if (blocked != user.blocked) {
+            return false;
+        }
+        if (id != null ? !id.equals(user.id) : user.id != null) {
+            return false;
+        }
         if (login != null ? !login.equals(user.login) : user.login != null) {
             return false;
         }
@@ -72,21 +87,24 @@ public class User implements Identifiable, Serializable {
 
     @Override
     public int hashCode() {
-        int result = login != null ? login.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (blocked ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "login='" + login + '\'' +
+                "id=" + id +
+                ", login='" + login + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", role=" + role +
+                ", isBlocked=" + blocked +
                 '}';
     }
-
 }

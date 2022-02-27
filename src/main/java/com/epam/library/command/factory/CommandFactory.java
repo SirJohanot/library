@@ -15,10 +15,11 @@ public class CommandFactory {
     private static final String BOOKS_PAGE_COMMAND = "booksPage";
     private static final String VIEW_BOOK_PAGE_COMMAND = "viewBook";
     private static final String EDIT_BOOK_PAGE_COMMAND = "editBookPage";
-    private static final String EDIT_BOOK_COMMAND = "editBook";
+    private static final String SAVE_BOOK_COMMAND = "saveBook";
     private static final String ADD_A_BOOK_PAGE_COMMAND = "addABookPage";
     private static final String DELETE_BOOK_COMMAND = "deleteBook";
     private static final String USERS_PAGE_COMMAND = "usersPage";
+    private static final String VIEW_USER_PAGE_COMMAND = "viewUser";
     private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
     private static final String USER_ORDERS_PAGE = "userOrdersPage";
 
@@ -40,14 +41,16 @@ public class CommandFactory {
                 return new ViewBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
             case EDIT_BOOK_PAGE_COMMAND:
                 return new EditBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case EDIT_BOOK_COMMAND:
-                return new EditBookCommand(new BookServiceImpl(new DaoHelperFactory()));
+            case SAVE_BOOK_COMMAND:
+                return new SaveBookCommand(new BookServiceImpl(new DaoHelperFactory()));
             case DELETE_BOOK_COMMAND:
                 return new DeleteBookCommand(new BookServiceImpl(new DaoHelperFactory()));
             case ADD_A_BOOK_PAGE_COMMAND:
-                return new MainPageCommand();
+                return new AddABookPageCommand();
             case USERS_PAGE_COMMAND:
-                return new MainPageCommand();
+                return new UsersPageCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case VIEW_USER_PAGE_COMMAND:
+                return new ViewUserPageCommand(new UserServiceImpl(new DaoHelperFactory()));
             case GLOBAL_ORDERS_PAGE_COMMAND:
                 return new MainPageCommand();
             case USER_ORDERS_PAGE:

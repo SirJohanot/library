@@ -18,7 +18,7 @@
 <fmt:message key="books.publisher" var="publisher"/>
 <fmt:message key="books.publishmentYear" var="publishmentYear"/>
 <fmt:message key="books.inStock" var="inStock"/>
-<fmt:message key="books.edit" var="edit"/>
+<fmt:message key="general.edit" var="edit"/>
 <fmt:message key="books.delete" var="delete"/>
 <fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
 <fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
@@ -77,7 +77,7 @@
         </form>
     </nav>
     <div>
-        <div class="round-bordered-subject book-container">
+        <div class="round-bordered-subject block-container">
             <h1>${bookTitle}: ${requestScope.book.title}</h1>
             <p>${authors}:
                 <c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">
@@ -91,7 +91,7 @@
                 <p>${inStock}: ${requestScope.book.amount}</p>
             </c:if>
         </div>
-        <form class="book-buttons-container" method="post"
+        <form class="buttons-container" method="post"
               action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
             <c:choose>
                 <c:when test="${sessionScope.user.role == 'ADMIN'}">

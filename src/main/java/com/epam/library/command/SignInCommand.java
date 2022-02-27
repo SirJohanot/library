@@ -16,6 +16,7 @@ import java.util.Optional;
 public class SignInCommand implements Command {
 
     private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect username or password.";
+    private static final String BLOCKED_MESSAGE = "You are blocked from using this resource.";
 
     private final UserService userService;
 
@@ -29,7 +30,11 @@ public class SignInCommand implements Command {
         String password = req.getParameter(ParameterNameConstants.PASSWORD);
         Optional<User> user = userService.signIn(login, password);
         if (user.isEmpty()) {
-            req.setAttribute(AttributeNameConstants.INVALID_CREDENTIALS_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
+            req.setAttribute(AttributeNameConstants.SIGN_IN_ERROR_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
+            return CommandResult.forward(PagePathConstants.SIGN_IN);
+        }
+        if (user.get().isBlocked()) {
+            req.setAttribute(AttributeNameConstants.SIGN_IN_ERROR_MESSAGE, BLOCKED_MESSAGE);
             return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
         req.getSession().setAttribute(AttributeNameConstants.USER, user.get());

@@ -34,10 +34,7 @@ public class BookServiceImpl implements BookService {
             helper.startTransaction();
             List<Book> bookList = new ArrayList<>();
             BookDao bookDao = helper.createBookDao();
-            AuthorDao authorDao = helper.createAuthorDao();
-            GenreDao genreDao = helper.createGenreDao();
-            PublisherDao publisherDao = helper.createPublisherDao();
-            for (Book book : bookDao.getAll()) {
+            for (Book book : bookDao.getAllNotDeleted()) {
                 bookList.add(shallowBookToActualBook(book, helper));
             }
             helper.endTransaction();

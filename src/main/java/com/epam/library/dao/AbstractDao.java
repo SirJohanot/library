@@ -85,8 +85,9 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     public Optional<T> findIdentical(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
+        valuesMap.remove("id");
         String getAllWhereQueryWithTableName = String.format(GET_ALL_WHERE_QUERY_BEGINNING, tableName);
-        String query = buildParametrisedQuery(valuesMap, getAllWhereQueryWithTableName, "");
+        String query = buildParametrisedQuery(valuesMap, getAllWhereQueryWithTableName, "AND", "");
         List<T> results = executeQuery(query, valuesMap);
         if (results.size() == 0) {
             return Optional.empty();
@@ -109,10 +110,14 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     @Override
     public void save(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
-        String query = item.getId() == null ?
-                buildParametrisedQuery(valuesMap, String.format(INSERT_QUERY_BEGINNING, tableName), "")
-                :
-                buildParametrisedQuery(valuesMap, String.format(UPDATE_QUERY_BEGINNING, tableName), UPDATE_QUERY_END);
+        Object id = valuesMap.remove("id");
+        String query;
+        if (item.getId() == null) {
+            query = buildParametrisedQuery(valuesMap, String.format(INSERT_QUERY_BEGINNING, tableName), ",", "");
+        } else {
+            query = buildParametrisedQuery(valuesMap, String.format(UPDATE_QUERY_BEGINNING, tableName), ",", UPDATE_QUERY_END);
+            valuesMap.put("id", id);
+        }
         executeUpdate(query, valuesMap);
     }
 
@@ -122,16 +127,15 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         executeUpdate(query, id);
     }
 
-    private String buildParametrisedQuery(Map<String, Object> valuesMap, String queryBeginning, String queryEnd) {
+    private String buildParametrisedQuery(Map<String, Object> valuesMap, String queryBeginning, String conditionDelimiter, String queryEnd) {
         StringBuilder stringBuilder = new StringBuilder(queryBeginning);
         for (String key : valuesMap.keySet()) {
-            if (!key.equals("id")) {
-                stringBuilder.append(" ");
-                stringBuilder.append(key);
-                stringBuilder.append(" = ?,");
-            }
+            stringBuilder.append(" ");
+            stringBuilder.append(key);
+            stringBuilder.append(" = ? ");
+            stringBuilder.append(conditionDelimiter);
         }
-        stringBuilder.setLength(stringBuilder.length() - 1);
+        stringBuilder.setLength(stringBuilder.length() - conditionDelimiter.length());
         stringBuilder.append(" ");
         stringBuilder.append(queryEnd);
         stringBuilder.append(" ;");
@@ -142,12 +146,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         int preparedStatementIndex = 1;
         for (String key : valuesMap.keySet()) {
-            if (!key.equals("id")) {
-                preparedStatement.setObject(preparedStatementIndex++, valuesMap.get(key));
-            }
-        }
-        if (valuesMap.get("id") != null) {
-            preparedStatement.setObject(preparedStatementIndex, valuesMap.get("id"));
+            preparedStatement.setObject(preparedStatementIndex++, valuesMap.get(key));
         }
         return preparedStatement;
     }

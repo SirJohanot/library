@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface NamedEntityDao<T extends Named> {
 
     Optional<T> getByName(String name) throws DaoException;
+
 }
