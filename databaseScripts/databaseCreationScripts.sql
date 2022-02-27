@@ -23,7 +23,7 @@ create table publisher
     name varchar(50) not null
 );
 
-create table databaseBook
+create table book
 (
     id               int primary key auto_increment,
     title            varchar(255) not null,
@@ -46,20 +46,20 @@ create table book_author
 (
     book_id   int not null,
     author_id int not null,
-    foreign key (book_id) references databaseBook (id),
+    foreign key (book_id) references book (id),
     foreign key (author_id) references author (id)
 );
 
 create table book_order
 (
     id          int primary key auto_increment,
-    book_id     int                                                                    not null,
-    user_id     int                                                                    not null,
-    rental_type enum ('to_reading_hall', 'out_of_library')                             not null,
-    start_date  date                                                                   not null,
-    end_date    date                                                                   not null,
+    book_id     int                                                                                      not null,
+    user_id     int                                                                                      not null,
+    rental_type enum ('to_reading_hall', 'out_of_library')                                               not null,
+    start_date  date                                                                                     not null,
+    end_date    date                                                                                     not null,
     return_date date,
-    state       enum ('order_placed', 'order_approved', 'book_taken', 'book_returned') not null,
-    foreign key (book_id) references databaseBook (id),
+    state       enum ('order_placed', 'order_approved', 'order_declined', 'book_taken', 'book_returned') not null,
+    foreign key (book_id) references book (id),
     foreign key (user_id) references user (id)
 );

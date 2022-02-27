@@ -1,7 +1,10 @@
 package com.epam.library.command;
 
 import com.epam.library.command.result.CommandResult;
-import com.epam.library.constant.LibraryConstants;
+import com.epam.library.constant.AttributeNameConstants;
+import com.epam.library.constant.CommandInvocationConstants;
+import com.epam.library.constant.PagePathConstants;
+import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.UserService;
@@ -12,9 +15,6 @@ import java.util.Optional;
 
 public class SignInCommand implements Command {
 
-    private static final String LOGIN_PARAMETER_NAME = "login";
-    private static final String PASSWORD_PARAMETER_NAME = "password";
-    private static final String INVALID_CREDENTIALS_MESSAGE_ATTRIBUTE_NAME = "signInErrorMessage";
     private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect username or password.";
 
     private final UserService userService;
@@ -25,14 +25,14 @@ public class SignInCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String login = req.getParameter(LOGIN_PARAMETER_NAME);
-        String password = req.getParameter(PASSWORD_PARAMETER_NAME);
+        String login = req.getParameter(ParameterNameConstants.LOGIN);
+        String password = req.getParameter(ParameterNameConstants.PASSWORD);
         Optional<User> user = userService.signIn(login, password);
-        if (!user.isPresent()) {
-            req.setAttribute(INVALID_CREDENTIALS_MESSAGE_ATTRIBUTE_NAME, INVALID_CREDENTIALS_MESSAGE);
-            return CommandResult.forward(LibraryConstants.SIGN_IN_PAGE_PATH);
+        if (user.isEmpty()) {
+            req.setAttribute(AttributeNameConstants.INVALID_CREDENTIALS_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
+            return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
-        req.getSession().setAttribute(LibraryConstants.USER_ATTRIBUTE_NAME, user.get());
-        return CommandResult.forward(LibraryConstants.MAIN_PAGE_PATH);
+        req.getSession().setAttribute(AttributeNameConstants.USER, user.get());
+        return CommandResult.redirect(CommandInvocationConstants.MAIN_PAGE);
     }
 }

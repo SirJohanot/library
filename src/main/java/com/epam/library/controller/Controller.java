@@ -3,6 +3,9 @@ package com.epam.library.controller;
 import com.epam.library.command.Command;
 import com.epam.library.command.factory.CommandFactory;
 import com.epam.library.command.result.CommandResult;
+import com.epam.library.constant.AttributeNameConstants;
+import com.epam.library.constant.PagePathConstants;
+import com.epam.library.constant.ParameterNameConstants;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -16,10 +19,6 @@ import java.io.StringWriter;
 
 public class Controller extends HttpServlet {
 
-    private static final String COMMAND_PARAMETER_NAME = "command";
-    private static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "errorMessage";
-    private static final String ERROR_PAGE_PATH = "/WEB-INF/view/errorPage.jsp";
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp);
@@ -31,7 +30,7 @@ public class Controller extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String commandLine = req.getParameter(COMMAND_PARAMETER_NAME);
+        String commandLine = req.getParameter(ParameterNameConstants.COMMAND);
         CommandFactory commandFactory = new CommandFactory();
         Command command = commandFactory.createCommand(commandLine);
         try {
@@ -41,8 +40,8 @@ public class Controller extends HttpServlet {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            req.setAttribute(ERROR_MESSAGE_ATTRIBUTE_NAME, sw.toString());
-            processCommandResult(CommandResult.forward(ERROR_PAGE_PATH), req, resp);
+            req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, sw.toString());
+            processCommandResult(CommandResult.forward(PagePathConstants.ERROR), req, resp);
         }
     }
 

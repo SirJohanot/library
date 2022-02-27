@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
 
+    private static final String DELETE_UNREFERENCED_GENRE_ROW_QUERY = "DELETE FROM %s g WHERE NOT EXISTS (SELECT 1 FROM %s b WHERE g.%s = b.%s );";
 
     public GenreDaoImpl(Connection connection) {
         super(connection, new GenreRowMapper(), Genre.TABLE_NAME);
@@ -24,17 +25,13 @@ public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
     }
 
     @Override
-    public Optional<Genre> getGenre(Long genreId) throws DaoException {
-        return getById(genreId);
-    }
-
-    @Override
-    public Optional<Genre> getGenreByName(String name) throws DaoException {
+    public Optional<Genre> getByName(String name) throws DaoException {
         return findIdentical(Genre.ofName(name));
     }
 
     @Override
-    public void saveGenre(Genre genre) throws DaoException {
-        save(genre);
+    public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
+        String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_GENRE_ROW_QUERY, Genre.TABLE_NAME, primaryTableName, Genre.ID_COLUMN, primaryTableColumnName);
+        executeUpdate(deleteGenreRowQuery);
     }
 }

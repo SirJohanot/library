@@ -82,26 +82,27 @@
         <form id="bookChanges" class="round-bordered-subject book-container" method="post"
               action="controller?command=editBook&bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
             <label for="title">${bookTitle}:</label>
-            <input id="title" name="title" type="text" value="${requestScope.book.title}"/>
+            <input id="title" name="title" type="text" value="${requestScope.book.title}" required="required"/>
             <label for="authors">${authors}:</label>
             <input id="authors" name="authors" type="text"
-                   value="<c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">${author.name}<c:if test="${!loop.last}">, </c:if></c:forEach>"/>
+                   value="<c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">${author.name}<c:if test="${!loop.last}">, </c:if></c:forEach>"
+                   required="required"/>
             <label for="genre">${genre}:</label>
-            <input id="genre" name="genre" type="text" value="${requestScope.book.genre.name}"/>
+            <input id="genre" name="genre" type="text" value="${requestScope.book.genre.name}" required="required"/>
             <label for="publisher">${publisher}:</label>
-            <input id="publisher" name="publisher" type="text" value="${requestScope.book.publisher.name}"/>
+            <input id="publisher" name="publisher" type="text" value="${requestScope.book.publisher.name}"
+                   required="required"/>
             <label for="publishmentYear">${publishmentYear}:</label>
             <input id="publishmentYear" name="publishmentYear" type="number" min="1" max="2022" step="1"
-                   value="${requestScope.book.publishmentYear}"/>
+                   value="${requestScope.book.publishmentYear}" required="required"/>
             <label for="amount">${inStock}:</label>
-            <input id="amount" name="amount" type="number" min="0" step="1" value="${requestScope.book.amount}"/>
+            <input id="amount" name="amount" type="number" min="0" step="1" value="${requestScope.book.amount}"
+                   required="required"/>
         </form>
-        <div class="book-buttons-container">
-            <form method="post" action="controller?command=booksPage">
-                <button type="submit">${cancel}</button>
-            </form>
-            <button type="submit" form="bookChanges">${commitChanges}</button>
-        </div>
+        <form method="post" action="controller?command=booksPage" class="book-buttons-container">
+            <button type="submit" class="red">${cancel}</button>
+            <button type="submit" form="bookChanges" class="green">${commitChanges}</button>
+        </form>
     </div>
 </section>
 </body>

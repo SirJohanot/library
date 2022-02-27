@@ -1,10 +1,11 @@
 package com.epam.library.entity.book;
 
 import com.epam.library.entity.Identifiable;
+import com.epam.library.entity.Named;
 
 import java.io.Serializable;
 
-public class Genre implements Identifiable, Serializable {
+public class Genre implements Identifiable, Named, Serializable {
 
     public static final String TABLE_NAME = "genre";
     public static final String ID_COLUMN = "id";

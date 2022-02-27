@@ -18,7 +18,9 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
 
     private static final String GET_AUTHORS_ASSOCIATED_WITH_BOOK_ID_QUERY = "SELECT * FROM %s b JOIN %s ba ON ba.%s = b.%s JOIN %s a ON a.%s = ba.%s WHERE b.%s = ? ;";
     private static final String GET_BOOK_AUTHOR_RELATION_QUERY = "SELECT * FROM %s ba JOIN %s a ON ba.%s = a.%s WHERE %s = ? AND %s = ? ;";
-    private static final String MAP_AUTHOR_TO_BOOK_QUERY = "INSERT INTO %s SET %s = ? , %s = ? ; SELECT * FROM %s ;";
+    private static final String MAP_AUTHOR_TO_BOOK_QUERY = "INSERT INTO %s SET %s = ? , %s = ? ;";
+    private static final String DELETE_ROWS_UNREFERENCED_BY_ANOTHER_TABLE_QUERY = "DELETE FROM %s ba WHERE NOT EXISTS (SELECT 1 FROM %s b WHERE ba.%s = b.%s);";
+    private static final String DELETE_RELATION_TABLE_ROWS_REFERENCING_BOOK = "DELETE FROM %s WHERE %s = ? ;";
 
     public AuthorDaoImpl(Connection connection) {
         super(connection, new AuthorRowMapper(), Author.TABLE_NAME);
@@ -39,13 +41,8 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
     }
 
     @Override
-    public Optional<Author> getAuthorByName(String name) throws DaoException {
+    public Optional<Author> getByName(String name) throws DaoException {
         return findIdentical(Author.ofName(name));
-    }
-
-    @Override
-    public void saveAuthor(Author author) throws DaoException {
-        save(author);
     }
 
     @Override
@@ -57,8 +54,14 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
 
     @Override
     public void mapAuthorToBookInRelationTable(Long authorId, Long bookId) throws DaoException {
-        String query = String.format(MAP_AUTHOR_TO_BOOK_QUERY, RELATION_TABLE_NAME, RELATION_TABLE_AUTHOR_ID_COLUMN, RELATION_TABLE_BOOK_ID_COLUMN, Author.TABLE_NAME);
-        executeQuery(query, authorId, bookId);
+        String query = String.format(MAP_AUTHOR_TO_BOOK_QUERY, RELATION_TABLE_NAME, RELATION_TABLE_AUTHOR_ID_COLUMN, RELATION_TABLE_BOOK_ID_COLUMN);
+        executeUpdate(query, authorId, bookId);
+    }
+
+    @Override
+    public void deleteBookMappingsFromRelationTable(Long bookId) throws DaoException {
+        String deleteRelationRowsQuery = String.format(DELETE_RELATION_TABLE_ROWS_REFERENCING_BOOK, RELATION_TABLE_NAME, RELATION_TABLE_BOOK_ID_COLUMN);
+        executeUpdate(deleteRelationRowsQuery, bookId);
     }
 
     @Override
@@ -67,5 +70,13 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
         valuesMap.put(Author.ID_COLUMN, entity.getId());
         valuesMap.put(Author.NAME_COLUMN, entity.getName());
         return valuesMap;
+    }
+
+    @Override
+    public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
+        String deleteRelationRowsQuery = String.format(DELETE_ROWS_UNREFERENCED_BY_ANOTHER_TABLE_QUERY, RELATION_TABLE_NAME, primaryTableName, RELATION_TABLE_BOOK_ID_COLUMN, primaryTableColumnName);
+        executeUpdate(deleteRelationRowsQuery);
+        String deleteAuthorRowsQuery = String.format(DELETE_ROWS_UNREFERENCED_BY_ANOTHER_TABLE_QUERY, Author.TABLE_NAME, RELATION_TABLE_NAME, Author.ID_COLUMN, RELATION_TABLE_AUTHOR_ID_COLUMN);
+        executeUpdate(deleteAuthorRowsQuery);
     }
 }

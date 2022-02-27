@@ -1,7 +1,9 @@
 package com.epam.library.command;
 
 import com.epam.library.command.result.CommandResult;
-import com.epam.library.constant.LibraryConstants;
+import com.epam.library.constant.AttributeNameConstants;
+import com.epam.library.constant.PagePathConstants;
+import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.BookService;
@@ -19,9 +21,9 @@ public class EditBookPageCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long bookId = Long.parseLong(req.getParameter(LibraryConstants.BOOK_ID_PARAMETER_NAME));
+        Long bookId = Long.parseLong(req.getParameter(ParameterNameConstants.BOOK_ID));
         Book book = bookService.getBookById(bookId);
-        req.setAttribute(LibraryConstants.BOOK_ATTRIBUTE_NAME, book);
-        return CommandResult.forward(LibraryConstants.EDIT_BOOK_PAGE_PATH);
+        req.setAttribute(AttributeNameConstants.BOOK, book);
+        return CommandResult.forward(PagePathConstants.EDIT_BOOK);
     }
 }

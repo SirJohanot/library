@@ -10,6 +10,6 @@ public class BookServiceImplTest {
 
     @Test
     public void testEditBook() throws ServiceException {
-        bookService.editBook(1L, "War and Peace", "Leo Tolstoy, Pavel Tsivunchyk", "Historical novel", "Aversev", "2004", 4);
+        bookService.saveBook(1L, "War and Peace", "Leo Tolstoy, Pavel Tsivunchyk", "Historical novel", "Aversev", "2004", 4);
     }
 }

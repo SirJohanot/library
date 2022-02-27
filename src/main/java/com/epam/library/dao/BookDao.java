@@ -6,11 +6,11 @@ import com.epam.library.exception.DaoException;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookDao {
+public interface BookDao extends Dao<Book> {
+
+    Optional<Book> findIdenticalBook(Book book) throws DaoException;
 
     List<Book> getAllNotDeleted() throws DaoException;
 
-    Optional<Book> getNotDeletedBookById(Long id) throws DaoException;
 
-    void saveBook(Book b) throws DaoException;
 }

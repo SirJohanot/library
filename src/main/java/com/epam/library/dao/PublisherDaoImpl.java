@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public class PublisherDaoImpl extends AbstractDao<Publisher> implements PublisherDao {
 
+    private static final String DELETE_UNREFERENCED_PUBLISHER_ROW_QUERY = "DELETE FROM %s p WHERE NOT EXISTS (SELECT 1 FROM %s b WHERE p.%s = b.%s );";
+
     public PublisherDaoImpl(Connection connection) {
         super(connection, new PublisherRowMapper(), Publisher.TABLE_NAME);
     }
@@ -23,17 +25,13 @@ public class PublisherDaoImpl extends AbstractDao<Publisher> implements Publishe
     }
 
     @Override
-    public Optional<Publisher> getPublisher(Long publisherId) throws DaoException {
-        return getById(publisherId);
-    }
-
-    @Override
-    public Optional<Publisher> getPublisherByName(String name) throws DaoException {
+    public Optional<Publisher> getByName(String name) throws DaoException {
         return findIdentical(Publisher.ofName(name));
     }
 
     @Override
-    public void savePublisher(Publisher publisher) throws DaoException {
-        save(publisher);
+    public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
+        String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_PUBLISHER_ROW_QUERY, Publisher.TABLE_NAME, primaryTableName, Publisher.ID_COLUMN, primaryTableColumnName);
+        executeUpdate(deleteGenreRowQuery);
     }
 }

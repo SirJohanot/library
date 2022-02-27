@@ -35,6 +35,14 @@ button:hover, input[type="submit"]:hover {
     color: red;
 }
 
+.red {
+    background-color: #691004;
+}
+
+.green {
+    background-color: #446c06;
+}
+
 .round-bordered-subject {
     border: 2px solid rgba(255, 255, 255, .55);
     border-radius: 25px;
@@ -232,6 +240,26 @@ nav form button {
     min-height: 60px;
     margin: 10px auto;
     font-size: 20px;
+}
+
+/* Edit book page */
+#bookChanges {
+    padding: 15px;
+}
+
+#bookChanges label, #bookChanges input {
+    display: block;
+    width: 100%;
+}
+
+#bookChanges input {
+    padding: 5px 12px;
+    line-height: 20px;
+    margin: 14px auto;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #f0f6fc;
+    background-color: #0d1117;
 }
 
 @media screen and (max-width: 480px) {

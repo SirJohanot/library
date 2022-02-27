@@ -11,28 +11,11 @@ import java.util.Optional;
 
 public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
-    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM %s WHERE is_deleted=false ;";
-    private static final String GET_NOT_DELETED_BY_ID_QUERY = "SELECT * FROM %s WHERE is_deleted=false AND id = ? ;";
+    private static final String UPDATE_IS_DELETED_TRUE_QUERY = "UPDATE %s SET is_deleted = true WHERE id = ? ;";
+    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM %s WHERE is_deleted = false ;";
 
     public BookDaoImpl(Connection connection) {
         super(connection, new BookRowMapper(), Book.TABLE_NAME);
-    }
-
-    @Override
-    public List<Book> getAllNotDeleted() throws DaoException {
-        String query = String.format(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
-        return executeQuery(query);
-    }
-
-    @Override
-    public Optional<Book> getNotDeletedBookById(Long id) throws DaoException {
-        String query = String.format(GET_NOT_DELETED_BY_ID_QUERY, Book.TABLE_NAME);
-        return executeForSingleResult(query, id);
-    }
-
-    @Override
-    public void saveBook(Book b) throws DaoException {
-        save(b);
     }
 
     @Override
@@ -45,5 +28,22 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
         valuesMap.put(Book.PUBLISHMENT_YEAR_COLUMN, entity.getPublishmentYear().getValue());
         valuesMap.put(Book.AMOUNT_COLUMN, entity.getAmount());
         return valuesMap;
+    }
+
+    @Override
+    public void removeById(Long id) throws DaoException {
+        String query = String.format(UPDATE_IS_DELETED_TRUE_QUERY, Book.TABLE_NAME);
+        executeUpdate(query, id);
+    }
+
+    @Override
+    public Optional<Book> findIdenticalBook(Book book) throws DaoException {
+        return findIdentical(book);
+    }
+
+    @Override
+    public List<Book> getAllNotDeleted() throws DaoException {
+        String query = String.format(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
+        return executeQuery(query);
     }
 }

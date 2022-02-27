@@ -96,7 +96,7 @@
             <c:choose>
                 <c:when test="${sessionScope.user.role == 'ADMIN'}">
                     <button type="submit" name="command" value="editBookPage">${edit}</button>
-                    <button type="submit" name="command" value="deleteBook">${delete}</button>
+                    <button type="submit" name="command" value="deleteBook" class="red">${delete}</button>
                 </c:when>
                 <c:when test="${sessionScope.user.role == 'READER'}">
                     <button type="submit" name="command"

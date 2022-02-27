@@ -11,5 +11,7 @@ public interface BookService {
 
     Book getBookById(Long id) throws ServiceException;
 
-    void editBook(Long id, String title, String authors, String genre, String publisher, String publishmentYear, int amount) throws ServiceException;
+    void saveBook(Long id, String title, String authors, String genre, String publisher, String publishmentYear, int amount) throws ServiceException;
+
+    void deleteBookById(Long bookId) throws ServiceException;
 }

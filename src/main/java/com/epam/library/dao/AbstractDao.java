@@ -14,7 +14,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = ? ;";
     private static final String GET_ALL_QUERY = "SELECT * FROM %s ;";
-    private static final String REMOVE_BY_ID_QUERY = "UPDATE %s SET is_deleted = true WHERE id = ? ;";
+    private static final String REMOVE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ? ;";
     private static final String UPDATE_QUERY_BEGINNING = "UPDATE %s SET";
     private static final String UPDATE_QUERY_END = "WHERE id = ?";
     private static final String INSERT_QUERY_BEGINNING = "INSERT INTO %s SET";
@@ -34,6 +34,31 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    protected List<T> executeQuery(String query, Map<String, Object> valuesMap) throws DaoException {
+        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return extractResultsFromResultSet(resultSet);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    protected void executeUpdate(String query, Object... parameters) throws DaoException {
+        try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    protected void executeUpdate(String query, Map<String, Object> valuesMap) throws DaoException {
+        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -62,16 +87,11 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
         String getAllWhereQueryWithTableName = String.format(GET_ALL_WHERE_QUERY_BEGINNING, tableName);
         String query = buildParametrisedQuery(valuesMap, getAllWhereQueryWithTableName, "");
-        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<T> results = extractResultsFromResultSet(resultSet);
-            if (results.size() == 0) {
-                return Optional.empty();
-            }
-            return Optional.of(results.get(0));
-        } catch (SQLException e) {
-            throw new DaoException(e);
+        List<T> results = executeQuery(query, valuesMap);
+        if (results.size() == 0) {
+            return Optional.empty();
         }
+        return Optional.of(results.get(0));
     }
 
     @Override
@@ -93,17 +113,13 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
                 buildParametrisedQuery(valuesMap, String.format(INSERT_QUERY_BEGINNING, tableName), "")
                 :
                 buildParametrisedQuery(valuesMap, String.format(UPDATE_QUERY_BEGINNING, tableName), UPDATE_QUERY_END);
-        try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        executeUpdate(query, valuesMap);
     }
 
     @Override
     public void removeById(Long id) throws DaoException {
         String query = String.format(REMOVE_BY_ID_QUERY, tableName);
-        executeQuery(query, id);
+        executeUpdate(query, id);
     }
 
     private String buildParametrisedQuery(Map<String, Object> valuesMap, String queryBeginning, String queryEnd) {
