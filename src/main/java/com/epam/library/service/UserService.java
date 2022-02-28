@@ -12,5 +12,9 @@ public interface UserService {
 
     List<User> getAllUsers() throws ServiceException;
 
-    User getUserById(Long id) throws ServiceException;
+    User getUserById(String idLine) throws ServiceException;
+
+    void saveUser(String idLine, String login, String name, String surname, String roleLine, String blockedLine) throws ServiceException;
+
+    void setUserBlockStatus(String idLine, boolean newValue) throws ServiceException;
 }

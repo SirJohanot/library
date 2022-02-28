@@ -20,6 +20,12 @@ public class CommandFactory {
     private static final String DELETE_BOOK_COMMAND = "deleteBook";
     private static final String USERS_PAGE_COMMAND = "usersPage";
     private static final String VIEW_USER_PAGE_COMMAND = "viewUser";
+    private static final String EDIT_USER_PAGE_COMMAND = "editUserPage";
+    private static final String SAVE_USER_COMMAND = "saveUser";
+    private static final String BLOCK_USER_COMMAND = "blockUser";
+    private static final String UNBLOCK_USER_COMMAND = "unblockUser";
+    private static final String ORDER_TO_READING_HALL_COMMAND = "orderToReadingHallPage";
+    private static final String ORDER_ON_SUBSCRIPTION_COMMAND = "orderOnSubscriptionPage";
     private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
     private static final String USER_ORDERS_PAGE = "userOrdersPage";
 
@@ -51,6 +57,14 @@ public class CommandFactory {
                 return new UsersPageCommand(new UserServiceImpl(new DaoHelperFactory()));
             case VIEW_USER_PAGE_COMMAND:
                 return new ViewUserPageCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case EDIT_USER_PAGE_COMMAND:
+                return new EditUserPageCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case SAVE_USER_COMMAND:
+                return new SaveUserCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case BLOCK_USER_COMMAND:
+                return new BlockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case UNBLOCK_USER_COMMAND:
+                return new UnblockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
             case GLOBAL_ORDERS_PAGE_COMMAND:
                 return new MainPageCommand();
             case USER_ORDERS_PAGE:

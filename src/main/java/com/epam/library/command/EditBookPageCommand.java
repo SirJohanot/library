@@ -21,7 +21,7 @@ public class EditBookPageCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long bookId = Long.parseLong(req.getParameter(ParameterNameConstants.BOOK_ID));
+        String bookId = req.getParameter(ParameterNameConstants.BOOK_ID);
         Book book = bookService.getBookById(bookId);
         req.setAttribute(AttributeNameConstants.BOOK, book);
         return CommandResult.forward(PagePathConstants.EDIT_BOOK);

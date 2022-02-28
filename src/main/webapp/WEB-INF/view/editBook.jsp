@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -80,7 +80,7 @@
     </nav>
     <div>
         <form id="bookChanges" class="round-bordered-subject block-container" method="post"
-              action="controller?command=saveBook&bookId=${requestScope.book.id}&userId=${sessionScope.user.id}">
+              action="controller?command=saveBook&bookId=${requestScope.book.id}">
             <label for="title">${bookTitle}:</label>
             <input id="title" name="title" type="text" value="${requestScope.book.title}" required="required"/>
             <label for="authors">${authors}:</label>

@@ -1,5 +1,6 @@
-package com.epam.library.dao;
+package com.epam.library.dao.book;
 
+import com.epam.library.dao.AbstractDao;
 import com.epam.library.entity.book.Author;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.DaoException;

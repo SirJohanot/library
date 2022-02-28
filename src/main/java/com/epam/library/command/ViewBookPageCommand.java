@@ -21,7 +21,7 @@ public class ViewBookPageCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long id = Long.parseLong(req.getParameter(ParameterNameConstants.BOOK_ID));
+        String id = req.getParameter(ParameterNameConstants.BOOK_ID);
         Book requestedBook = bookService.getBookById(id);
         req.setAttribute(AttributeNameConstants.BOOK, requestedBook);
         return CommandResult.forward(PagePathConstants.VIEW_BOOK);

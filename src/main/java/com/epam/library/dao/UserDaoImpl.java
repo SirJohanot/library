@@ -11,6 +11,7 @@ import java.util.Optional;
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     private static final String FIND_BY_LOGIN_AND_PASSWORD = "SELECT * FROM %s WHERE %s = ? AND password = MD5(?) ;";
+    private static final String UPDATE_USER_BLOCKED_STATE_QUERY = "UPDATE %s SET %s = ? WHERE %s = ? ;";
 
     public UserDaoImpl(Connection connection) {
         super(connection, new UserRowMapper(), User.TABLE_NAME);
@@ -23,6 +24,12 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 query,
                 login,
                 password);
+    }
+
+    @Override
+    public void updateUserBlocked(Long id, boolean newValue) throws DaoException {
+        String query = String.format(UPDATE_USER_BLOCKED_STATE_QUERY, User.TABLE_NAME, User.BLOCKED_COLUMN, User.ID_COLUMN);
+        executeUpdate(query, newValue, id);
     }
 
     @Override

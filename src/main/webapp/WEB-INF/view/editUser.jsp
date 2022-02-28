@@ -11,8 +11,16 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="mainPage.title" var="title"/>
-<fmt:message key="mainPage.greetingsMessage" var="greetingsMessage"/>
+<fmt:message key="general.search" var="search"/>
+<fmt:message key="general.cancel" var="cancel"/>
+<fmt:message key="general.commitChanges" var="commitChanges"/>
+<fmt:message key="authorisation.loginLocale" var="login"/>
+<fmt:message key="users.name" var="name"/>
+<fmt:message key="users.surname" var="surname"/>
+<fmt:message key="users.role" var="role"/>
+<fmt:message key="users.blocked" var="blocked"/>
+<fmt:message key="users.block" var="block"/>
+<fmt:message key="general.edit" var="edit"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -21,7 +29,7 @@
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${requestScope.targetUser.login} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -67,8 +75,31 @@
             </c:choose>
         </form>
     </nav>
-    <div class="container round-bordered-subject main-page-message">
-        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+    <div>
+        <form id="userChanges" class="round-bordered-subject block-container" method="post"
+              action="controller?command=saveUser&userId=${requestScope.targetUser.id}">
+            <h1>${login}: ${requestScope.targetUser.login}</h1>
+            <label for="name">${name}:</label>
+            <input id="name" name="name" type="text"
+                   value="${requestScope.targetUser.name}"
+                   required="required"/>
+            <label for="surname">${surname}:</label>
+            <input id="surname" name="surname" type="text" value="${requestScope.targetUser.surname}"
+                   required="required"/>
+            <label for="role">${role}:</label>
+            <select id="role" name="role" required="required">
+                <option value="READER"
+                        <c:if test="${requestScope.targetUser.role == 'READER'}">selected="selected"</c:if> >READER
+                </option>
+                <option value="LIBRARIAN"
+                        <c:if test="${requestScope.targetUser.role == 'LIBRARIAN'}">selected="selected"</c:if>>LIBRARIAN
+                </option>
+            </select>
+        </form>
+        <form method="post" action="controller?command=usersPage" class="buttons-container">
+            <button type="submit" class="red">${cancel}</button>
+            <button type="submit" form="userChanges" class="green">${commitChanges}</button>
+        </form>
     </div>
 </section>
 </body>

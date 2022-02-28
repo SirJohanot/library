@@ -11,19 +11,19 @@ import com.epam.library.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ViewUserPageCommand implements Command {
+public class EditUserPageCommand implements Command {
 
     private final UserService userService;
 
-    public ViewUserPageCommand(UserService userService) {
+    public EditUserPageCommand(UserService userService) {
         this.userService = userService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String id = req.getParameter(ParameterNameConstants.USER_ID);
-        User user = userService.getUserById(id);
-        req.setAttribute(AttributeNameConstants.TARGET_USER, user);
-        return CommandResult.forward(PagePathConstants.VIEW_USER);
+        String targetUserId = req.getParameter(ParameterNameConstants.USER_ID);
+        User targetUser = userService.getUserById(targetUserId);
+        req.setAttribute(AttributeNameConstants.TARGET_USER, targetUser);
+        return CommandResult.forward(PagePathConstants.EDIT_USER);
     }
 }

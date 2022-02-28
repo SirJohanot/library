@@ -262,6 +262,26 @@ nav form button {
     background-color: #0d1117;
 }
 
+/* Edit user page */
+#userChanges {
+    padding: 15px;
+}
+
+#userChanges label, #userChanges input {
+    display: block;
+    width: 100%;
+}
+
+#userChanges input, #userChanges select {
+    padding: 5px 12px;
+    line-height: 20px;
+    margin: 14px auto;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #f0f6fc;
+    background-color: #0d1117;
+}
+
 @media screen and (max-width: 480px) {
 
     /* Global */

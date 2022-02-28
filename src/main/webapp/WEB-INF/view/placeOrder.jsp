@@ -11,8 +11,19 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="mainPage.title" var="title"/>
-<fmt:message key="mainPage.greetingsMessage" var="greetingsMessage"/>
+<fmt:message key="general.search" var="search"/>
+<fmt:message key="general.edit" var="edit"/>
+<fmt:message key="general.cancel" var="cancel"/>
+<fmt:message key="general.dateFormat" var="dateFormat"/>
+<fmt:message key="books.bookTitle" var="bookTitle"/>
+<fmt:message key="books.authors" var="authors"/>
+<fmt:message key="books.genre" var="genre"/>
+<fmt:message key="books.publisher" var="publisher"/>
+<fmt:message key="books.publishmentYear" var="publishmentYear"/>
+<fmt:message key="books.inStock" var="inStock"/>
+<fmt:message key="orders.rentalType" var="rentalType"/>
+<fmt:message key="orders.startDate" var="startDate"/>
+<fmt:message key="orders.endDate" var="endDate"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -21,7 +32,7 @@
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${requestScope.book.title} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -67,8 +78,35 @@
             </c:choose>
         </form>
     </nav>
-    <div class="container round-bordered-subject main-page-message">
-        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+    <div>
+        <div class="round-bordered-subject block-container">
+            <h1>${bookTitle}: ${requestScope.book.title}</h1>
+            <p>${authors}:
+                <c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">
+                    ${author.name}
+                <c:if test="${!loop.last}">,</c:if>
+                </c:forEach>
+            <p>${genre}: ${requestScope.book.genre.name}</p>
+            <p>${publisher}: ${requestScope.book.publisher.name}</p>
+            <p>${publishmentYear}: ${requestScope.book.publishmentYear}</p>
+            <c:if test="${sessionScope.user.role != 'READER'}">
+                <p>${inStock}: ${requestScope.book.amount}</p>
+            </c:if>
+        </div>
+        <div class="round-bordered-subject block-container">
+            <h1>${rentalType}: ${requestScope.bookOrder.rentalType}</h1>
+            <p>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></p>
+            <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
+        </div>
+        <form class="buttons-container" method="post"
+              action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}&bookOrder=${requestScope.bookOrder}">
+            <c:if test="${sessionScope.user.role == 'READER'}">
+                <button type="submit" name="command"
+                        value="booksPage" class="red">${cancel}</button>
+                <button type="submit" name="command"
+                        value="order" class="green">${confirmOrder}</button>
+            </c:if>
+        </form>
     </div>
 </section>
 </body>

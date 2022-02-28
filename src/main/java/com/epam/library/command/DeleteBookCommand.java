@@ -19,7 +19,7 @@ public class DeleteBookCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        Long bookId = Long.parseLong(req.getParameter(ParameterNameConstants.BOOK_ID));
+        String bookId = req.getParameter(ParameterNameConstants.BOOK_ID);
         bookService.deleteBookById(bookId);
         return CommandResult.redirect(CommandInvocationConstants.BOOKS_PAGE);
     }

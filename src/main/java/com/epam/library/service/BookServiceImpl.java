@@ -1,9 +1,9 @@
 package com.epam.library.service;
 
-import com.epam.library.dao.AuthorDao;
-import com.epam.library.dao.BookDao;
-import com.epam.library.dao.GenreDao;
-import com.epam.library.dao.PublisherDao;
+import com.epam.library.dao.book.AuthorDao;
+import com.epam.library.dao.book.BookDao;
+import com.epam.library.dao.book.GenreDao;
+import com.epam.library.dao.book.PublisherDao;
 import com.epam.library.dao.daohelper.DaoHelper;
 import com.epam.library.dao.daohelper.DaoHelperFactory;
 import com.epam.library.entity.book.Author;
@@ -45,11 +45,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(Long id) throws ServiceException {
+    public Book getBookById(String idLine) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+            Long id = Long.parseLong(idLine);
             BookDao bookDao = helper.createBookDao();
             Optional<Book> shallowBook = bookDao.getById(id);
+            if (shallowBook.isEmpty()) {
+                throw new ServiceException("The requested book does not exist");
+            }
             Book book = shallowBookToActualBook(shallowBook.get(), helper);
             helper.endTransaction();
             return book;
@@ -59,12 +63,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(Long id, String title, String authors, String genre, String publisher, String publishmentYear, int amount) throws ServiceException {
+    public void saveBook(String idLine, String title, String authors, String genre, String publisher, String publishmentYear, String amountLine) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+            Long id = idLine == null ? null : Long.parseLong(idLine);
             Genre genreEntity = getExistingGenreOrANewlySavedOne(helper, genre);
             Publisher publisherEntity = getExistingPublisherOrANewlySavedOne(helper, publisher);
             Year publishmentYearObject = Year.parse(publishmentYear);
+            int amount = Integer.parseInt(amountLine);
             Book book = new Book(id, title, null, genreEntity, publisherEntity, publishmentYearObject, amount);
             BookDao bookDao = helper.createBookDao();
             bookDao.save(book);
@@ -78,9 +84,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookById(Long bookId) throws ServiceException {
+    public void deleteBookById(String bookIdLine) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+            Long bookId = Long.parseLong(bookIdLine);
             BookDao bookDao = helper.createBookDao();
             bookDao.removeById(bookId);
             helper.endTransaction();

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -75,14 +75,15 @@
             <input type="text" name="searchValue" placeholder="${search}"/>
         </form>
         <form method="post" action="controller?command=viewUser">
-            <c:forEach items="${requestScope.userList}" var="user">
-                <button type="submit" name="userId" value="${user.id}" class="block-container round-bordered-subject">
-                    <h1>${user.login}</h1>
+            <c:forEach items="${requestScope.userList}" var="targetUser">
+                <button type="submit" name="userId" value="${targetUser.id}"
+                        class="block-container round-bordered-subject">
+                    <h1>${targetUser.login}</h1>
                     <div class="block-parameters">
-                        <p>${name}: ${user.name}</p>
-                        <p>${surname}: ${user.surname}</p>
-                        <p>${role}: ${user.role}</p>
-                        <p>${blocked}: ${user.blocked}</p>
+                        <p>${name}: ${targetUser.name}</p>
+                        <p>${surname}: ${targetUser.surname}</p>
+                        <p>${role}: ${targetUser.role}</p>
+                        <p>${blocked}: ${targetUser.blocked}</p>
                     </div>
                 </button>
             </c:forEach>

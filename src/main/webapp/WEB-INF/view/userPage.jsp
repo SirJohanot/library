@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -19,8 +19,7 @@
 <fmt:message key="users.role" var="role"/>
 <fmt:message key="users.blocked" var="blocked"/>
 <fmt:message key="users.block" var="block"/>
-<fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
-<fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
+<fmt:message key="users.unblock" var="unblock"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -29,7 +28,7 @@
 
 <html>
 <head>
-    <title>${requestScope.user.login} | ${appName}</title>
+    <title>${requestScope.targetUser.login} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -77,17 +76,24 @@
     </nav>
     <div>
         <div class="round-bordered-subject block-container">
-            <h1>${login}: ${requestScope.user.login}</h1>
-            <p>${name}: ${requestScope.user.name}</p>
-            <p>${surname}: ${requestScope.user.surname}</p>
-            <p>${role}: ${requestScope.user.role}</p>
-            <p>${blocked}: ${requestScope.user.blocked}</p>
+            <h1>${login}: ${requestScope.targetUser.login}</h1>
+            <p>${name}: ${requestScope.targetUser.name}</p>
+            <p>${surname}: ${requestScope.targetUser.surname}</p>
+            <p>${role}: ${requestScope.targetUser.role}</p>
+            <p>${blocked}: ${requestScope.targetUser.blocked}</p>
         </div>
         <form class="buttons-container" method="post"
-              action="controller?userId=${sessionScope.user.id}">
-            <c:if test="${sessionScope.user.role == 'ADMIN'}">
+              action="controller?userId=${requestScope.targetUser.id}">
+            <c:if test="${sessionScope.user.role == 'ADMIN' && requestScope.targetUser.role != 'ADMIN'}">
                 <button type="submit" name="command" value="editUserPage">${edit}</button>
-                <button type="submit" name="command" value="blockUser" class="red">${block}</button>
+                <c:choose>
+                    <c:when test="${!requestScope.targetUser.blocked}">
+                        <button type="submit" name="command" value="blockUser" class="red">${block}</button>
+                    </c:when>
+                    <c:otherwise>
+                        <button type="submit" name="command" value="unblockUser" class="red">${unblock}</button>
+                    </c:otherwise>
+                </c:choose>
             </c:if>
         </form>
     </div>

@@ -9,9 +9,9 @@ public interface BookService {
 
     List<Book> getBooks() throws ServiceException;
 
-    Book getBookById(Long id) throws ServiceException;
+    Book getBookById(String idLine) throws ServiceException;
 
-    void saveBook(Long id, String title, String authors, String genre, String publisher, String publishmentYear, int amount) throws ServiceException;
+    void saveBook(String idLine, String title, String authors, String genre, String publisher, String publishmentYear, String amountLine) throws ServiceException;
 
-    void deleteBookById(Long bookId) throws ServiceException;
+    void deleteBookById(String bookIdLine) throws ServiceException;
 }
