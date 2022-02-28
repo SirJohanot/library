@@ -1,7 +1,7 @@
 package com.epam.library.command.factory;
 
 import com.epam.library.command.*;
-import com.epam.library.dao.daohelper.DaoHelperFactory;
+import com.epam.library.dao.helper.DaoHelperFactory;
 import com.epam.library.service.BookServiceImpl;
 import com.epam.library.service.UserServiceImpl;
 

@@ -1,4 +1,4 @@
-package com.epam.library.dao.daohelper;
+package com.epam.library.dao.helper;
 
 import com.epam.library.connection.ConnectionPool;
 import com.epam.library.exception.DaoException;

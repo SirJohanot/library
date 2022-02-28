@@ -24,6 +24,7 @@
 <fmt:message key="orders.rentalType" var="rentalType"/>
 <fmt:message key="orders.startDate" var="startDate"/>
 <fmt:message key="orders.endDate" var="endDate"/>
+<fmt:message key="orders.confirmOrder" var="confirmOrder"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -99,7 +100,7 @@
             <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
         </div>
         <form class="buttons-container" method="post"
-              action="controller?bookId=${requestScope.book.id}&userId=${sessionScope.user.id}&bookOrder=${requestScope.bookOrder}">
+              action="controller?bookId=${requestScope.book.id}&bookOrder=${requestScope.bookOrder}">
             <c:if test="${sessionScope.user.role == 'READER'}">
                 <button type="submit" name="command"
                         value="booksPage" class="red">${cancel}</button>

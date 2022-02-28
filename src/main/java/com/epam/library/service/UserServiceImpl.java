@@ -1,8 +1,8 @@
 package com.epam.library.service;
 
 import com.epam.library.dao.UserDao;
-import com.epam.library.dao.daohelper.DaoHelper;
-import com.epam.library.dao.daohelper.DaoHelperFactory;
+import com.epam.library.dao.helper.DaoHelper;
+import com.epam.library.dao.helper.DaoHelperFactory;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;

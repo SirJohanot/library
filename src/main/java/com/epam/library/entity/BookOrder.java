@@ -3,9 +3,20 @@ package com.epam.library.entity;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BookOrder implements Identifiable {
+public class BookOrder implements Identifiable, Serializable {
+
+    public static final String TABLE_NAME = "book_order";
+    public static final String ID_COLUMN = "id";
+    public static final String BOOK_ID_COLUMN = "book_id";
+    public static final String USER_ID_COLUMN = "user_id";
+    public static final String START_DATE_COLUMN = "start_date";
+    public static final String END_DATE_COLUMN = "end_date";
+    public static final String RETURN_DATE_COLUMN = "return_date";
+    public static final String RENTAL_TYPE_COLUMN = "rental_type";
+    public static final String RENTAL_STATE_COLUMN = "state";
 
     private final Long id;
     private final Long bookId;
