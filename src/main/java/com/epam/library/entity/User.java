@@ -20,15 +20,19 @@ public class User implements Identifiable, Serializable {
     private final String name;
     private final String surname;
     private final UserRole role;
-    private final boolean blocked;
+    private final Boolean blocked;
 
-    public User(Long id, String login, String name, String surname, UserRole role, boolean blocked) {
+    public User(Long id, String login, String name, String surname, UserRole role, Boolean blocked) {
         this.id = id;
         this.login = login;
         this.name = name;
         this.surname = surname;
         this.role = role;
         this.blocked = blocked;
+    }
+
+    public static User ofId(Long id) {
+        return new User(id, null, null, null, null, false);
     }
 
     @Override
@@ -52,7 +56,7 @@ public class User implements Identifiable, Serializable {
         return role;
     }
 
-    public boolean isBlocked() {
+    public Boolean isBlocked() {
         return blocked;
     }
 
@@ -64,12 +68,7 @@ public class User implements Identifiable, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         User user = (User) o;
-
-        if (blocked != user.blocked) {
-            return false;
-        }
         if (id != null ? !id.equals(user.id) : user.id != null) {
             return false;
         }
@@ -82,7 +81,10 @@ public class User implements Identifiable, Serializable {
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) {
             return false;
         }
-        return role == user.role;
+        if (role != user.role) {
+            return false;
+        }
+        return blocked != null ? blocked.equals(user.blocked) : user.blocked == null;
     }
 
     @Override
@@ -92,7 +94,7 @@ public class User implements Identifiable, Serializable {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (blocked ? 1 : 0);
+        result = 31 * result + (blocked != null ? blocked.hashCode() : 0);
         return result;
     }
 
@@ -104,7 +106,7 @@ public class User implements Identifiable, Serializable {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", role=" + role +
-                ", isBlocked=" + blocked +
+                ", blocked=" + blocked +
                 '}';
     }
 }

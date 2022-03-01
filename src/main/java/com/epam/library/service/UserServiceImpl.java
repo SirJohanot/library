@@ -46,10 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String idLine) throws ServiceException {
+    public User getUserById(Long id) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long id = Long.parseLong(idLine);
             UserDao dao = helper.createUserDao();
             Optional<User> user = dao.getById(id);
             if (user.isEmpty()) {
@@ -63,12 +62,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(String idLine, String login, String name, String surname, String roleLine, String blockedLine) throws ServiceException {
+    public void saveUser(Long id, String login, String name, String surname, UserRole role, Boolean blocked) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long id = Long.parseLong(idLine);
-            UserRole role = UserRole.valueOf(roleLine);
-            boolean blocked = Boolean.parseBoolean(blockedLine);
             UserDao dao = helper.createUserDao();
             User user = new User(id, login, name, surname, role, blocked);
             dao.save(user);
@@ -79,10 +75,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setUserBlockStatus(String idLine, boolean newValue) throws ServiceException {
+    public void setUserBlockStatus(Long id, Boolean newValue) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long id = Long.parseLong(idLine);
             UserDao dao = helper.createUserDao();
             dao.updateUserBlocked(id, newValue);
             helper.endTransaction();

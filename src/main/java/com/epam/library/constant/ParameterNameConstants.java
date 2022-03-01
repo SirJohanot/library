@@ -20,6 +20,8 @@ public final class ParameterNameConstants {
     public static final String USER_SURNAME = "surname";
     public static final String USER_ROLE = "role";
     public static final String USER_BLOCKED = "blocked";
-    public static final String REQUESTER_ID = "requesterId";
+    public static final String DAYS = "days";
+    public static final String ORDER_ID = "orderId";
+    public static final String STATE = "state";
 
 }

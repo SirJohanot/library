@@ -1,5 +1,6 @@
-package com.epam.library.command;
+package com.epam.library.command.user;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.CommandInvocationConstants;

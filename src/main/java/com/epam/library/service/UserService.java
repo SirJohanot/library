@@ -1,6 +1,7 @@
 package com.epam.library.service;
 
 import com.epam.library.entity.User;
+import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface UserService {
 
     List<User> getAllUsers() throws ServiceException;
 
-    User getUserById(String idLine) throws ServiceException;
+    User getUserById(Long id) throws ServiceException;
 
-    void saveUser(String idLine, String login, String name, String surname, String roleLine, String blockedLine) throws ServiceException;
+    void saveUser(Long id, String login, String name, String surname, UserRole role, Boolean blocked) throws ServiceException;
 
-    void setUserBlockStatus(String idLine, boolean newValue) throws ServiceException;
+    void setUserBlockStatus(Long id, Boolean newValue) throws ServiceException;
 }

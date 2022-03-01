@@ -1,5 +1,6 @@
 package com.epam.library.entity;
 
+import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 
@@ -19,18 +20,18 @@ public class BookOrder implements Identifiable, Serializable {
     public static final String RENTAL_STATE_COLUMN = "state";
 
     private final Long id;
-    private final Long bookId;
-    private final Long userId;
+    private final Book book;
+    private final User user;
     private final Date startDate;
     private final Date endDate;
     private final Date returnDate;
     private final RentalType type;
     private final RentalState state;
 
-    public BookOrder(Long id, Long bookId, Long userId, Date startDate, Date endDate, Date returnDate, RentalType type, RentalState state) {
+    public BookOrder(Long id, Book book, User user, Date startDate, Date endDate, Date returnDate, RentalType type, RentalState state) {
         this.id = id;
-        this.bookId = bookId;
-        this.userId = userId;
+        this.book = book;
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.returnDate = returnDate;
@@ -43,12 +44,12 @@ public class BookOrder implements Identifiable, Serializable {
         return id;
     }
 
-    public Long getBookId() {
-        return bookId;
+    public Book getBook() {
+        return book;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public Date getStartDate() {
@@ -79,16 +80,14 @@ public class BookOrder implements Identifiable, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         BookOrder bookOrder = (BookOrder) o;
-
         if (id != null ? !id.equals(bookOrder.id) : bookOrder.id != null) {
             return false;
         }
-        if (bookId != null ? !bookId.equals(bookOrder.bookId) : bookOrder.bookId != null) {
+        if (book != null ? !book.equals(bookOrder.book) : bookOrder.book != null) {
             return false;
         }
-        if (userId != null ? !userId.equals(bookOrder.userId) : bookOrder.userId != null) {
+        if (user != null ? !user.equals(bookOrder.user) : bookOrder.user != null) {
             return false;
         }
         if (startDate != null ? !startDate.equals(bookOrder.startDate) : bookOrder.startDate != null) {
@@ -109,8 +108,8 @@ public class BookOrder implements Identifiable, Serializable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (bookId != null ? bookId.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (book != null ? book.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (returnDate != null ? returnDate.hashCode() : 0);
@@ -123,8 +122,8 @@ public class BookOrder implements Identifiable, Serializable {
     public String toString() {
         return "BookOrder{" +
                 "id=" + id +
-                ", bookId=" + bookId +
-                ", userId=" + userId +
+                ", book=" + book +
+                ", user=" + user +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", returnDate=" + returnDate +

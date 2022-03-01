@@ -1,29 +1,29 @@
-package com.epam.library.command;
+package com.epam.library.command.user;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.PagePathConstants;
-import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
-public class ViewUserPageCommand implements Command {
+public class UsersPageCommand implements Command {
 
     private final UserService userService;
 
-    public ViewUserPageCommand(UserService userService) {
+    public UsersPageCommand(UserService userService) {
         this.userService = userService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String id = req.getParameter(ParameterNameConstants.USER_ID);
-        User user = userService.getUserById(id);
-        req.setAttribute(AttributeNameConstants.TARGET_USER, user);
-        return CommandResult.forward(PagePathConstants.VIEW_USER);
+        List<User> userList = userService.getAllUsers();
+        req.setAttribute(AttributeNameConstants.USER_LIST, userList);
+        return CommandResult.forward(PagePathConstants.USERS);
     }
 }

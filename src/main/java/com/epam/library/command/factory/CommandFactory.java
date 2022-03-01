@@ -1,7 +1,19 @@
 package com.epam.library.command.factory;
 
-import com.epam.library.command.*;
+import com.epam.library.command.Command;
+import com.epam.library.command.LanguageChangeCommand;
+import com.epam.library.command.MainPageCommand;
+import com.epam.library.command.SignInPageCommand;
+import com.epam.library.command.book.*;
+import com.epam.library.command.order.OrderOnSubscriptionCommand;
+import com.epam.library.command.order.OrderToReadingHallCommand;
+import com.epam.library.command.order.OrdersPageCommand;
+import com.epam.library.command.order.statemanipulation.LibrarianOrderDecisionCommand;
+import com.epam.library.command.order.statemanipulation.ReaderOrderActionCommand;
+import com.epam.library.command.user.*;
 import com.epam.library.dao.helper.DaoHelperFactory;
+import com.epam.library.entity.enumeration.RentalState;
+import com.epam.library.service.BookOrderServiceImpl;
 import com.epam.library.service.BookServiceImpl;
 import com.epam.library.service.UserServiceImpl;
 
@@ -24,10 +36,13 @@ public class CommandFactory {
     private static final String SAVE_USER_COMMAND = "saveUser";
     private static final String BLOCK_USER_COMMAND = "blockUser";
     private static final String UNBLOCK_USER_COMMAND = "unblockUser";
+    private static final String ORDERS_PAGE_COMMAND = "ordersPage";
     private static final String ORDER_TO_READING_HALL_COMMAND = "orderToReadingHallPage";
     private static final String ORDER_ON_SUBSCRIPTION_COMMAND = "orderOnSubscriptionPage";
-    private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
-    private static final String USER_ORDERS_PAGE = "userOrdersPage";
+    private static final String APPROVE_ORDER_COMMAND = "approveOrder";
+    private static final String DECLINE_ORDER_COMMAND = "declineOrder";
+    private static final String COLLECT_ORDER_COMMAND = "collectOrder";
+    private static final String RETURN_ORDER_COMMAND = "returnOrder";
 
     public Command createCommand(String command) {
         switch (command) {
@@ -65,10 +80,20 @@ public class CommandFactory {
                 return new BlockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
             case UNBLOCK_USER_COMMAND:
                 return new UnblockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case GLOBAL_ORDERS_PAGE_COMMAND:
-                return new MainPageCommand();
-            case USER_ORDERS_PAGE:
-                return new MainPageCommand();
+            case ORDERS_PAGE_COMMAND:
+                return new OrdersPageCommand(new BookOrderServiceImpl(new DaoHelperFactory()));
+            case ORDER_TO_READING_HALL_COMMAND:
+                return new OrderToReadingHallCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
+            case ORDER_ON_SUBSCRIPTION_COMMAND:
+                return new OrderOnSubscriptionCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
+            case APPROVE_ORDER_COMMAND:
+                return new LibrarianOrderDecisionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.ORDER_APPROVED);
+            case DECLINE_ORDER_COMMAND:
+                return new LibrarianOrderDecisionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.ORDER_DECLINED);
+            case COLLECT_ORDER_COMMAND:
+                return new ReaderOrderActionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.BOOK_COLLECTED);
+            case RETURN_ORDER_COMMAND:
+                return new ReaderOrderActionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.BOOK_RETURNED);
             default:
                 throw new IllegalArgumentException("Unknown command = " + command);
         }

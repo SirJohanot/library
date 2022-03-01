@@ -11,17 +11,22 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="general.search" var="search"/>
+<fmt:message key="authorisation.loginLocale" var="login"/>
+<fmt:message key="users.name" var="name"/>
+<fmt:message key="users.surname" var="surname"/>
+<fmt:message key="users.role" var="role"/>
+<fmt:message key="users.blocked" var="blocked"/>
 <fmt:message key="books.bookTitle" var="bookTitle"/>
 <fmt:message key="books.authors" var="authors"/>
 <fmt:message key="books.genre" var="genre"/>
 <fmt:message key="books.publisher" var="publisher"/>
 <fmt:message key="books.publishmentYear" var="publishmentYear"/>
 <fmt:message key="books.inStock" var="inStock"/>
-<fmt:message key="general.edit" var="edit"/>
-<fmt:message key="books.delete" var="delete"/>
-<fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
-<fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
+<fmt:message key="orders.startDate" var="startDate"/>
+<fmt:message key="orders.endDate" var="endDate"/>
+<fmt:message key="orders.returnDate" var="returnDate"/>
+<fmt:message key="orders.rentalType" var="rentalType"/>
+<fmt:message key="orders.rentalState" var="rentalState"/>
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
 <fmt:message key="navigation.users" var="users"/>
@@ -30,7 +35,7 @@
 
 <html>
 <head>
-    <title>${requestScope.book.title} | ${appName}</title>
+    <title>${requestScope.bookOrder.user.login} ${requestScope.bookOrder.book.title} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -78,21 +83,35 @@
     </nav>
     <div>
         <div class="round-bordered-subject block-container">
-            <h1>${bookTitle}: ${requestScope.book.title}</h1>
+            <h1>${startDate}: ${requestScope.bookOrder.user.login}</h1>
+            <p>${endDate}: ${requestScope.bookOrder.user.name}</p>
+            <p>${returnDate}: ${requestScope.bookOrder.user.surname}</p>
+            <p>${rentalType}: ${requestScope.bookOrder.user.role}</p>
+            <p>${rentalState}: ${requestScope.bookOrder.user.blocked}</p>
+        </div>
+        <div class="round-bordered-subject block-container">
+            <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
+            <p>${name}: ${requestScope.bookOrder.user.name}</p>
+            <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
+            <p>${role}: ${requestScope.bookOrder.user.role}</p>
+            <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
+        </div>
+        <div class="round-bordered-subject block-container">
+            <h1>${bookTitle}: ${requestScope.bookOrder.book.title}</h1>
             <p>${authors}:
-                <c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">
+                <c:forEach items="${requestScope.bookOrder.book.authorList}" var="author" varStatus="loop">
                     ${author.name}
                 <c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
-            <p>${genre}: ${requestScope.book.genre.name}</p>
-            <p>${publisher}: ${requestScope.book.publisher.name}</p>
-            <p>${publishmentYear}: ${requestScope.book.publishmentYear}</p>
+            <p>${genre}: ${requestScope.bookOrder.book.genre.name}</p>
+            <p>${publisher}: ${requestScope.bookOrder.book.publisher.name}</p>
+            <p>${publishmentYear}: ${requestScope.bookOrder.book.publishmentYear}</p>
             <c:if test="${sessionScope.user.role != 'READER'}">
-                <p>${inStock}: ${requestScope.book.amount}</p>
+                <p>${inStock}: ${requestScope.bookOrder.book.amount}</p>
             </c:if>
         </div>
         <form class="buttons-container" method="post"
-              action="controller?bookId=${requestScope.book.id}">
+              action="controller?bookId=${requestScope.bookOrder.book.id}">
             <c:choose>
                 <c:when test="${sessionScope.user.role == 'ADMIN'}">
                     <button type="submit" name="command" value="editBookPage">${edit}</button>
@@ -104,7 +123,7 @@
                     <div>
                         <h1>${orderOnSubscription}:</h1>
                         <form class="buttons-container" method="post"
-                              action="controller?command=orderOnSubscriptionPage&bookId=${requestScope.book.id}">
+                              action="controller?command=orderOnSubscriptionPage&bookId=${requestScope.bookOrder.book.id}">
                             <button type="submit" name="days" value="7">7 ${days}</button>
                             <button type="submit" name="days" value="14">14 ${days}</button>
                             <button type="submit" name="days" value="21">21 ${days}</button>

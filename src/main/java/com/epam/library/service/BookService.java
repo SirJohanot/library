@@ -3,15 +3,16 @@ package com.epam.library.service;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
 
+import java.time.Year;
 import java.util.List;
 
 public interface BookService {
 
     List<Book> getBooks() throws ServiceException;
 
-    Book getBookById(String idLine) throws ServiceException;
+    Book getBookById(Long id) throws ServiceException;
 
-    void saveBook(String idLine, String title, String authors, String genre, String publisher, String publishmentYear, String amountLine) throws ServiceException;
+    void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount) throws ServiceException;
 
-    void deleteBookById(String bookIdLine) throws ServiceException;
+    void deleteBookById(Long bookId) throws ServiceException;
 }

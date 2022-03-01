@@ -45,10 +45,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(String idLine) throws ServiceException {
+    public Book getBookById(Long id) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long id = Long.parseLong(idLine);
             BookDao bookDao = helper.createBookDao();
             Optional<Book> shallowBook = bookDao.getById(id);
             if (shallowBook.isEmpty()) {
@@ -63,18 +62,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(String idLine, String title, String authors, String genre, String publisher, String publishmentYear, String amountLine) throws ServiceException {
+    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long id = idLine == null ? null : Long.parseLong(idLine);
             Genre genreEntity = getExistingGenreOrANewlySavedOne(helper, genre);
             Publisher publisherEntity = getExistingPublisherOrANewlySavedOne(helper, publisher);
-            Year publishmentYearObject = Year.parse(publishmentYear);
-            int amount = Integer.parseInt(amountLine);
-            Book book = new Book(id, title, null, genreEntity, publisherEntity, publishmentYearObject, amount);
+            Book book = new Book(id, title, null, genreEntity, publisherEntity, publishmentYear, amount);
             BookDao bookDao = helper.createBookDao();
             bookDao.save(book);
-            Book savedBook = bookDao.findIdenticalBook(book).get();
+            Optional<Book> optionalBook = bookDao.findIdenticalBook(book);
+            if (optionalBook.isEmpty()) {
+                throw new ServiceException("The book could not be saved to the database");
+            }
+            Book savedBook = optionalBook.get();
             saveAuthorsAndMapThemToBook(helper, authors, savedBook.getId());
             deleteUnreferenced(helper);
             helper.endTransaction();
@@ -84,10 +84,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookById(String bookIdLine) throws ServiceException {
+    public void deleteBookById(Long bookId) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
-            Long bookId = Long.parseLong(bookIdLine);
             BookDao bookDao = helper.createBookDao();
             bookDao.removeById(bookId);
             helper.endTransaction();
@@ -96,15 +95,20 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private Book shallowBookToActualBook(Book book, DaoHelper helper) throws DaoException {
+    private Book shallowBookToActualBook(Book book, DaoHelper helper) throws DaoException, ServiceException {
         Long id = book.getId();
         String title = book.getTitle();
         AuthorDao authorDao = helper.createAuthorDao();
         List<Author> authorList = authorDao.getAuthorsAssociatedWithBookId(book.getId());
         GenreDao genreDao = helper.createGenreDao();
-        Genre genre = genreDao.getById(book.getGenre().getId()).get();
+        Optional<Genre> optionalGenre = genreDao.getById(book.getGenre().getId());
         PublisherDao publisherDao = helper.createPublisherDao();
-        Publisher publisher = publisherDao.getById(book.getPublisher().getId()).get();
+        Optional<Publisher> optionalPublisher = publisherDao.getById(book.getPublisher().getId());
+        if (optionalGenre.isEmpty() || optionalPublisher.isEmpty()) {
+            throw new ServiceException("There is an error in database content");
+        }
+        Genre genre = optionalGenre.get();
+        Publisher publisher = optionalPublisher.get();
         Year publishmentYear = book.getPublishmentYear();
         int amount = book.getAmount();
         return new Book(id, title, authorList, genre, publisher, publishmentYear, amount);
@@ -122,6 +126,9 @@ public class BookServiceImpl implements BookService {
             if (optionalAuthor.isEmpty()) {
                 authorDao.save(Author.ofName(authorName));
                 optionalAuthor = authorDao.getByName(authorName);
+                if (optionalAuthor.isEmpty()) {
+                    throw new ServiceException("Author could not be save to the database");
+                }
             }
             Long authorId = optionalAuthor.get().getId();
             if (!authorDao.isAuthorMappedToBookInRelationTable(authorId, bookId)) {
@@ -130,22 +137,28 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private Genre getExistingGenreOrANewlySavedOne(DaoHelper helper, String genre) throws DaoException {
+    private Genre getExistingGenreOrANewlySavedOne(DaoHelper helper, String genre) throws DaoException, ServiceException {
         GenreDao genreDao = helper.createGenreDao();
         Optional<Genre> optionalGenre = genreDao.getByName(genre);
         if (optionalGenre.isEmpty()) {
             genreDao.save(Genre.ofName(genre));
             optionalGenre = genreDao.getByName(genre);
+            if (optionalGenre.isEmpty()) {
+                throw new ServiceException("Genre could not be save to the database");
+            }
         }
         return optionalGenre.get();
     }
 
-    private Publisher getExistingPublisherOrANewlySavedOne(DaoHelper helper, String publisher) throws DaoException {
+    private Publisher getExistingPublisherOrANewlySavedOne(DaoHelper helper, String publisher) throws DaoException, ServiceException {
         PublisherDao genreDao = helper.createPublisherDao();
         Optional<Publisher> optionalPublisher = genreDao.getByName(publisher);
         if (optionalPublisher.isEmpty()) {
             genreDao.save(Publisher.ofName(publisher));
             optionalPublisher = genreDao.getByName(publisher);
+            if (optionalPublisher.isEmpty()) {
+                throw new ServiceException("Publisher could not be save to the database");
+            }
         }
         return optionalPublisher.get();
     }

@@ -1,5 +1,6 @@
-package com.epam.library.command;
+package com.epam.library.command.book;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
@@ -9,24 +10,19 @@ import com.epam.library.service.BookService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SaveBookCommand implements Command {
+public class DeleteBookCommand implements Command {
 
     private final BookService bookService;
 
-    public SaveBookCommand(BookService bookService) {
+    public DeleteBookCommand(BookService bookService) {
         this.bookService = bookService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
-        String title = req.getParameter(ParameterNameConstants.BOOK_TITLE);
-        String authors = req.getParameter(ParameterNameConstants.BOOK_AUTHORS);
-        String genre = req.getParameter(ParameterNameConstants.BOOK_GENRE);
-        String publisher = req.getParameter(ParameterNameConstants.BOOK_PUBLISHER);
-        String publishmentYear = req.getParameter(ParameterNameConstants.BOOK_PUBLISHMENT_YEAR);
-        String amount = req.getParameter(ParameterNameConstants.BOOK_AMOUNT);
-        bookService.saveBook(bookIdLine, title, authors, genre, publisher, publishmentYear, amount);
+        Long bookId = Long.valueOf(bookIdLine);
+        bookService.deleteBookById(bookId);
         return CommandResult.redirect(CommandInvocationConstants.BOOKS_PAGE);
     }
 }

@@ -1,8 +1,10 @@
-package com.epam.library.command;
+package com.epam.library.command.user;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
+import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.UserService;
 
@@ -19,12 +21,15 @@ public class SaveUserCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String targetUserId = req.getParameter(ParameterNameConstants.USER_ID);
+        String targetUserIdLine = req.getParameter(ParameterNameConstants.USER_ID);
+        Long targetUserId = Long.valueOf(targetUserIdLine);
         String targetUserLogin = req.getParameter(ParameterNameConstants.USER_LOGIN);
         String targetUserName = req.getParameter(ParameterNameConstants.USER_NAME);
         String targetUserSurname = req.getParameter(ParameterNameConstants.USER_SURNAME);
-        String targetUserRole = req.getParameter(ParameterNameConstants.USER_ROLE);
-        String targetUserBlocked = req.getParameter(ParameterNameConstants.USER_BLOCKED);
+        String targetUserRoleLine = req.getParameter(ParameterNameConstants.USER_ROLE).toUpperCase();
+        UserRole targetUserRole = UserRole.valueOf(targetUserRoleLine);
+        String targetUserBlockedLine = req.getParameter(ParameterNameConstants.USER_BLOCKED);
+        boolean targetUserBlocked = Boolean.parseBoolean(targetUserBlockedLine);
         userService.saveUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked);
         return CommandResult.redirect(CommandInvocationConstants.USERS_PAGE);
     }

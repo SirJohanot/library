@@ -1,6 +1,8 @@
 package com.epam.library.mapper;
 
 import com.epam.library.entity.BookOrder;
+import com.epam.library.entity.User;
+import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 
@@ -20,6 +22,6 @@ public class BookOrderRowMapper implements RowMapper<BookOrder> {
         Date returnDate = resultSet.getDate(BookOrder.RETURN_DATE_COLUMN);
         RentalType rentalType = RentalType.valueOf(resultSet.getString(BookOrder.RENTAL_TYPE_COLUMN).toUpperCase());
         RentalState rentalState = RentalState.valueOf(resultSet.getString(BookOrder.RENTAL_STATE_COLUMN).toUpperCase());
-        return new BookOrder(id, bookId, userId, startDate, endDate, returnDate, rentalType, rentalState);
+        return new BookOrder(id, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
     }
 }

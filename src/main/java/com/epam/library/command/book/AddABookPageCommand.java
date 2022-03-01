@@ -1,5 +1,6 @@
-package com.epam.library.command;
+package com.epam.library.command.book;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.PagePathConstants;
 import com.epam.library.exception.ServiceException;

@@ -1,5 +1,6 @@
-package com.epam.library.command;
+package com.epam.library.command.book;
 
+import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.PagePathConstants;
@@ -21,7 +22,8 @@ public class ViewBookPageCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String id = req.getParameter(ParameterNameConstants.BOOK_ID);
+        String idLine = req.getParameter(ParameterNameConstants.BOOK_ID);
+        Long id = Long.valueOf(idLine);
         Book requestedBook = bookService.getBookById(id);
         req.setAttribute(AttributeNameConstants.BOOK, requestedBook);
         return CommandResult.forward(PagePathConstants.VIEW_BOOK);

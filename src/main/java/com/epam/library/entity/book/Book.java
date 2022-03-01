@@ -23,9 +23,9 @@ public class Book implements Identifiable, Serializable {
     private final Genre genre;
     private final Publisher publisher;
     private final Year publishmentYear;
-    private final int amount;
+    private final Integer amount;
 
-    public Book(Long id, String title, List<Author> authorList, Genre genre, Publisher publisher, Year publishmentYear, int amount) {
+    public Book(Long id, String title, List<Author> authorList, Genre genre, Publisher publisher, Year publishmentYear, Integer amount) {
         this.id = id;
         this.title = title;
         this.authorList = authorList;
@@ -33,6 +33,10 @@ public class Book implements Identifiable, Serializable {
         this.publisher = publisher;
         this.publishmentYear = publishmentYear;
         this.amount = amount;
+    }
+
+    public static Book ofId(Long id) {
+        return new Book(id, null, null, null, null, null, 0);
     }
 
     @Override
@@ -60,7 +64,7 @@ public class Book implements Identifiable, Serializable {
         return publishmentYear;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
@@ -72,12 +76,7 @@ public class Book implements Identifiable, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Book book = (Book) o;
-
-        if (amount != book.amount) {
-            return false;
-        }
         if (id != null ? !id.equals(book.id) : book.id != null) {
             return false;
         }
@@ -93,7 +92,10 @@ public class Book implements Identifiable, Serializable {
         if (publisher != null ? !publisher.equals(book.publisher) : book.publisher != null) {
             return false;
         }
-        return publishmentYear != null ? publishmentYear.equals(book.publishmentYear) : book.publishmentYear == null;
+        if (publishmentYear != null ? !publishmentYear.equals(book.publishmentYear) : book.publishmentYear != null) {
+            return false;
+        }
+        return amount != null ? amount.equals(book.amount) : book.amount == null;
     }
 
     @Override
@@ -104,7 +106,7 @@ public class Book implements Identifiable, Serializable {
         result = 31 * result + (genre != null ? genre.hashCode() : 0);
         result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
         result = 31 * result + (publishmentYear != null ? publishmentYear.hashCode() : 0);
-        result = 31 * result + amount;
+        result = 31 * result + (amount != null ? amount.hashCode() : 0);
         return result;
     }
 
