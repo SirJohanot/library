@@ -14,6 +14,7 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
     private static final String UPDATE_IS_DELETED_TRUE_QUERY = "UPDATE %s SET is_deleted = true WHERE id = ? ;";
     private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM %s WHERE is_deleted = false ;";
+    private static final String TWEAK_AMOUNT_QUERY = "UPDATE %s SET amount = amount + (?) ;";
 
     public BookDaoImpl(Connection connection) {
         super(connection, new BookRowMapper(), Book.TABLE_NAME);
@@ -40,6 +41,12 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
     @Override
     public Optional<Book> findIdenticalBook(Book book) throws DaoException {
         return findIdentical(book);
+    }
+
+    @Override
+    public void tweakAmount(Long bookId, int value) throws DaoException {
+        String query = String.format(TWEAK_AMOUNT_QUERY, Book.TABLE_NAME);
+        executeUpdate(query, value);
     }
 
     @Override

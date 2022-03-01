@@ -56,7 +56,7 @@ public class User implements Identifiable, Serializable {
         return role;
     }
 
-    public Boolean isBlocked() {
+    public boolean isBlocked() {
         return blocked;
     }
 

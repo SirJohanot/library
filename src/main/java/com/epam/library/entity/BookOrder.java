@@ -5,7 +5,7 @@ import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 public class BookOrder implements Identifiable, Serializable {
 

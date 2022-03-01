@@ -15,7 +15,7 @@ public class UserRowMapper implements RowMapper<User> {
         String name = resultSet.getString(User.NAME_COLUMN);
         String surname = resultSet.getString(User.SURNAME_COLUMN);
         UserRole role = UserRole.valueOf(resultSet.getString(User.ROLE_COLUMN).toUpperCase());
-        boolean isBlocked = resultSet.getBoolean(User.BLOCKED_COLUMN);
+        Boolean isBlocked = resultSet.getBoolean(User.BLOCKED_COLUMN);
         return new User(id, login, name, surname, role, isBlocked);
     }
 }

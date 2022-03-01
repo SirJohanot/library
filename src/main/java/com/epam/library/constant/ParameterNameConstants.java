@@ -6,6 +6,7 @@ public final class ParameterNameConstants {
     public static final String LOCALE = "locale";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
+    public static final String BOOK = "book";
     public static final String BOOK_ID = "bookId";
     public static final String BOOK_TITLE = "title";
     public static final String BOOK_AUTHORS = "authors";
@@ -22,6 +23,9 @@ public final class ParameterNameConstants {
     public static final String USER_BLOCKED = "blocked";
     public static final String DAYS = "days";
     public static final String ORDER_ID = "orderId";
+    public static final String START_DATE = "startDate";
+    public static final String END_DATE = "endDate";
+    public static final String RENTAL_TYPE = "rentalType";
     public static final String STATE = "state";
 
 }

@@ -18,12 +18,12 @@ public class BookRowMapper implements RowMapper<Book> {
         Long id = resultSet.getLong(Book.ID_COLUMN);
         String title = resultSet.getString(Book.TITLE_COLUMN);
         Long genreId = resultSet.getLong(Book.GENRE_ID_COLUMN);
+        Genre genre = Genre.ofId(genreId);
         Long publisherId = resultSet.getLong(Book.PUBLISHER_ID_COLUMN);
+        Publisher publisher = Publisher.ofId(publisherId);
         String yearLine = resultSet.getString(Book.PUBLISHMENT_YEAR_COLUMN).split(NON_DIGIT_REGEX)[0];
         Year publishmentYear = Year.parse(yearLine);
-        int amount = resultSet.getInt(Book.AMOUNT_COLUMN);
-        Genre genre = Genre.ofId(genreId);
-        Publisher publisher = Publisher.ofId(publisherId);
+        Integer amount = resultSet.getInt(Book.AMOUNT_COLUMN);
         return new Book(id, title, new ArrayList<>(), genre, publisher, publishmentYear, amount);
     }
 }

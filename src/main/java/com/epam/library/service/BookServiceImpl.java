@@ -127,7 +127,7 @@ public class BookServiceImpl implements BookService {
                 authorDao.save(Author.ofName(authorName));
                 optionalAuthor = authorDao.getByName(authorName);
                 if (optionalAuthor.isEmpty()) {
-                    throw new ServiceException("Author could not be save to the database");
+                    throw new ServiceException("Author could not be save to the database or could not be found by name");
                 }
             }
             Long authorId = optionalAuthor.get().getId();
@@ -144,7 +144,7 @@ public class BookServiceImpl implements BookService {
             genreDao.save(Genre.ofName(genre));
             optionalGenre = genreDao.getByName(genre);
             if (optionalGenre.isEmpty()) {
-                throw new ServiceException("Genre could not be save to the database");
+                throw new ServiceException("Genre could not be save to the database or could not be found by name");
             }
         }
         return optionalGenre.get();
@@ -157,7 +157,7 @@ public class BookServiceImpl implements BookService {
             genreDao.save(Publisher.ofName(publisher));
             optionalPublisher = genreDao.getByName(publisher);
             if (optionalPublisher.isEmpty()) {
-                throw new ServiceException("Publisher could not be save to the database");
+                throw new ServiceException("Publisher could not be save to the database or could not be found by name");
             }
         }
         return optionalPublisher.get();

@@ -36,9 +36,12 @@ public class CommandFactory {
     private static final String SAVE_USER_COMMAND = "saveUser";
     private static final String BLOCK_USER_COMMAND = "blockUser";
     private static final String UNBLOCK_USER_COMMAND = "unblockUser";
+    private static final String USER_ORDERS_PAGE_COMMAND = "userOrdersPage";
+    private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
     private static final String ORDERS_PAGE_COMMAND = "ordersPage";
     private static final String ORDER_TO_READING_HALL_COMMAND = "orderToReadingHallPage";
     private static final String ORDER_ON_SUBSCRIPTION_COMMAND = "orderOnSubscriptionPage";
+    private static final String ORDER_COMMAND = "order";
     private static final String APPROVE_ORDER_COMMAND = "approveOrder";
     private static final String DECLINE_ORDER_COMMAND = "declineOrder";
     private static final String COLLECT_ORDER_COMMAND = "collectOrder";
@@ -57,7 +60,7 @@ public class CommandFactory {
             case MAIN_PAGE_COMMAND:
                 return new MainPageCommand();
             case BOOKS_PAGE_COMMAND:
-                return new BooksPageCommand(new BookServiceImpl(new DaoHelperFactory()));   //TODO: create proper commands
+                return new BooksPageCommand(new BookServiceImpl(new DaoHelperFactory()));
             case VIEW_BOOK_PAGE_COMMAND:
                 return new ViewBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
             case EDIT_BOOK_PAGE_COMMAND:
@@ -80,6 +83,8 @@ public class CommandFactory {
                 return new BlockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
             case UNBLOCK_USER_COMMAND:
                 return new UnblockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
+            case USER_ORDERS_PAGE_COMMAND:
+            case GLOBAL_ORDERS_PAGE_COMMAND:
             case ORDERS_PAGE_COMMAND:
                 return new OrdersPageCommand(new BookOrderServiceImpl(new DaoHelperFactory()));
             case ORDER_TO_READING_HALL_COMMAND:

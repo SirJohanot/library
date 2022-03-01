@@ -11,6 +11,8 @@ public interface BookDao extends Dao<Book> {
 
     Optional<Book> findIdenticalBook(Book book) throws DaoException;
 
+    void tweakAmount(Long bookId, int value) throws DaoException;
+
     List<Book> getAllNotDeleted() throws DaoException;
 
 }

@@ -95,15 +95,19 @@
             </c:if>
         </div>
         <div class="round-bordered-subject block-container">
-            <h1>${rentalType}: ${requestScope.bookOrder.rentalType}</h1>
+            <h1>${rentalType}: ${requestScope.bookOrder.type}</h1>
             <p>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></p>
             <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
         </div>
         <form class="buttons-container" method="post"
-              action="controller?bookId=${requestScope.book.id}&bookOrder=${requestScope.bookOrder}">
+              action="controller?">
             <c:if test="${sessionScope.user.role == 'READER'}">
                 <button type="submit" name="command"
                         value="booksPage" class="red">${cancel}</button>
+                <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
+                <input type="hidden" name="startDate" value="${requestScope.bookOrder.startDate}"/>
+                <input type="hidden" name="endDate" value="${requestScope.bookOrder.endDate}"/>
+                <input type="hidden" name="rentalType" value="${requestScope.bookOrder.type}"/>
                 <button type="submit" name="command"
                         value="order" class="green">${confirmOrder}</button>
             </c:if>

@@ -11,6 +11,11 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
+<fmt:message key="navigation.books" var="books"/>
+<fmt:message key="navigation.addABook" var="addABook"/>
+<fmt:message key="navigation.users" var="users"/>
+<fmt:message key="navigation.orders" var="orders"/>
+<fmt:message key="navigation.myOrders" var="myOrders"/>
 <fmt:message key="authorisation.loginLocale" var="login"/>
 <fmt:message key="users.name" var="name"/>
 <fmt:message key="users.surname" var="surname"/>
@@ -27,11 +32,10 @@
 <fmt:message key="orders.returnDate" var="returnDate"/>
 <fmt:message key="orders.rentalType" var="rentalType"/>
 <fmt:message key="orders.rentalState" var="rentalState"/>
-<fmt:message key="navigation.books" var="books"/>
-<fmt:message key="navigation.addABook" var="addABook"/>
-<fmt:message key="navigation.users" var="users"/>
-<fmt:message key="navigation.orders" var="orders"/>
-<fmt:message key="navigation.myOrders" var="myOrders"/>
+<fmt:message key="orders.approveOrder" var="approveOrder"/>
+<fmt:message key="orders.decline" var="declineOrder"/>
+<fmt:message key="orders.collectOrder" var="collectOrder"/>
+<fmt:message key="orders.returnOrder" var="returnOrder"/>
 
 <html>
 <head>
@@ -90,13 +94,6 @@
             <p>${rentalState}: ${requestScope.bookOrder.user.blocked}</p>
         </div>
         <div class="round-bordered-subject block-container">
-            <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
-            <p>${name}: ${requestScope.bookOrder.user.name}</p>
-            <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
-            <p>${role}: ${requestScope.bookOrder.user.role}</p>
-            <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
-        </div>
-        <div class="round-bordered-subject block-container">
             <h1>${bookTitle}: ${requestScope.bookOrder.book.title}</h1>
             <p>${authors}:
                 <c:forEach items="${requestScope.bookOrder.book.authorList}" var="author" varStatus="loop">
@@ -110,25 +107,29 @@
                 <p>${inStock}: ${requestScope.bookOrder.book.amount}</p>
             </c:if>
         </div>
+        <div class="round-bordered-subject block-container">
+            <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
+            <p>${name}: ${requestScope.bookOrder.user.name}</p>
+            <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
+            <p>${role}: ${requestScope.bookOrder.user.role}</p>
+            <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
+        </div>
         <form class="buttons-container" method="post"
-              action="controller?bookId=${requestScope.bookOrder.book.id}">
+              action="controller?orderId=${requestScope.bookOrder.id}">
             <c:choose>
-                <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                    <button type="submit" name="command" value="editBookPage">${edit}</button>
-                    <button type="submit" name="command" value="deleteBook" class="red">${delete}</button>
+                <c:when test="${sessionScope.user.role == 'LIBRARIAN' && requestScope.bookOrder.state == 'ORDER_PLACED'}">
+                    <button type="submit" name="command" value="declineOrder" class="red">${declineOrder}</button>
+                    <button type="submit" name="command" value="approveOrder" class="green">${approveOrder}</button>
                 </c:when>
-                <c:when test="${sessionScope.user.role == 'READER'}">
-                    <button type="submit" name="command"
-                            value="orderToReadingHallPage">${orderToReadingHall}</button>
-                    <div>
-                        <h1>${orderOnSubscription}:</h1>
-                        <form class="buttons-container" method="post"
-                              action="controller?command=orderOnSubscriptionPage&bookId=${requestScope.bookOrder.book.id}">
-                            <button type="submit" name="days" value="7">7 ${days}</button>
-                            <button type="submit" name="days" value="14">14 ${days}</button>
-                            <button type="submit" name="days" value="21">21 ${days}</button>
-                        </form>
-                    </div>
+                <c:when test="${sessionScope.user.role == 'READER' && sessionScope.user.id == requestScope.bookOrder.userId}">
+                    <c:choose>
+                        <c:when test="${requestScope.bookOrder.state == 'ORDER_APPROVED'}">
+                            <button type="submit" name="command" value="collectOrder">${collectOrder}</button>
+                        </c:when>
+                        <c:when test="${requestScope.bookOrder.state == 'ORDER_COLLECTED'}">
+                            <button type="submit" name="command" value="returnOrder">${returnOrder}</button>
+                        </c:when>
+                    </c:choose>
                 </c:when>
             </c:choose>
         </form>

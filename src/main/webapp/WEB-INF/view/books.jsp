@@ -76,19 +76,22 @@
         </form>
         <form method="post" action="controller?command=viewBook">
             <c:forEach items="${requestScope.bookList}" var="book">
-                <button type="submit" name="bookId" value="${book.id}" class="block-container round-bordered-subject">
-                    <h1>${book.title}</h1>
-                    <div class="block-parameters">
-                        <p>${authors}: <c:forEach items="${book.authorList}" var="author" varStatus="loop">
-                            ${author.name}
-                            <c:if test="${!loop.last}">,</c:if>
-                        </c:forEach>
-                        </p>
-                        <p>${genre}: ${book.genre.name}</p>
-                        <p>${publisher}: ${book.publisher.name}</p>
-                        <p>${publishmentYear}: ${book.publishmentYear}</p>
-                    </div>
-                </button>
+                <c:if test="${sessionScope.user.role != 'READER' || book.amount > 0}">
+                    <button type="submit" name="bookId" value="${book.id}"
+                            class="block-container round-bordered-subject">
+                        <h1>${book.title}</h1>
+                        <div class="block-parameters">
+                            <p>${authors}: <c:forEach items="${book.authorList}" var="author" varStatus="loop">
+                                ${author.name}
+                                <c:if test="${!loop.last}">,</c:if>
+                            </c:forEach>
+                            </p>
+                            <p>${genre}: ${book.genre.name}</p>
+                            <p>${publisher}: ${book.publisher.name}</p>
+                            <p>${publishmentYear}: ${book.publishmentYear}</p>
+                        </div>
+                    </button>
+                </c:if>
             </c:forEach>
         </form>
     </div>

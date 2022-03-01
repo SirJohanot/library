@@ -34,7 +34,7 @@ public class ReaderOrderActionCommand implements Command {
         }
         String orderIdLine = req.getParameter(ParameterNameConstants.ORDER_ID);
         Long orderId = Long.valueOf(orderIdLine);
-        bookOrderService.setOrderState(orderId, newState);
+        bookOrderService.advanceOrderState(orderId, newState);
         return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }
 }

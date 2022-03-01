@@ -11,7 +11,11 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
-<fmt:message key="general.search" var="search"/>
+<fmt:message key="navigation.books" var="books"/>
+<fmt:message key="navigation.addABook" var="addABook"/>
+<fmt:message key="navigation.users" var="users"/>
+<fmt:message key="navigation.orders" var="orders"/>
+<fmt:message key="navigation.myOrders" var="myOrders"/>
 <fmt:message key="books.bookTitle" var="bookTitle"/>
 <fmt:message key="books.authors" var="authors"/>
 <fmt:message key="books.genre" var="genre"/>
@@ -22,11 +26,7 @@
 <fmt:message key="books.delete" var="delete"/>
 <fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
 <fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
-<fmt:message key="navigation.books" var="books"/>
-<fmt:message key="navigation.addABook" var="addABook"/>
-<fmt:message key="navigation.users" var="users"/>
-<fmt:message key="navigation.orders" var="orders"/>
-<fmt:message key="navigation.myOrders" var="myOrders"/>
+<fmt:message key="orders.days" var="days"/>
 
 <html>
 <head>
@@ -91,16 +91,21 @@
                 <p>${inStock}: ${requestScope.book.amount}</p>
             </c:if>
         </div>
-        <form class="buttons-container" method="post"
-              action="controller?bookId=${requestScope.book.id}">
-            <c:choose>
-                <c:when test="${sessionScope.user.role == 'ADMIN'}">
+        <c:choose>
+            <c:when test="${sessionScope.user.role == 'ADMIN'}">
+                <form class="buttons-container" method="post"
+                      action="controller?bookId=${requestScope.book.id}">
                     <button type="submit" name="command" value="editBookPage">${edit}</button>
                     <button type="submit" name="command" value="deleteBook" class="red">${delete}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'READER'}">
-                    <button type="submit" name="command"
-                            value="orderToReadingHallPage">${orderToReadingHall}</button>
+                </form>
+            </c:when>
+            <c:when test="${sessionScope.user.role == 'READER'}">
+                <div class="buttons-container">
+                    <form method="post"
+                          action="controller?bookId=${requestScope.book.id}">
+                        <button type="submit" name="command"
+                                value="orderToReadingHallPage">${orderToReadingHall}</button>
+                    </form>
                     <div>
                         <h1>${orderOnSubscription}:</h1>
                         <form class="buttons-container" method="post"
@@ -110,9 +115,9 @@
                             <button type="submit" name="days" value="21">21 ${days}</button>
                         </form>
                     </div>
-                </c:when>
-            </c:choose>
-        </form>
+                </div>
+            </c:when>
+        </c:choose>
     </div>
 </section>
 </body>

@@ -11,5 +11,6 @@ public final class AttributeNameConstants {
     public static final String BOOK_LIST = "bookList";
     public static final String USER_LIST = "userList";
     public static final String TARGET_USER = "targetUser";
+    public static final String ORDER_LIST = "orderList";
 
 }
