@@ -6,11 +6,12 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.BookOrderRowMapper;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.LinkedHashMap;
 
 public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrderDao {
 
-    private static final String SET_NEW_ORDER_STATE_QUERY = "UPDATE %s SET %s = ? WHERE id = ? ;";
+    private static final String SET_NEW_FIELD_VALUE_QUERY = "UPDATE %s SET %s = ? WHERE id = ? ;";
 
     public BookOrderDaoImpl(Connection connection) {
         super(connection, new BookOrderRowMapper(), BookOrder.TABLE_NAME);
@@ -32,7 +33,13 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
 
     @Override
     public void setState(Long id, RentalState newState) throws DaoException {
-        String query = String.format(SET_NEW_ORDER_STATE_QUERY, BookOrder.TABLE_NAME, BookOrder.RENTAL_STATE_COLUMN);
+        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.TABLE_NAME, BookOrder.RENTAL_STATE_COLUMN);
         executeUpdate(query, newState, id);
+    }
+
+    @Override
+    public void setReturnDate(Long id, Date returnDate) throws DaoException {
+        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.TABLE_NAME, BookOrder.RETURN_DATE_COLUMN);
+        executeUpdate(query, returnDate, id);
     }
 }

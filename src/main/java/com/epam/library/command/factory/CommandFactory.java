@@ -5,6 +5,7 @@ import com.epam.library.command.LanguageChangeCommand;
 import com.epam.library.command.MainPageCommand;
 import com.epam.library.command.SignInPageCommand;
 import com.epam.library.command.book.*;
+import com.epam.library.command.order.OrderCommand;
 import com.epam.library.command.order.OrderOnSubscriptionCommand;
 import com.epam.library.command.order.OrderToReadingHallCommand;
 import com.epam.library.command.order.OrdersPageCommand;
@@ -91,6 +92,8 @@ public class CommandFactory {
                 return new OrderToReadingHallCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
             case ORDER_ON_SUBSCRIPTION_COMMAND:
                 return new OrderOnSubscriptionCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
+            case ORDER_COMMAND:
+                return new OrderCommand(new BookOrderServiceImpl(new DaoHelperFactory()));
             case APPROVE_ORDER_COMMAND:
                 return new LibrarianOrderDecisionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.ORDER_APPROVED);
             case DECLINE_ORDER_COMMAND:

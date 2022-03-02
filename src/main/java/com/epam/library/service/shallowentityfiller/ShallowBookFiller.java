@@ -25,15 +25,12 @@ public class ShallowBookFiller implements ShallowEntityFiller<Book> {
         List<Author> authorList = authorDao.getAuthorsAssociatedWithBookId(shallowEntity.getId());
         GenreDao genreDao = daoHelper.createGenreDao();
         Optional<Genre> optionalGenre = genreDao.getById(shallowEntity.getGenre().getId());
-        if (optionalGenre.isEmpty()) {
-            throw new ServiceException("Could not find genre associated with inputted shallow book");
-        }
-        Genre genre = optionalGenre.get();
         PublisherDao publisherDao = daoHelper.createPublisherDao();
         Optional<Publisher> optionalPublisher = publisherDao.getById(shallowEntity.getPublisher().getId());
-        if (optionalPublisher.isEmpty()) {
-            throw new ServiceException("Could not find publisher associated with inputted shallow book");
+        if (optionalGenre.isEmpty() || optionalPublisher.isEmpty()) {
+            throw new ServiceException("There is an error in database content");
         }
+        Genre genre = optionalGenre.get();
         Publisher publisher = optionalPublisher.get();
         Year publishmentYear = shallowEntity.getPublishmentYear();
         int amount = shallowEntity.getAmount();

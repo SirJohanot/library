@@ -12,6 +12,8 @@ import com.epam.library.entity.book.Genre;
 import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.service.shallowentityfiller.ShallowBookFiller;
+import com.epam.library.service.shallowentityfiller.ShallowEntityFiller;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ public class BookServiceImpl implements BookService {
 
     private final DaoHelperFactory daoHelperFactory;
 
+    private final ShallowEntityFiller<Book> bookFiller = new ShallowBookFiller();
+
     public BookServiceImpl(DaoHelperFactory daoHelperFactory) {
         this.daoHelperFactory = daoHelperFactory;
     }
@@ -35,7 +39,7 @@ public class BookServiceImpl implements BookService {
             List<Book> bookList = new ArrayList<>();
             BookDao bookDao = helper.createBookDao();
             for (Book book : bookDao.getAllNotDeleted()) {
-                bookList.add(shallowBookToActualBook(book, helper));
+                bookList.add(bookFiller.fillShallowEntity(book, helper));
             }
             helper.endTransaction();
             return bookList;
@@ -53,7 +57,7 @@ public class BookServiceImpl implements BookService {
             if (shallowBook.isEmpty()) {
                 throw new ServiceException("The requested book does not exist");
             }
-            Book book = shallowBookToActualBook(shallowBook.get(), helper);
+            Book book = bookFiller.fillShallowEntity(shallowBook.get(), helper);
             helper.endTransaction();
             return book;
         } catch (DaoException e) {
@@ -94,26 +98,7 @@ public class BookServiceImpl implements BookService {
             throw new ServiceException(e);
         }
     }
-
-    private Book shallowBookToActualBook(Book book, DaoHelper helper) throws DaoException, ServiceException {
-        Long id = book.getId();
-        String title = book.getTitle();
-        AuthorDao authorDao = helper.createAuthorDao();
-        List<Author> authorList = authorDao.getAuthorsAssociatedWithBookId(book.getId());
-        GenreDao genreDao = helper.createGenreDao();
-        Optional<Genre> optionalGenre = genreDao.getById(book.getGenre().getId());
-        PublisherDao publisherDao = helper.createPublisherDao();
-        Optional<Publisher> optionalPublisher = publisherDao.getById(book.getPublisher().getId());
-        if (optionalGenre.isEmpty() || optionalPublisher.isEmpty()) {
-            throw new ServiceException("There is an error in database content");
-        }
-        Genre genre = optionalGenre.get();
-        Publisher publisher = optionalPublisher.get();
-        Year publishmentYear = book.getPublishmentYear();
-        int amount = book.getAmount();
-        return new Book(id, title, authorList, genre, publisher, publishmentYear, amount);
-    }
-
+    
     private void saveAuthorsAndMapThemToBook(DaoHelper helper, String authors, Long bookId) throws ServiceException, DaoException {
         AuthorDao authorDao = helper.createAuthorDao();
         authorDao.deleteBookMappingsFromRelationTable(bookId);

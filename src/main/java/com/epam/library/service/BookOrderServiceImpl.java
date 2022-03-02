@@ -44,6 +44,7 @@ public class BookOrderServiceImpl implements BookOrderService {
 
     @Override
     public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId) throws ServiceException {
+        //TODO: make it so that dates are stored in DB in a fixed format
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
             BookDao bookDao = helper.createBookDao();
@@ -70,10 +71,12 @@ public class BookOrderServiceImpl implements BookOrderService {
             Long bookId = order.getBook().getId();
             BookDao bookDao = helper.createBookDao();
             switch (newState) {
-                case BOOK_COLLECTED:
+                case ORDER_APPROVED:
                     bookDao.tweakAmount(bookId, -1);
                     break;
                 case BOOK_RETURNED:
+                    Date currentDate = Date.valueOf(LocalDate.now());
+                    orderDao.setReturnDate(orderId, currentDate);
                     bookDao.tweakAmount(bookId, 1);
                     break;
             }

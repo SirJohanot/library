@@ -14,6 +14,7 @@ public class BookOrderRowMapper implements RowMapper<BookOrder> {
 
     @Override
     public BookOrder map(ResultSet resultSet) throws SQLException {
+        //TODO: make it so that dates are read in a fixed format
         Long id = resultSet.getLong(BookOrder.ID_COLUMN);
         Long bookId = resultSet.getLong(BookOrder.BOOK_ID_COLUMN);
         Book book = Book.ofId(bookId);
