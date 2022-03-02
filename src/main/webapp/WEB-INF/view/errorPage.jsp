@@ -7,10 +7,12 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="pageContent"/>
+
 <fmt:message key="general.appName" var="appName"/>
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
+
 <fmt:message key="errorPage.errorOccurred" var="errorOccurred"/>
 <fmt:message key="errorPage.title" var="title"/>
 <html>
@@ -22,12 +24,12 @@
 <body>
 <header>
     <div class="container">
-        <img src="static/resources/white_book_symbol.png">
+        <img src="static/resources/white_book_symbol.png" alt="Book symbol">
         <h1>${appName}</h1>
         <h1 class="right-header-buttons">
             <form method="post" action="controller?command=languageChange" id="language-change">
                 <button type="button">
-                    <img src="static/resources/white_globe_symbol.png">
+                    <img src="static/resources/white_globe_symbol.png" alt="Globe symbol">
                 </button>
                 <div class="dropdown-content">
                     <button type="submit" name="locale" value="en_US">${en}</button>
