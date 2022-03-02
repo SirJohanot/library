@@ -96,7 +96,7 @@
             <input id="publisher" name="publisher" type="text" value="${requestScope.book.publisher.name}"
                    required="required"/>
             <label for="publishmentYear">${publishmentYear}:</label>
-            <input id="publishmentYear" name="publishmentYear" type="number" min="1" max="2022" step="1"
+            <input id="publishmentYear" name="publishmentYear" type="number" min="1000" max="2022" step="1"
                    value="${requestScope.book.publishmentYear}" required="required"/>
             <label for="amount">${inStock}:</label>
             <input id="amount" name="amount" type="number" min="0" step="1" value="${requestScope.book.amount}"
