@@ -7,7 +7,6 @@ import com.epam.library.mapper.GenreRowMapper;
 
 import java.sql.Connection;
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
 
@@ -26,13 +25,9 @@ public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
     }
 
     @Override
-    public Optional<Genre> getByName(String name) throws DaoException {
-        return findIdentical(Genre.ofName(name));
-    }
-
-    @Override
     public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
         String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_GENRE_ROW_QUERY, Genre.TABLE_NAME, primaryTableName, Genre.ID_COLUMN, primaryTableColumnName);
         executeUpdate(deleteGenreRowQuery);
     }
+
 }

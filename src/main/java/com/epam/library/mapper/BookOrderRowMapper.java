@@ -14,17 +14,26 @@ public class BookOrderRowMapper implements RowMapper<BookOrder> {
 
     @Override
     public BookOrder map(ResultSet resultSet) throws SQLException {
-        //TODO: make it so that dates are read in a fixed format
         Long id = resultSet.getLong(BookOrder.ID_COLUMN);
+
         Long bookId = resultSet.getLong(BookOrder.BOOK_ID_COLUMN);
         Book book = Book.ofId(bookId);
+
         Long userId = resultSet.getLong(BookOrder.USER_ID_COLUMN);
         User user = User.ofId(userId);
+
         Date startDate = resultSet.getDate(BookOrder.START_DATE_COLUMN);
         Date endDate = resultSet.getDate(BookOrder.END_DATE_COLUMN);
         Date returnDate = resultSet.getDate(BookOrder.RETURN_DATE_COLUMN);
-        RentalType rentalType = RentalType.valueOf(resultSet.getString(BookOrder.RENTAL_TYPE_COLUMN).toUpperCase());
-        RentalState rentalState = RentalState.valueOf(resultSet.getString(BookOrder.RENTAL_STATE_COLUMN).toUpperCase());
+
+        String rentalTypeLowercaseLine = resultSet.getString(BookOrder.RENTAL_TYPE_COLUMN);
+        String rentalTypeUppercaseLine = rentalTypeLowercaseLine.toUpperCase();
+        RentalType rentalType = RentalType.valueOf(rentalTypeUppercaseLine);
+
+        String rentalStateLowercaseLine = resultSet.getString(BookOrder.RENTAL_STATE_COLUMN);
+        String rentalStateUppercaseLine = rentalStateLowercaseLine.toUpperCase();
+        RentalState rentalState = RentalState.valueOf(rentalStateUppercaseLine);
+
         return new BookOrder(id, book, user, startDate, endDate, returnDate, rentalType, rentalState);
     }
 }

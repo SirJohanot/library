@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="customTags" prefix="ctg" %>
 
 <c:if test="${sessionScope.locale == null}">
     <c:set var="locale" value="en_US" scope="session"/>
@@ -53,23 +54,7 @@
     </div>
 </header>
 <section id="main-content">
-    <nav>
-        <form method="post" action="controller?">
-            <button type="submit" name="command" value="booksPage">${books}</button>
-            <c:choose>
-                <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                    <button type="submit" name="command" value="addABookPage">${addABook}</button>
-                    <button type="submit" name="command" value="usersPage">${users}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'LIBRARIAN'}">
-                    <button type="submit" name="command" value="globalOrdersPage">${orders}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'READER'}">
-                    <button type="submit" name="command" value="userOrdersPage">${myOrders}</button>
-                </c:when>
-            </c:choose>
-        </form>
-    </nav>
+    <ctg:navigation/>
     <div class="container round-bordered-subject main-page-message">
         <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
     </div>

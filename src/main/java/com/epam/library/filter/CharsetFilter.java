@@ -7,15 +7,15 @@ public class CharsetFilter implements Filter {
 
     private String encoding;
 
-    public void init(FilterConfig config) {
-        encoding = config.getInitParameter("requestEncoding");
+    public void init(FilterConfig filterConfig) {
+        encoding = filterConfig.getInitParameter("requestEncoding");
         if (encoding == null) encoding = "UTF-8";
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain next)
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        response.setCharacterEncoding(encoding);
-        next.doFilter(request, response);
+        servletResponse.setCharacterEncoding(encoding);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     public void destroy() {

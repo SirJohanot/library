@@ -8,21 +8,21 @@ html, body {
 }
 
 body {
-    color: #f0f6fc;
-    background-color: #010409;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 /* Global */
 button, input[type="submit"] {
-    color: #f0f6fc;
-    background-color: #003050;
+    color: #ffffff;
+    background-color: #0a80d7;
     border-radius: 6px;
     cursor: pointer;
-    border: 1px solid #c9d1d9;
+    border: 1px solid rgb(255, 255, 255);
 }
 
 button:hover, input[type="submit"]:hover {
-    background-color: #002940;
+    background-color: #076591;
 }
 
 .container {
@@ -36,17 +36,18 @@ button:hover, input[type="submit"]:hover {
 }
 
 .red {
-    background-color: #691004;
+    background-color: #c0250e;
 }
 
 .green {
-    background-color: #446c06;
+    background-color: #76b711;
 }
 
 .round-bordered-subject {
-    border: 2px solid rgba(255, 255, 255, .55);
+    border: 2px solid rgb(0, 0, 0);
+    color: black;
     border-radius: 25px;
-    background-color: #161b22;
+    background-color: #bdbdc2;
 }
 
 #main-content {
@@ -55,7 +56,7 @@ button:hover, input[type="submit"]:hover {
     height: 100%;
 }
 
-#main-content div {
+#main-content-div {
     width: 100%;
     padding: 5px;
 }
@@ -68,15 +69,16 @@ button:hover, input[type="submit"]:hover {
     line-height: 20px;
     font-size: 20px;
     border-radius: 6px;
-    color: #f0f6fc;
-    background-color: #0d1117;
+    color: black;
+    background-color: #ffffff;
     border: 1px solid #30363d;
 }
 
 /* Header*/
 header {
     background-color: #161b22;
-    border-bottom: 2px solid rgba(255, 255, 255, .55);
+    color: white;
+    border-bottom: 2px solid rgba(47, 43, 43, 0.55);
     padding-top: 10px;
     padding-bottom: 5px;
 }
@@ -109,9 +111,9 @@ header h1 {
 /* Navigation */
 nav {
     height: 100%;
-    background-color: #0d1117;
-    border-right: 2px solid rgba(255, 255, 255, .55);
-    flex: 0 0 130px;
+    background-color: #b4b6c0;
+    border-right: 2px solid rgb(0, 0, 0);
+    flex: 0 0 160px;
 }
 
 nav form {
@@ -120,11 +122,10 @@ nav form {
 }
 
 nav form button {
-    margin: 0;
+    margin: 10px;
+    width: 140px;
     font-size: 24px;
     display: block;
-    width: 100%;
-    min-height: 60px;
 }
 
 /* Logout Button */
@@ -156,7 +157,7 @@ nav form button {
 }
 
 #language-change:hover {
-    background-color: #002940;
+    background-color: #02273b;
 }
 
 #language-change:hover .dropdown-content {
@@ -167,6 +168,24 @@ nav form button {
     display: block;
     width: 100%;
     min-height: 30px;
+}
+
+/* Pagination */
+#pagination-form {
+    display: inline-block;
+    width: auto;
+    margin: 10px auto;
+    padding: 5px;
+}
+
+#pagination-form form {
+    display: inline-block;
+    width: auto;
+    margin: 0 5px;
+}
+
+#pagination-form form input, #pagination-form form button {
+    font-size: 20px;
 }
 
 /* Login Form*/
@@ -187,8 +206,8 @@ nav form button {
 
 .login-form input[type="text"], .login-form input[type="password"] {
     border-radius: 6px;
-    color: #f0f6fc;
-    background-color: #0d1117;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 /* Main Page */
@@ -213,7 +232,7 @@ nav form button {
     display: block;
     text-align: center;
     font-weight: bold;
-    font-size: 32px;
+    font-size: 24px;
     margin: 10px auto;
 }
 
@@ -235,11 +254,7 @@ nav form button {
     margin: 10px auto;
 }
 
-.buttons-container * {
-    flex-grow: 1;
-}
-
-.buttons-container button {
+.buttons-container button, .buttons-container input[type="submit"] {
     min-width: 25%;
     min-height: 60px;
     margin: 10px auto;
@@ -253,17 +268,20 @@ nav form button {
 
 #bookChanges label, #bookChanges input {
     display: block;
+}
+
+#bookChanges input[type="text"] {
     width: 100%;
 }
 
 #bookChanges input {
     padding: 5px 12px;
     line-height: 20px;
-    margin: 14px auto;
+    margin: 14px 0;
     border: 1px solid #30363d;
     border-radius: 6px;
-    color: #f0f6fc;
-    background-color: #0d1117;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 /* Edit user page */
@@ -276,14 +294,18 @@ nav form button {
     width: 100%;
 }
 
+#userChanges input[type="text"] {
+    width: 100%;
+}
+
 #userChanges input, #userChanges select {
     padding: 5px 12px;
     line-height: 20px;
-    margin: 14px auto;
+    margin: 14px 0;
     border: 1px solid #30363d;
     border-radius: 6px;
-    color: #f0f6fc;
-    background-color: #0d1117;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 @media screen and (max-width: 480px) {
@@ -297,17 +319,20 @@ nav form button {
     nav {
         display: block;
         height: auto;
-        border-bottom: 2px solid rgba(255, 255, 255, .55);
+        border-bottom: 2px solid rgba(49, 44, 44, 0.55);
         border-right: none;
     }
 
-    nav ul {
-        display: block;
-    }
-
-    nav ul li {
+    nav form {
         display: block;
         padding: 0;
+    }
+
+    nav form button {
+        display: block;
+        padding: 0;
+        margin: 0;
+        width: 100%;
     }
 
 }

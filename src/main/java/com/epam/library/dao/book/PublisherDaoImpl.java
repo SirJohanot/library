@@ -7,7 +7,6 @@ import com.epam.library.mapper.PublisherRowMapper;
 
 import java.sql.Connection;
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 public class PublisherDaoImpl extends AbstractDao<Publisher> implements PublisherDao {
 
@@ -26,13 +25,9 @@ public class PublisherDaoImpl extends AbstractDao<Publisher> implements Publishe
     }
 
     @Override
-    public Optional<Publisher> getByName(String name) throws DaoException {
-        return findIdentical(Publisher.ofName(name));
-    }
-
-    @Override
     public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
         String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_PUBLISHER_ROW_QUERY, Publisher.TABLE_NAME, primaryTableName, Publisher.ID_COLUMN, primaryTableColumnName);
         executeUpdate(deleteGenreRowQuery);
     }
+
 }

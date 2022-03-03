@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="customTags" prefix="ctg" %>
 
 <c:if test="${sessionScope.locale == null}">
     <c:set var="locale" value="en_US" scope="session"/>
@@ -58,27 +59,11 @@
     </div>
 </header>
 <section id="main-content">
-    <nav>
-        <form method="post" action="controller?">
-            <button type="submit" name="command" value="booksPage">${books}</button>
-            <c:choose>
-                <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                    <button type="submit" name="command" value="addABookPage">${addABook}</button>
-                    <button type="submit" name="command" value="usersPage">${users}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'LIBRARIAN'}">
-                    <button type="submit" name="command" value="globalOrdersPage">${orders}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'READER'}">
-                    <button type="submit" name="command" value="userOrdersPage">${myOrders}</button>
-                </c:when>
-            </c:choose>
-        </form>
-    </nav>
-    <div>
+    <ctg:navigation/>
+    <div id="main-content-div">
         <form method="post" action="controller?command=viewOrder">
             <c:forEach items="${requestScope.orderList}" var="order">
-                <button type="submit" name="orderId" value="${book.id}" class="block-container round-bordered-subject">
+                <button type="submit" name="orderId" value="${order.id}" class="block-container round-bordered-subject">
                     <h1>${order.book.title} | ${order.user.login}</h1>
                     <div class="block-parameters">
                         <p>${startDate}: <fmt:formatDate value="${order.startDate}" pattern="${dateFormat}"/></p>
@@ -90,6 +75,7 @@
                 </button>
             </c:forEach>
         </form>
+        <ctg:pagination command="ordersPage"/>
     </div>
 </section>
 </body>

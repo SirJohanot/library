@@ -42,11 +42,6 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
     }
 
     @Override
-    public Optional<Author> getByName(String name) throws DaoException {
-        return findIdentical(Author.ofName(name));
-    }
-
-    @Override
     public boolean isAuthorMappedToBookInRelationTable(Long authorId, Long bookId) throws DaoException {
         String query = String.format(GET_BOOK_AUTHOR_RELATION_QUERY, RELATION_TABLE_NAME, Author.TABLE_NAME, RELATION_TABLE_AUTHOR_ID_COLUMN, Author.ID_COLUMN, RELATION_TABLE_AUTHOR_ID_COLUMN, RELATION_TABLE_BOOK_ID_COLUMN);
         Optional<Author> optionalAuthor = executeForSingleResult(query, authorId, bookId);
@@ -80,4 +75,5 @@ public class AuthorDaoImpl extends AbstractDao<Author> implements AuthorDao {
         String deleteAuthorRowsQuery = String.format(DELETE_ROWS_UNREFERENCED_BY_ANOTHER_TABLE_QUERY, Author.TABLE_NAME, RELATION_TABLE_NAME, Author.ID_COLUMN, RELATION_TABLE_AUTHOR_ID_COLUMN);
         executeUpdate(deleteAuthorRowsQuery);
     }
+
 }

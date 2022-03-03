@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="customTags" prefix="ctg" %>
 
 <c:if test="${sessionScope.locale == null}">
     <c:set var="locale" value="en_US" scope="session"/>
@@ -73,30 +74,14 @@
     </div>
 </header>
 <section id="main-content">
-    <nav>
-        <form method="post" action="controller?">
-            <button type="submit" name="command" value="booksPage">${books}</button>
-            <c:choose>
-                <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                    <button type="submit" name="command" value="addABookPage">${addABook}</button>
-                    <button type="submit" name="command" value="usersPage">${users}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'LIBRARIAN'}">
-                    <button type="submit" name="command" value="globalOrdersPage">${orders}</button>
-                </c:when>
-                <c:when test="${sessionScope.user.role == 'READER'}">
-                    <button type="submit" name="command" value="userOrdersPage">${myOrders}</button>
-                </c:when>
-            </c:choose>
-        </form>
-    </nav>
-    <div>
+    <ctg:navigation/>
+    <div id="main-content-div">
         <div class="round-bordered-subject block-container">
-            <h1>${startDate}: ${requestScope.bookOrder.user.login}</h1>
-            <p>${endDate}: ${requestScope.bookOrder.user.name}</p>
-            <p>${returnDate}: ${requestScope.bookOrder.user.surname}</p>
-            <p>${rentalType}: ${requestScope.bookOrder.user.role}</p>
-            <p>${rentalState}: ${requestScope.bookOrder.user.blocked}</p>
+            <h1>${startDate}: ${requestScope.bookOrder.startDate}</h1>
+            <p>${endDate}: ${requestScope.bookOrder.endDate}</p>
+            <p>${returnDate}: ${requestScope.bookOrder.returnDate}</p>
+            <p>${rentalType}: ${requestScope.bookOrder.type}</p>
+            <p>${rentalState}: ${requestScope.bookOrder.state}</p>
         </div>
         <div class="round-bordered-subject block-container">
             <h1>${bookTitle}: ${requestScope.bookOrder.book.title}</h1>
@@ -112,26 +97,28 @@
                 <p>${inStock}: ${requestScope.bookOrder.book.amount}</p>
             </c:if>
         </div>
-        <div class="round-bordered-subject block-container">
-            <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
-            <p>${name}: ${requestScope.bookOrder.user.name}</p>
-            <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
-            <p>${role}: ${requestScope.bookOrder.user.role}</p>
-            <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
-        </div>
-        <form class="buttons-container" method="post"
-              action="controller?orderId=${requestScope.bookOrder.id}">
+        <c:if test="${sessionScope.user.role != 'READER'}">
+            <div class="round-bordered-subject block-container">
+                <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
+                <p>${name}: ${requestScope.bookOrder.user.name}</p>
+                <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
+                <p>${role}: ${requestScope.bookOrder.user.role}</p>
+                <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
+            </div>
+        </c:if>
+        <form class="buttons-container" method="post" action="controller?">
+            <input type="hidden" name="orderId" value="${requestScope.bookOrder.id}"/>
             <c:choose>
-                <c:when test="${sessionScope.user.role == 'LIBRARIAN' && requestScope.bookOrder.state == 'ORDER_PLACED'}">
+                <c:when test="${(sessionScope.user.role == 'LIBRARIAN') && (requestScope.bookOrder.state == 'ORDER_PLACED')}">
                     <button type="submit" name="command" value="declineOrder" class="red">${declineOrder}</button>
                     <button type="submit" name="command" value="approveOrder" class="green">${approveOrder}</button>
                 </c:when>
-                <c:when test="${sessionScope.user.role == 'READER' && sessionScope.user.id == requestScope.bookOrder.userId}">
+                <c:when test="${(sessionScope.user.role == 'READER') && (sessionScope.user.id == requestScope.bookOrder.user.id)}">
                     <c:choose>
                         <c:when test="${requestScope.bookOrder.state == 'ORDER_APPROVED'}">
                             <button type="submit" name="command" value="collectOrder">${collectOrder}</button>
                         </c:when>
-                        <c:when test="${requestScope.bookOrder.state == 'ORDER_COLLECTED'}">
+                        <c:when test="${requestScope.bookOrder.state == 'BOOK_COLLECTED'}">
                             <button type="submit" name="command" value="returnOrder">${returnOrder}</button>
                         </c:when>
                     </c:choose>

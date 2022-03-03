@@ -14,8 +14,13 @@ public class UserRowMapper implements RowMapper<User> {
         String login = resultSet.getString(User.LOGIN_COLUMN);
         String name = resultSet.getString(User.NAME_COLUMN);
         String surname = resultSet.getString(User.SURNAME_COLUMN);
-        UserRole role = UserRole.valueOf(resultSet.getString(User.ROLE_COLUMN).toUpperCase());
+
+        String roleLowercaseLine = resultSet.getString(User.ROLE_COLUMN);
+        String roleUppercaseLine = roleLowercaseLine.toUpperCase();
+        UserRole role = UserRole.valueOf(roleUppercaseLine);
+
         Boolean isBlocked = resultSet.getBoolean(User.BLOCKED_COLUMN);
+        
         return new User(id, login, name, surname, role, isBlocked);
     }
 }

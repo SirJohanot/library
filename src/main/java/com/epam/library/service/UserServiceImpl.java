@@ -23,8 +23,10 @@ public class UserServiceImpl implements UserService {
     public Optional<User> signIn(String login, String password) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+
             UserDao dao = helper.createUserDao();
             Optional<User> user = dao.findUserByLoginAndPassword(login, password);
+
             helper.endTransaction();
             return user;
         } catch (DaoException e) {
@@ -36,8 +38,10 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+
             UserDao dao = helper.createUserDao();
             List<User> userList = dao.getAll();
+
             helper.endTransaction();
             return userList;
         } catch (DaoException e) {
@@ -49,11 +53,13 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+
             UserDao dao = helper.createUserDao();
             Optional<User> user = dao.getById(id);
             if (user.isEmpty()) {
                 throw new ServiceException("The requested user does not exist");
             }
+
             helper.endTransaction();
             return user.get();
         } catch (DaoException e) {
@@ -65,9 +71,11 @@ public class UserServiceImpl implements UserService {
     public void saveUser(Long id, String login, String name, String surname, UserRole role, Boolean blocked) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+
             UserDao dao = helper.createUserDao();
             User user = new User(id, login, name, surname, role, blocked);
             dao.save(user);
+
             helper.endTransaction();
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -78,8 +86,10 @@ public class UserServiceImpl implements UserService {
     public void setUserBlockStatus(Long id, Boolean newValue) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
+
             UserDao dao = helper.createUserDao();
             dao.updateUserBlocked(id, newValue);
+            
             helper.endTransaction();
         } catch (DaoException e) {
             throw new ServiceException(e);

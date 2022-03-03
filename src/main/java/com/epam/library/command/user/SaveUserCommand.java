@@ -22,14 +22,18 @@ public class SaveUserCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String targetUserIdLine = req.getParameter(ParameterNameConstants.USER_ID);
-        Long targetUserId = Long.valueOf(targetUserIdLine);
+        Long targetUserId = targetUserIdLine == null ? null : Long.valueOf(targetUserIdLine);
+
         String targetUserLogin = req.getParameter(ParameterNameConstants.USER_LOGIN);
         String targetUserName = req.getParameter(ParameterNameConstants.USER_NAME);
         String targetUserSurname = req.getParameter(ParameterNameConstants.USER_SURNAME);
+
         String targetUserRoleLine = req.getParameter(ParameterNameConstants.USER_ROLE).toUpperCase();
         UserRole targetUserRole = UserRole.valueOf(targetUserRoleLine);
+
         String targetUserBlockedLine = req.getParameter(ParameterNameConstants.USER_BLOCKED);
         boolean targetUserBlocked = Boolean.parseBoolean(targetUserBlockedLine);
+
         userService.saveUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked);
         return CommandResult.redirect(CommandInvocationConstants.USERS_PAGE);
     }

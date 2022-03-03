@@ -18,7 +18,7 @@ public interface BookOrderService {
 
     BookOrder getOrderById(Long id) throws ServiceException;
 
-    List<BookOrder> getAllOrders() throws ServiceException;
+    List<BookOrder> getOrdersForLibrarian() throws ServiceException;
 
-    List<BookOrder> getUserOrders(Long userId) throws ServiceException;
+    List<BookOrder> getReaderOrders(Long userId) throws ServiceException;
 }

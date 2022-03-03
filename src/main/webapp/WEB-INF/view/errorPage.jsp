@@ -41,7 +41,7 @@
     </div>
 </header>
 <section id="main-content">
-    <div class="container error-message round-bordered-subject">
+    <div class="container round-bordered-subject error-message">
         <h1>${errorOccurred}</h1>
         <p>${requestScope.errorMessage}</p>
     </div>

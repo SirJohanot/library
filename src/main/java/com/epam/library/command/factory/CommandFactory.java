@@ -5,103 +5,80 @@ import com.epam.library.command.LanguageChangeCommand;
 import com.epam.library.command.MainPageCommand;
 import com.epam.library.command.SignInPageCommand;
 import com.epam.library.command.book.*;
-import com.epam.library.command.order.OrderCommand;
-import com.epam.library.command.order.OrderOnSubscriptionCommand;
-import com.epam.library.command.order.OrderToReadingHallCommand;
-import com.epam.library.command.order.OrdersPageCommand;
-import com.epam.library.command.order.statemanipulation.LibrarianOrderDecisionCommand;
-import com.epam.library.command.order.statemanipulation.ReaderOrderActionCommand;
+import com.epam.library.command.order.*;
 import com.epam.library.command.user.*;
+import com.epam.library.command.viewentities.BooksPageCommand;
+import com.epam.library.command.viewentities.OrdersPageCommand;
+import com.epam.library.command.viewentities.UsersPageCommand;
+import com.epam.library.constant.CommandLineConstants;
 import com.epam.library.dao.helper.DaoHelperFactory;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.service.BookOrderServiceImpl;
 import com.epam.library.service.BookServiceImpl;
 import com.epam.library.service.UserServiceImpl;
+import com.epam.library.service.shallowentityfiller.ShallowEntityFillerFactory;
+import com.epam.library.util.Paginator;
 
 public class CommandFactory {
 
-    private static final String LOGIN_COMMAND = "signIn";
-    private static final String LANGUAGE_CHANGE_COMMAND = "languageChange";
-    private static final String LOG_OUT_COMMAND = "signOut";
-    private static final String SIGN_IN_PAGE_COMMAND = "signInPage";
-    private static final String MAIN_PAGE_COMMAND = "mainPage";
-    private static final String BOOKS_PAGE_COMMAND = "booksPage";
-    private static final String VIEW_BOOK_PAGE_COMMAND = "viewBook";
-    private static final String EDIT_BOOK_PAGE_COMMAND = "editBookPage";
-    private static final String SAVE_BOOK_COMMAND = "saveBook";
-    private static final String ADD_A_BOOK_PAGE_COMMAND = "addABookPage";
-    private static final String DELETE_BOOK_COMMAND = "deleteBook";
-    private static final String USERS_PAGE_COMMAND = "usersPage";
-    private static final String VIEW_USER_PAGE_COMMAND = "viewUser";
-    private static final String EDIT_USER_PAGE_COMMAND = "editUserPage";
-    private static final String SAVE_USER_COMMAND = "saveUser";
-    private static final String BLOCK_USER_COMMAND = "blockUser";
-    private static final String UNBLOCK_USER_COMMAND = "unblockUser";
-    private static final String USER_ORDERS_PAGE_COMMAND = "userOrdersPage";
-    private static final String GLOBAL_ORDERS_PAGE_COMMAND = "globalOrdersPage";
-    private static final String ORDERS_PAGE_COMMAND = "ordersPage";
-    private static final String ORDER_TO_READING_HALL_COMMAND = "orderToReadingHallPage";
-    private static final String ORDER_ON_SUBSCRIPTION_COMMAND = "orderOnSubscriptionPage";
-    private static final String ORDER_COMMAND = "order";
-    private static final String APPROVE_ORDER_COMMAND = "approveOrder";
-    private static final String DECLINE_ORDER_COMMAND = "declineOrder";
-    private static final String COLLECT_ORDER_COMMAND = "collectOrder";
-    private static final String RETURN_ORDER_COMMAND = "returnOrder";
-
     public Command createCommand(String command) {
+        DaoHelperFactory daoHelperFactory = new DaoHelperFactory();
+        ShallowEntityFillerFactory fillerFactory = new ShallowEntityFillerFactory();
         switch (command) {
-            case LOGIN_COMMAND:
-                return new SignInCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case LANGUAGE_CHANGE_COMMAND:
+            case CommandLineConstants.LOGIN:
+                return new SignInCommand(new UserServiceImpl(daoHelperFactory));
+            case CommandLineConstants.LANGUAGE_CHANGE:
                 return new LanguageChangeCommand();
-            case LOG_OUT_COMMAND:
+            case CommandLineConstants.LOG_OUT:
                 return new SignOutCommand();
-            case SIGN_IN_PAGE_COMMAND:
+            case CommandLineConstants.SIGN_IN_PAGE:
                 return new SignInPageCommand();
-            case MAIN_PAGE_COMMAND:
+            case CommandLineConstants.MAIN_PAGE:
                 return new MainPageCommand();
-            case BOOKS_PAGE_COMMAND:
-                return new BooksPageCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case VIEW_BOOK_PAGE_COMMAND:
-                return new ViewBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case EDIT_BOOK_PAGE_COMMAND:
-                return new EditBookPageCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case SAVE_BOOK_COMMAND:
-                return new SaveBookCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case DELETE_BOOK_COMMAND:
-                return new DeleteBookCommand(new BookServiceImpl(new DaoHelperFactory()));
-            case ADD_A_BOOK_PAGE_COMMAND:
+            case CommandLineConstants.BOOKS_PAGE:
+                return new BooksPageCommand(new BookServiceImpl(daoHelperFactory, fillerFactory), new Paginator<>());
+            case CommandLineConstants.VIEW_BOOK_PAGE:
+                return new ViewBookPageCommand(new BookServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.EDIT_BOOK_PAGE:
+                return new EditBookPageCommand(new BookServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.SAVE_BOOK:
+                return new SaveBookCommand(new BookServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.DELETE_BOOK:
+                return new DeleteBookCommand(new BookServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.ADD_A_BOOK_PAGE:
                 return new AddABookPageCommand();
-            case USERS_PAGE_COMMAND:
-                return new UsersPageCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case VIEW_USER_PAGE_COMMAND:
-                return new ViewUserPageCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case EDIT_USER_PAGE_COMMAND:
-                return new EditUserPageCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case SAVE_USER_COMMAND:
-                return new SaveUserCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case BLOCK_USER_COMMAND:
-                return new BlockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case UNBLOCK_USER_COMMAND:
-                return new UnblockUserCommand(new UserServiceImpl(new DaoHelperFactory()));
-            case USER_ORDERS_PAGE_COMMAND:
-            case GLOBAL_ORDERS_PAGE_COMMAND:
-            case ORDERS_PAGE_COMMAND:
-                return new OrdersPageCommand(new BookOrderServiceImpl(new DaoHelperFactory()));
-            case ORDER_TO_READING_HALL_COMMAND:
-                return new OrderToReadingHallCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
-            case ORDER_ON_SUBSCRIPTION_COMMAND:
-                return new OrderOnSubscriptionCommand(new BookServiceImpl(new DaoHelperFactory()), new BookOrderServiceImpl(new DaoHelperFactory()));
-            case ORDER_COMMAND:
-                return new OrderCommand(new BookOrderServiceImpl(new DaoHelperFactory()));
-            case APPROVE_ORDER_COMMAND:
-                return new LibrarianOrderDecisionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.ORDER_APPROVED);
-            case DECLINE_ORDER_COMMAND:
-                return new LibrarianOrderDecisionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.ORDER_DECLINED);
-            case COLLECT_ORDER_COMMAND:
-                return new ReaderOrderActionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.BOOK_COLLECTED);
-            case RETURN_ORDER_COMMAND:
-                return new ReaderOrderActionCommand(new BookOrderServiceImpl(new DaoHelperFactory()), RentalState.BOOK_RETURNED);
+            case CommandLineConstants.USERS_PAGE:
+                return new UsersPageCommand(new UserServiceImpl(daoHelperFactory), new Paginator<>());
+            case CommandLineConstants.VIEW_USER_PAGE:
+                return new ViewUserPageCommand(new UserServiceImpl(daoHelperFactory));
+            case CommandLineConstants.EDIT_USER_PAGE:
+                return new EditUserPageCommand(new UserServiceImpl(daoHelperFactory));
+            case CommandLineConstants.SAVE_USER:
+                return new SaveUserCommand(new UserServiceImpl(daoHelperFactory));
+            case CommandLineConstants.BLOCK_USER:
+                return new SetUserBlockedStatusCommand(new UserServiceImpl(daoHelperFactory), true);
+            case CommandLineConstants.UNBLOCK_USER:
+                return new SetUserBlockedStatusCommand(new UserServiceImpl(daoHelperFactory), false);
+            case CommandLineConstants.USER_ORDERS_PAGE:
+            case CommandLineConstants.GLOBAL_ORDERS_PAGE:
+            case CommandLineConstants.ORDERS_PAGE:
+                return new OrdersPageCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory), new Paginator<>());
+            case CommandLineConstants.VIEW_ORDER:
+                return new ViewOrderPage(new BookOrderServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.ORDER_TO_READING_HALL:
+                return new OrderToReadingHallCommand(new BookServiceImpl(daoHelperFactory, fillerFactory), new BookOrderServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.ORDER_ON_SUBSCRIPTION:
+                return new OrderOnSubscriptionCommand(new BookServiceImpl(daoHelperFactory, fillerFactory), new BookOrderServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.ORDER:
+                return new OrderCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory));
+            case CommandLineConstants.APPROVE_ORDER:
+                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory), RentalState.ORDER_APPROVED);
+            case CommandLineConstants.DECLINE_ORDER:
+                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory), RentalState.ORDER_DECLINED);
+            case CommandLineConstants.COLLECT_ORDER:
+                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory), RentalState.BOOK_COLLECTED);
+            case CommandLineConstants.RETURN_ORDER:
+                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, fillerFactory), RentalState.BOOK_RETURNED);
             default:
                 throw new IllegalArgumentException("Unknown command = " + command);
         }

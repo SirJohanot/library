@@ -83,7 +83,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         }
     }
 
-    public Optional<T> findIdentical(T item) throws DaoException {
+    protected Optional<T> findIdentical(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
         valuesMap.remove("id");
         String getAllWhereQueryWithTableName = String.format(GET_ALL_WHERE_QUERY_BEGINNING, tableName);
@@ -125,6 +125,19 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     public void removeById(Long id) throws DaoException {
         String query = String.format(REMOVE_BY_ID_QUERY, tableName);
         executeUpdate(query, id);
+    }
+
+    @Override
+    public Long getIdOfNewOrExistingObject(T object) throws DaoException {
+        Optional<T> optionalObject = findIdentical(object);
+        if (optionalObject.isEmpty()) {
+            save(object);
+            optionalObject = findIdentical(object);
+            if (optionalObject.isEmpty()) {
+                throw new DaoException("Object could not be saved to the database or could not be found by dao");
+            }
+        }
+        return optionalObject.get().getId();
     }
 
     private String buildParametrisedQuery(Map<String, Object> valuesMap, String queryBeginning, String conditionDelimiter, String queryEnd) {

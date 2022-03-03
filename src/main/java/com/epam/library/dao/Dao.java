@@ -15,4 +15,6 @@ public interface Dao<T extends Identifiable> {
     void save(T item) throws DaoException;
 
     void removeById(Long id) throws DaoException;
+
+    Long getIdOfNewOrExistingObject(T object) throws DaoException;
 }

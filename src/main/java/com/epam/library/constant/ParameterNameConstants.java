@@ -3,9 +3,14 @@ package com.epam.library.constant;
 public final class ParameterNameConstants {
 
     public static final String COMMAND = "command";
+
     public static final String LOCALE = "locale";
+
+    public static final String PAGE = "page";
+
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
+
     public static final String BOOK = "book";
     public static final String BOOK_ID = "bookId";
     public static final String BOOK_TITLE = "title";
@@ -14,6 +19,7 @@ public final class ParameterNameConstants {
     public static final String BOOK_PUBLISHER = "publisher";
     public static final String BOOK_PUBLISHMENT_YEAR = "publishmentYear";
     public static final String BOOK_AMOUNT = "amount";
+
     public static final String USER_ID = "userId";
     public static final String USER_LOGIN = "login";
     public static final String USER_PASSWORD = "password";
@@ -21,6 +27,7 @@ public final class ParameterNameConstants {
     public static final String USER_SURNAME = "surname";
     public static final String USER_ROLE = "role";
     public static final String USER_BLOCKED = "blocked";
+
     public static final String DAYS = "days";
     public static final String ORDER_ID = "orderId";
     public static final String START_DATE = "startDate";

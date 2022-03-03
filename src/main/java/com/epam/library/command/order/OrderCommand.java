@@ -26,14 +26,19 @@ public class OrderCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         User orderingUser = (User) req.getSession().getAttribute(AttributeNameConstants.USER);
         Long userId = orderingUser.getId();
+
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
+
         String startDateLine = req.getParameter(ParameterNameConstants.START_DATE);
         Date startDate = Date.valueOf(startDateLine);
+
         String endDateLine = req.getParameter(ParameterNameConstants.END_DATE);
         Date endDate = Date.valueOf(endDateLine);
+
         String rentalTypeLine = req.getParameter(ParameterNameConstants.RENTAL_TYPE);
         RentalType rentalType = RentalType.valueOf(rentalTypeLine);
+        
         bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId);
         return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }
