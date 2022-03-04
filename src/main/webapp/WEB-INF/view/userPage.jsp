@@ -71,7 +71,8 @@
             <p>${blocked}: ${requestScope.targetUser.blocked}</p>
         </div>
         <form class="buttons-container" method="post"
-              action="controller?userId=${requestScope.targetUser.id}">
+              action="controller?">
+            <input type="hidden" name="userId" value="${requestScope.targetUser.id}"/>
             <c:if test="${sessionScope.user.role == 'ADMIN' && requestScope.targetUser.role != 'ADMIN'}">
                 <button type="submit" name="command" value="editUserPage">${edit}</button>
                 <c:choose>

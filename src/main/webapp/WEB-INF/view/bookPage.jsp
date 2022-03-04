@@ -82,8 +82,8 @@
         </div>
         <c:choose>
             <c:when test="${sessionScope.user.role == 'ADMIN'}">
-                <form class="buttons-container" method="post"
-                      action="controller?bookId=${requestScope.book.id}">
+                <form class="buttons-container" method="post" action="controller?">
+                    <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
                     <button type="submit" name="command" value="editBookPage">${edit}</button>
                     <button type="submit" name="command" value="deleteBook" class="red">${delete}</button>
                 </form>
@@ -91,14 +91,16 @@
             <c:when test="${sessionScope.user.role == 'READER'}">
                 <div class="buttons-container">
                     <form method="post"
-                          action="controller?bookId=${requestScope.book.id}">
+                          action="controller?">
+                        <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
                         <button type="submit" name="command"
                                 value="orderToReadingHallPage">${orderToReadingHall}</button>
                     </form>
                     <div>
                         <h1>${orderOnSubscription}:</h1>
                         <form class="buttons-container" method="post"
-                              action="controller?command=orderOnSubscriptionPage&bookId=${requestScope.book.id}">
+                              action="controller?command=orderOnSubscriptionPage">
+                            <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
                             <button type="submit" name="days" value="7">7 ${days}</button>
                             <button type="submit" name="days" value="14">14 ${days}</button>
                             <button type="submit" name="days" value="21">21 ${days}</button>

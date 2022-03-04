@@ -68,7 +68,8 @@
     <ctg:navigation/>
     <div id="main-content-div">
         <form id="bookChanges" class="round-bordered-subject block-container" method="post"
-              action="controller?command=saveBook&bookId=${requestScope.book.id}">
+              action="controller?command=saveBook">
+            <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
             <label for="title">${bookTitle}:</label>
             <input id="title" name="title" type="text" value="${requestScope.book.title}" required="required"/>
             <label for="authors">${authors}:</label>

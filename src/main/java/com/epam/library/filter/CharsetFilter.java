@@ -5,19 +5,25 @@ import java.io.IOException;
 
 public class CharsetFilter implements Filter {
 
-    private String encoding;
+    private String requiredEncoding;
 
+    @Override
     public void init(FilterConfig filterConfig) {
-        encoding = filterConfig.getInitParameter("requestEncoding");
-        if (encoding == null) encoding = "UTF-8";
+        requiredEncoding = filterConfig.getInitParameter("requestEncoding");
+        if (requiredEncoding == null) requiredEncoding = "UTF-8";
     }
 
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        servletResponse.setCharacterEncoding(encoding);
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        String currentEncoding = servletRequest.getCharacterEncoding();
+        if (currentEncoding == null || !currentEncoding.equals(requiredEncoding)) {
+            servletResponse.setCharacterEncoding(requiredEncoding);
+            servletResponse.setCharacterEncoding(requiredEncoding);
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    @Override
     public void destroy() {
     }
 }

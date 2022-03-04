@@ -25,11 +25,11 @@ public class CommandFactory {
         DaoHelperFactory daoHelperFactory = new DaoHelperFactory();
         ShallowEntityFillerFactory fillerFactory = new ShallowEntityFillerFactory();
         switch (command) {
-            case CommandLineConstants.LOGIN:
+            case CommandLineConstants.SIGN_IN:
                 return new SignInCommand(new UserServiceImpl(daoHelperFactory));
             case CommandLineConstants.LANGUAGE_CHANGE:
                 return new LanguageChangeCommand();
-            case CommandLineConstants.LOG_OUT:
+            case CommandLineConstants.SIGN_OUT:
                 return new SignOutCommand();
             case CommandLineConstants.SIGN_IN_PAGE:
                 return new SignInPageCommand();

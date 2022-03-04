@@ -64,7 +64,8 @@
     <ctg:navigation/>
     <div id="main-content-div">
         <form id="userChanges" class="round-bordered-subject block-container" method="post"
-              action="controller?command=saveUser&userId=${requestScope.targetUser.id}">
+              action="controller?command=saveUser">
+            <input type="hidden" name="userId" value="${requestScope.targetUser.id}"/>
             <h1>${login}: ${requestScope.targetUser.login}</h1>
             <label for="name">${name}:</label>
             <input id="name" name="name" type="text"

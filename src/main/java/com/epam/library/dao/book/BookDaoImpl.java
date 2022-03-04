@@ -8,7 +8,6 @@ import com.epam.library.mapper.BookRowMapper;
 import java.sql.Connection;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 
 public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
@@ -36,11 +35,6 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
     public void removeById(Long id) throws DaoException {
         String query = String.format(UPDATE_IS_DELETED_TRUE_QUERY, Book.TABLE_NAME);
         executeUpdate(query, id);
-    }
-
-    @Override
-    public Optional<Book> findIdenticalBook(Book book) throws DaoException {
-        return findIdentical(book);
     }
 
     @Override

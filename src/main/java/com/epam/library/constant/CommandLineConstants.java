@@ -5,8 +5,8 @@ public class CommandLineConstants {
     public static final String LANGUAGE_CHANGE = "languageChange";
 
     public static final String SIGN_IN_PAGE = "signInPage";
-    public static final String LOGIN = "signIn";
-    public static final String LOG_OUT = "signOut";
+    public static final String SIGN_IN = "signIn";
+    public static final String SIGN_OUT = "signOut";
 
     public static final String MAIN_PAGE = "mainPage";
 

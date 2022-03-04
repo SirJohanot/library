@@ -88,8 +88,7 @@
             <p>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></p>
             <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
         </div>
-        <form class="buttons-container" method="post"
-              action="controller?">
+        <form class="buttons-container" method="post" action="controller?">
             <c:if test="${sessionScope.user.role == 'READER'}">
                 <button type="submit" name="command"
                         value="booksPage" class="red">${cancel}</button>
