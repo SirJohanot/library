@@ -13,7 +13,7 @@ import java.io.IOException;
 public class NavigationMenuTag extends TagSupport {
 
     private static final String NAV_START = "<nav>";
-    private static final String FORM_START = "<form method=\"post\" action=\"controller?\">";
+    private static final String FORM_START = "<form method=\"get\" action=\"controller?\">";
     private static final String BOOKS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"booksPage\">";
     private static final String ADD_A_BOOK_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"addABookPage\">";
     private static final String USERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"usersPage\">";

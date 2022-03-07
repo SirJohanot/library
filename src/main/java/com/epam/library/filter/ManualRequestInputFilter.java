@@ -86,9 +86,9 @@ public class ManualRequestInputFilter implements Filter {
         if (user == null && !command.equals(CommandLineConstants.SIGN_IN_PAGE) && !command.equals(CommandLineConstants.SIGN_IN) && !command.equals(CommandLineConstants.LANGUAGE_CHANGE) || commandAccessMap.get(command) == null) {
             httpServletResponse.sendRedirect(CommandInvocationConstants.SIGN_IN_PAGE);
         } else {
-            UserRole role = user.getRole();
+            UserRole role = user == null ? null : user.getRole();
             Set<UserRole> acceptedRolesForCommand = commandAccessMap.get(command);
-            if (!acceptedRolesForCommand.contains(role)) {
+            if (!acceptedRolesForCommand.contains(role) && role != null) {
                 httpServletResponse.sendRedirect(CommandInvocationConstants.MAIN_PAGE);
             }
         }

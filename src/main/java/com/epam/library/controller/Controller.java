@@ -30,6 +30,9 @@ public class Controller extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (resp.isCommitted()) {
+            return;
+        }
         String commandLine = req.getParameter(ParameterNameConstants.COMMAND);
         CommandFactory commandFactory = new CommandFactory();
         Command command = commandFactory.createCommand(commandLine);
