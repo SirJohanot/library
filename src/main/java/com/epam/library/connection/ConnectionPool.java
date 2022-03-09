@@ -10,7 +10,7 @@ public class ConnectionPool {
 
     private static final int MAXIMUM_SIMULTANEOUS_CONNECTIONS = 10;
 
-    private static ConnectionPool INSTANCE;
+    private static volatile ConnectionPool INSTANCE;
 
     private final Queue<ProxyConnection> availableConnections;
     private final Queue<ProxyConnection> connectionsInUse;
