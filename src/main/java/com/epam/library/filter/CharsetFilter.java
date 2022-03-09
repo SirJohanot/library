@@ -17,7 +17,7 @@ public class CharsetFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String currentEncoding = servletRequest.getCharacterEncoding();
         if (currentEncoding == null || !currentEncoding.equals(requiredEncoding)) {
-            servletResponse.setCharacterEncoding(requiredEncoding);
+            servletRequest.setCharacterEncoding(requiredEncoding);
             servletResponse.setCharacterEncoding(requiredEncoding);
         }
         filterChain.doFilter(servletRequest, servletResponse);

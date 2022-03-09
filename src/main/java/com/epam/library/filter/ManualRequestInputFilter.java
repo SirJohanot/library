@@ -80,9 +80,12 @@ public class ManualRequestInputFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+
         HttpSession session = httpServletRequest.getSession();
         User user = (User) session.getAttribute(AttributeNameConstants.USER);
+
         String command = httpServletRequest.getParameter(ParameterNameConstants.COMMAND);
+        
         if (user == null && !command.equals(CommandLineConstants.SIGN_IN_PAGE) && !command.equals(CommandLineConstants.SIGN_IN) && !command.equals(CommandLineConstants.LANGUAGE_CHANGE) || commandAccessMap.get(command) == null) {
             httpServletResponse.sendRedirect(CommandInvocationConstants.SIGN_IN_PAGE);
         } else {
