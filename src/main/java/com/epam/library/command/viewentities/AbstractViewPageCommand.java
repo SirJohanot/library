@@ -6,7 +6,7 @@ import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.Identifiable;
 import com.epam.library.exception.ServiceException;
-import com.epam.library.util.Paginator;
+import com.epam.library.pagination.Paginator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,5 +1,9 @@
 package com.epam.library.service;
 
+import com.epam.library.command.parser.AuthorsLineParser;
+import com.epam.library.command.repository.BookRepository;
+import com.epam.library.command.repository.RepositoryFactory;
+import com.epam.library.command.validation.Validator;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;
@@ -12,24 +16,20 @@ import com.epam.library.entity.book.Genre;
 import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
-import com.epam.library.service.shallowentityfiller.ShallowEntityFiller;
-import com.epam.library.service.shallowentityfiller.ShallowEntityFillerFactory;
+import com.epam.library.exception.ValidationException;
 
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
 
-    private static final String COMMA_AND_WHITESPACE_REGEX = "[ ]+,[ ]+";
-
     private final DaoHelperFactory daoHelperFactory;
-    private final ShallowEntityFillerFactory fillerFactory;
+    private final RepositoryFactory repositoryFactory;
 
-    public BookServiceImpl(DaoHelperFactory daoHelperFactory, ShallowEntityFillerFactory fillerFactory) {
+    public BookServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory) {
         this.daoHelperFactory = daoHelperFactory;
-        this.fillerFactory = fillerFactory;
+        this.repositoryFactory = repositoryFactory;
     }
 
     @Override
@@ -37,13 +37,9 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            ShallowEntityFiller<Book> bookFiller = createBookFiller(helper);
+            BookRepository bookRepository = buildBookRepository(helper);
 
-            List<Book> bookList = new ArrayList<>();
-            BookDao bookDao = helper.createBookDao();
-            for (Book book : bookDao.getAllNotDeleted()) {
-                bookList.add(bookFiller.fillShallowEntity(book));
-            }
+            List<Book> bookList = bookRepository.getAll();
 
             helper.endTransaction();
             return bookList;
@@ -57,15 +53,13 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookDao bookDao = helper.createBookDao();
-            Optional<Book> shallowBook = bookDao.getById(id);
-            if (shallowBook.isEmpty()) {
-                throw new ServiceException("The requested book does not exist");
+            BookRepository bookRepository = buildBookRepository(helper);
+
+            Optional<Book> optionalBook = bookRepository.getById(id);
+            if (optionalBook.isEmpty()) {
+                throw new ServiceException("Could not find the requested book");
             }
-
-            ShallowEntityFiller<Book> bookFiller = createBookFiller(helper);
-
-            Book book = bookFiller.fillShallowEntity(shallowBook.get());
+            Book book = optionalBook.get();
 
             helper.endTransaction();
             return book;
@@ -75,26 +69,19 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount) throws ServiceException {
+    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException {
+        Book newBook = buildBookFromParameters(id, title, authors, genre, publisher, publishmentYear, amount, authorsLineParser);
+        try {
+            bookValidator.validate(newBook);
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            GenreDao genreDao = helper.createGenreDao();
-            Genre idLessGenre = Genre.ofName(genre);
-            Long savedGenreId = genreDao.getIdOfNewOrExistingObject(idLessGenre);
+            BookRepository bookRepository = buildBookRepository(helper);
 
-            PublisherDao publisherDao = helper.createPublisherDao();
-            Publisher idLessPublisher = Publisher.ofName(publisher);
-            Long savedPublisherId = publisherDao.getIdOfNewOrExistingObject(idLessPublisher);
-
-            BookDao bookDao = helper.createBookDao();
-            Book book = new Book(id, title, null, Genre.ofId(savedGenreId), Publisher.ofId(savedPublisherId), publishmentYear, amount);
-            Long savedBookId = bookDao.getIdOfNewOrExistingObject(book);
-
-            AuthorDao authorDao = helper.createAuthorDao();
-            saveAuthorsAndMapThemToBook(authorDao, authors, savedBookId);
-
-            deleteUnreferenced(authorDao, genreDao, publisherDao);
+            bookRepository.save(newBook);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -107,8 +94,8 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookDao bookDao = helper.createBookDao();
-            bookDao.removeById(bookId);
+            BookRepository bookRepository = buildBookRepository(helper);
+            bookRepository.removeById(bookId);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -116,32 +103,23 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void saveAuthorsAndMapThemToBook(AuthorDao authorDao, String authors, Long bookId) throws ServiceException, DaoException {
-        authorDao.deleteBookMappingsFromRelationTable(bookId);
-        String[] authorNames = authors.split(COMMA_AND_WHITESPACE_REGEX);
-        for (String authorName : authorNames) {
-            if (authorName.length() == 0) {
-                throw new ServiceException("Author name cannot be blank");
-            }
-
-            Long authorId = authorDao.getIdOfNewOrExistingObject(Author.ofName(authorName));
-            if (!authorDao.isAuthorMappedToBookInRelationTable(authorId, bookId)) {
-                authorDao.mapAuthorToBookInRelationTable(authorId, bookId);
-            }
-        }
-    }
-
-    private void deleteUnreferenced(AuthorDao authorDao, GenreDao genreDao, PublisherDao publisherDao) throws DaoException {
-        authorDao.deleteUnreferenced(Book.TABLE_NAME, Book.ID_COLUMN);
-        genreDao.deleteUnreferenced(Book.TABLE_NAME, Book.GENRE_ID_COLUMN);
-        publisherDao.deleteUnreferenced(Book.TABLE_NAME, Book.PUBLISHER_ID_COLUMN);
-    }
-
-    private ShallowEntityFiller<Book> createBookFiller(DaoHelper helper) {
+    private BookRepository buildBookRepository(DaoHelper helper) {
+        BookDao bookDao = helper.createBookDao();
         AuthorDao authorDao = helper.createAuthorDao();
         GenreDao genreDao = helper.createGenreDao();
         PublisherDao publisherDao = helper.createPublisherDao();
 
-        return fillerFactory.createBookFiller(authorDao, genreDao, publisherDao);
+        return repositoryFactory.createBookRepository(bookDao, authorDao, genreDao, publisherDao);
     }
+
+    private Book buildBookFromParameters(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, AuthorsLineParser authorsLineParser) {
+        List<Author> authorList = authorsLineParser.parse(authors);
+
+        Genre genreObject = Genre.ofName(genre);
+
+        Publisher publisherObject = Publisher.ofName(publisher);
+
+        return new Book(id, title, authorList, genreObject, publisherObject, publishmentYear, amount);
+    }
+
 }

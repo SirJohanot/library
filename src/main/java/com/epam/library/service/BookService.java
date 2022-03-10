@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.command.parser.AuthorsLineParser;
+import com.epam.library.command.validation.Validator;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
 
@@ -41,7 +43,7 @@ public interface BookService {
      * @param amount          Integer object representing the number of Book in stock
      * @throws ServiceException if a DaoException occurs
      */
-    void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount) throws ServiceException;
+    void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException;
 
     void deleteBookById(Long bookId) throws ServiceException;
 }

@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.command.repository.BookOrderRepository;
+import com.epam.library.command.repository.RepositoryFactory;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -17,12 +19,9 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
 import com.epam.library.service.comparator.OrderReaderPriorityComparator;
-import com.epam.library.service.shallowentityfiller.ShallowEntityFiller;
-import com.epam.library.service.shallowentityfiller.ShallowEntityFillerFactory;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -30,11 +29,11 @@ import java.util.Optional;
 public class BookOrderServiceImpl implements BookOrderService {
 
     private final DaoHelperFactory daoHelperFactory;
-    private final ShallowEntityFillerFactory fillerFactory;
+    private final RepositoryFactory repositoryFactory;
 
-    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, ShallowEntityFillerFactory fillerFactory) {
+    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory) {
         this.daoHelperFactory = daoHelperFactory;
-        this.fillerFactory = fillerFactory;
+        this.repositoryFactory = repositoryFactory;
     }
 
     @Override
@@ -54,8 +53,8 @@ public class BookOrderServiceImpl implements BookOrderService {
             helper.startTransaction();
 
             BookOrder newOrder = new BookOrder(null, Book.ofId(bookId), User.ofId(userId), startDate, endDate, null, rentalType, RentalState.ORDER_PLACED);
-            BookOrderDao orderDao = helper.createBookOrderDao();
-            orderDao.save(newOrder);
+            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            orderRepository.save(newOrder);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -68,12 +67,13 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderDao orderDao = helper.createBookOrderDao();
-            Optional<BookOrder> optionalBookOrder = orderDao.getById(orderId);
+            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            Optional<BookOrder> optionalBookOrder = orderRepository.getById(orderId);
             if (optionalBookOrder.isEmpty()) {
                 throw new ServiceException("Could not find the requested bookOrder");
             }
             BookOrder order = optionalBookOrder.get();
+
             Long bookId = order.getBook().getId();
             BookDao bookDao = helper.createBookDao();
             switch (newState) {
@@ -82,11 +82,11 @@ public class BookOrderServiceImpl implements BookOrderService {
                     break;
                 case BOOK_RETURNED:
                     Date currentDate = Date.valueOf(LocalDate.now());
-                    orderDao.setReturnDate(orderId, currentDate);
+                    orderRepository.setReturnDate(orderId, currentDate);
                     bookDao.tweakAmount(bookId, 1);
                     break;
             }
-            orderDao.setState(orderId, newState);
+            orderRepository.setState(orderId, newState);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -99,19 +99,15 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderDao orderDao = helper.createBookOrderDao();
-            Optional<BookOrder> optionalOrder = orderDao.getById(id);
-            if (optionalOrder.isEmpty()) {
-                throw new ServiceException("The requested order does not exist");
+            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            Optional<BookOrder> optionalBookOrder = orderRepository.getById(id);
+            if (optionalBookOrder.isEmpty()) {
+                throw new ServiceException("Could not find the requested bookOrder");
             }
-            BookOrder shallowOrder = optionalOrder.get();
-
-            ShallowEntityFiller<BookOrder> orderFiller = createBookOrderFiller(helper);
-
-            BookOrder fullOrder = orderFiller.fillShallowEntity(shallowOrder);
+            BookOrder order = optionalBookOrder.get();
 
             helper.endTransaction();
-            return fullOrder;
+            return order;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -135,13 +131,9 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderDao orderDao = helper.createBookOrderDao();
-            ShallowEntityFiller<BookOrder> orderFiller = createBookOrderFiller(helper);
+            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
 
-            List<BookOrder> orderList = new ArrayList<>();
-            for (BookOrder bookOrder : userId == null ? orderDao.getAll() : orderDao.getOrdersOfUser(userId)) {
-                orderList.add(orderFiller.fillShallowEntity(bookOrder));
-            }
+            List<BookOrder> orderList = userId == null ? orderRepository.getAll() : orderRepository.getOrdersOfUser(userId);
 
             helper.endTransaction();
             return orderList;
@@ -150,15 +142,15 @@ public class BookOrderServiceImpl implements BookOrderService {
         }
     }
 
-    private ShallowEntityFiller<BookOrder> createBookOrderFiller(DaoHelper helper) {
+    private BookOrderRepository buildBookOrderRepository(DaoHelper helper) {
+        BookOrderDao bookOrderDao = helper.createBookOrderDao();
         UserDao userDao = helper.createUserDao();
         BookDao bookDao = helper.createBookDao();
         AuthorDao authorDao = helper.createAuthorDao();
         GenreDao genreDao = helper.createGenreDao();
         PublisherDao publisherDao = helper.createPublisherDao();
 
-        ShallowEntityFiller<Book> bookFiller = fillerFactory.createBookFiller(authorDao, genreDao, publisherDao);
-        return fillerFactory.createBookOrderFiller(userDao, bookDao, bookFiller);
+        return repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao);
     }
 
 }

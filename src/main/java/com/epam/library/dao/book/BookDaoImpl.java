@@ -44,7 +44,7 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
     }
 
     @Override
-    public List<Book> getAllNotDeleted() throws DaoException {
+    public List<Book> getAll() throws DaoException {
         String query = String.format(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
         return executeQuery(query);
     }

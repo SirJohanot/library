@@ -1,6 +1,5 @@
 package com.epam.library.dao.book;
 
-import com.epam.library.dao.Dao;
 import com.epam.library.dao.SecondaryTableDao;
 import com.epam.library.entity.book.Author;
 import com.epam.library.exception.DaoException;
@@ -11,7 +10,7 @@ import java.util.List;
  * This interface is concerned with manipulating, analyzing and getting Book-To-Author relations of the database
  */
 
-public interface AuthorDao extends Dao<Author>, SecondaryTableDao<Author> {
+public interface AuthorDao extends SecondaryTableDao<Author> {
 
     /**
      * Returns authors associated with a Book

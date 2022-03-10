@@ -19,8 +19,11 @@ public class PublisherDaoImpl extends AbstractDao<Publisher> implements Publishe
     @Override
     protected LinkedHashMap<String, Object> getMapOfColumnValues(Publisher entity) {
         LinkedHashMap<String, Object> valuesMap = new LinkedHashMap<>();
+
         valuesMap.put(Publisher.ID_COLUMN, entity.getId());
+
         valuesMap.put(Publisher.NAME_COLUMN, entity.getName());
+
         return valuesMap;
     }
 

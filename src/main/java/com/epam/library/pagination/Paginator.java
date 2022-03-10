@@ -1,4 +1,4 @@
-package com.epam.library.util;
+package com.epam.library.pagination;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,8 +4,8 @@ import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.PagePathConstants;
 import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.pagination.Paginator;
 import com.epam.library.service.UserService;
-import com.epam.library.util.Paginator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

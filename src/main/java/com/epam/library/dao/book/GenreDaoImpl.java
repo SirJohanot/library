@@ -19,8 +19,11 @@ public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
     @Override
     protected LinkedHashMap<String, Object> getMapOfColumnValues(Genre entity) {
         LinkedHashMap<String, Object> valuesMap = new LinkedHashMap<>();
+
         valuesMap.put(Genre.ID_COLUMN, entity.getId());
+
         valuesMap.put(Genre.NAME_COLUMN, entity.getName());
+        
         return valuesMap;
     }
 

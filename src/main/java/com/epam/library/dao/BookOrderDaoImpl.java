@@ -27,19 +27,28 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
     @Override
     protected LinkedHashMap<String, Object> getMapOfColumnValues(BookOrder entity) {
         LinkedHashMap<String, Object> valuesMap = new LinkedHashMap<>();
+
         valuesMap.put(BookOrder.ID_COLUMN, entity.getId());
+
         valuesMap.put(BookOrder.BOOK_ID_COLUMN, entity.getBook().getId());
+
         valuesMap.put(BookOrder.USER_ID_COLUMN, entity.getUser().getId());
+
         String startDateLine = sqlDateFormatter.format(entity.getStartDate());
         valuesMap.put(BookOrder.START_DATE_COLUMN, startDateLine);
+
         String endDateLine = sqlDateFormatter.format(entity.getEndDate());
         valuesMap.put(BookOrder.END_DATE_COLUMN, endDateLine);
+
         if (entity.getReturnDate() != null) {
             String returnDateLine = sqlDateFormatter.format(entity.getReturnDate());
             valuesMap.put(BookOrder.RETURN_DATE_COLUMN, returnDateLine);
         }
+
         valuesMap.put(BookOrder.RENTAL_TYPE_COLUMN, entity.getType().toString().toLowerCase());
+
         valuesMap.put(BookOrder.RENTAL_STATE_COLUMN, entity.getState().toString().toLowerCase());
+        
         return valuesMap;
     }
 

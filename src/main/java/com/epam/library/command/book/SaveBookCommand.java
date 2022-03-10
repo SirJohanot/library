@@ -1,7 +1,9 @@
 package com.epam.library.command.book;
 
 import com.epam.library.command.Command;
+import com.epam.library.command.parser.AuthorsLineParser;
 import com.epam.library.command.result.CommandResult;
+import com.epam.library.command.validation.BookValidator;
 import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.exception.ServiceException;
@@ -35,7 +37,7 @@ public class SaveBookCommand implements Command {
         String amountLine = req.getParameter(ParameterNameConstants.BOOK_AMOUNT);
         Integer amount = Integer.valueOf(amountLine);
 
-        bookService.saveBook(bookId, title, authors, genre, publisher, publishmentYear, amount);
+        bookService.saveBook(bookId, title, authors, genre, publisher, publishmentYear, amount, new BookValidator(), new AuthorsLineParser());
         return CommandResult.redirect(CommandInvocationConstants.BOOKS_PAGE);
     }
 }
