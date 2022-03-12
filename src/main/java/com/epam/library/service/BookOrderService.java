@@ -1,5 +1,6 @@
 package com.epam.library.service;
 
+import com.epam.library.command.validation.Validator;
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
@@ -21,7 +22,7 @@ public interface BookOrderService {
      * @param type         the RentalType of desired BookOrder
      * @return BookOrder object with today's startDate, endDate numberOfDays ahead of startDate and RentalType same as type (other fields are null)
      */
-    BookOrder buildPreviewOrder(int numberOfDays, RentalType type);
+    BookOrder buildPreviewOrder(int numberOfDays, RentalType type) throws ServiceException;
 
     /**
      * Uses DAO objects to save the BookOrder
@@ -33,7 +34,7 @@ public interface BookOrderService {
      * @param userId     id of the User in the database related to the BookOrder
      * @throws ServiceException if a DaoException occurs while saving the object to the database
      */
-    void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId) throws ServiceException;
+    void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException;
 
     /**
      * Sets new state for BookOrder in the database

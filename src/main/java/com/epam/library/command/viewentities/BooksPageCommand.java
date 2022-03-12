@@ -23,6 +23,6 @@ public class BooksPageCommand extends AbstractViewPageCommand<Book> {
 
     @Override
     protected List<Book> getEntitiesUsingService(HttpServletRequest req) throws ServiceException {
-        return bookService.getBooks();
+        return bookService.getAllBooks();
     }
 }

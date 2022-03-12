@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class BookRowMapper implements RowMapper<Book> {
 
-    private static final String NON_DIGIT_REGEX = "[\\D]";
-
     @Override
     public Book map(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(Book.ID_COLUMN);
@@ -24,9 +22,9 @@ public class BookRowMapper implements RowMapper<Book> {
         Long publisherId = resultSet.getLong(Book.PUBLISHER_ID_COLUMN);
         Publisher publisher = Publisher.ofId(publisherId);
 
-        String yearLine = resultSet.getString(Book.PUBLISHMENT_YEAR_COLUMN).split(NON_DIGIT_REGEX)[0];
-        Year publishmentYear = Year.parse(yearLine);
-        
+        int yearNumber = resultSet.getInt(Book.PUBLISHMENT_YEAR_COLUMN);
+        Year publishmentYear = Year.of(yearNumber);
+
         Integer amount = resultSet.getInt(Book.AMOUNT_COLUMN);
         return new Book(id, title, new ArrayList<>(), genre, publisher, publishmentYear, amount);
     }

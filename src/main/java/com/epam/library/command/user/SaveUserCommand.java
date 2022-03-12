@@ -2,6 +2,7 @@ package com.epam.library.command.user;
 
 import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
+import com.epam.library.command.validation.UserValidator;
 import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.enumeration.UserRole;
@@ -34,7 +35,7 @@ public class SaveUserCommand implements Command {
         String targetUserBlockedLine = req.getParameter(ParameterNameConstants.USER_BLOCKED);
         boolean targetUserBlocked = Boolean.parseBoolean(targetUserBlockedLine);
 
-        userService.saveUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked);
+        userService.saveUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked, new UserValidator());
         return CommandResult.redirect(CommandInvocationConstants.USERS_PAGE);
     }
 }

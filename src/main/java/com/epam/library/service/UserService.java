@@ -1,5 +1,6 @@
 package com.epam.library.service;
 
+import com.epam.library.command.validation.UserValidator;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
@@ -51,7 +52,7 @@ public interface UserService {
      * @param blocked blocked state of User
      * @throws ServiceException if a DaoException occurs
      */
-    void saveUser(Long id, String login, String name, String surname, UserRole role, Boolean blocked) throws ServiceException;
+    void saveUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException;
 
     /**
      * Updates the User's blocked status

@@ -146,6 +146,30 @@ public class BookRepositoryImplTest {
     }
 
     @Test
+    public void testSaveShouldUnmapAllAuthorsFromBook() throws DaoException {
+        //given
+        Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
+        Book shallowCopy = new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount);
+
+        when(genreDao.getIdOfNewOrExistingObject(genre)).thenReturn(genreId);
+
+        when(publisherDao.getIdOfNewOrExistingObject(publisher)).thenReturn(publisherId);
+
+        when(authorDao.getIdOfNewOrExistingObject(firstAuthor)).thenReturn(firstAuthorId);
+        when(authorDao.isAuthorMappedToBookInRelationTable(firstAuthorId, bookId)).thenReturn(false);
+        when(authorDao.getIdOfNewOrExistingObject(secondAuthor)).thenReturn(secondAuthorId);
+        when(authorDao.isAuthorMappedToBookInRelationTable(secondAuthorId, bookId)).thenReturn(true);
+        when(authorDao.getIdOfNewOrExistingObject(thirdAuthor)).thenReturn(thirdAuthorId);
+        when(authorDao.isAuthorMappedToBookInRelationTable(thirdAuthorId, bookId)).thenReturn(false);
+
+        when(bookDao.getIdOfNewOrExistingObject(shallowCopy)).thenReturn(bookId);
+        //when
+        bookRepository.save(book);
+        //then
+        verify(authorDao, times(1)).deleteBookMappingsFromRelationTable(bookId);
+    }
+
+    @Test
     public void testSaveShouldMapAllAuthorsRelatedToBook() throws DaoException {
         //given
         Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
@@ -167,7 +191,7 @@ public class BookRepositoryImplTest {
         bookRepository.save(book);
         //then
         verify(authorDao, times(1)).mapAuthorToBookInRelationTable(firstAuthorId, bookId);
-        verify(authorDao, times(0)).mapAuthorToBookInRelationTable(secondAuthorId, bookId);
+        verify(authorDao, never()).mapAuthorToBookInRelationTable(secondAuthorId, bookId);
         verify(authorDao, times(1)).mapAuthorToBookInRelationTable(thirdAuthorId, bookId);
     }
 

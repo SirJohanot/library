@@ -29,7 +29,7 @@ public class OrderOnSubscriptionCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String daysLine = req.getParameter(ParameterNameConstants.DAYS);
         int days = Integer.parseInt(daysLine);
-        BookOrder dummyOrder = bookOrderService.buildPreviewOrder(days, RentalType.ON_SUBSCRIPTION);
+        BookOrder dummyOrder = bookOrderService.buildPreviewOrder(days, RentalType.OUT_OF_LIBRARY);
         req.setAttribute(AttributeNameConstants.BOOK_ORDER, dummyOrder);
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);

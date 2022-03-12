@@ -6,45 +6,53 @@ import com.epam.library.entity.book.Genre;
 import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.ValidationException;
 
+import java.time.Year;
 import java.util.List;
-import java.util.regex.Pattern;
 
-public class BookValidator implements Validator<Book> {
+public class BookValidator extends AbstractValidator<Book> {
 
-    private static final String IS_A_WORD_REGEX = "[\\p{L}]+[.]*";
+    private static final Year MIN_YEAR = Year.of(1000);
+    private static final Year MAX_YEAR = Year.of(2025);
 
     @Override
     public void validate(Book object) throws ValidationException {
         String title = object.getTitle();
-        if (isNotAWord(title)) {
-            throw new ValidationException("A book's title must start with an alphabetical character");
-        }
+        throwExceptionIfNull(title, "A book's title must not be null");
+        throwExceptionIfIsNotAWord(title, "A book's title must start with an alphabetical character");
 
         List<Author> authorList = object.getAuthorList();
+        if (authorList == null || authorList.isEmpty()) {
+            throw new ValidationException("A book must have at least one author");
+        }
         for (Author author : authorList) {
-            if (isNotAWord(author.getName())) {
-                throw new ValidationException("An author's name must start with an alphabetical character");
-            }
+            throwExceptionIfNull(author, "Non of the book's authors may be null");
+            String authorName = author.getName();
+            throwExceptionIfNull(authorName, "An author's name must not be null");
+            throwExceptionIfIsNotAWord(authorName, "An author's name must start with an alphabetical character");
         }
 
         Genre genre = object.getGenre();
+        throwExceptionIfNull(genre, "A book must have a genre");
         String genreName = genre.getName();
-        if (isNotAWord(genreName)) {
-            throw new ValidationException("A genre's name must start with an alphabetical character");
-        }
+        throwExceptionIfNull(genreName, "A genre's name must not be null");
+        throwExceptionIfIsNotAWord(genreName, "A genre's name must start with an alphabetical character");
 
         Publisher publisher = object.getPublisher();
+        throwExceptionIfNull(publisher, "A book must have a publisher");
         String publisherName = publisher.getName();
-        if (isNotAWord(publisherName)) {
-            throw new ValidationException("A publisher's name must start with an alphabetical character");
+        throwExceptionIfNull(publisherName, "A publisher's name must not be null");
+        throwExceptionIfIsNotAWord(publisherName, "A publisher's name must start with an alphabetical character");
+
+        Year publishmentYear = object.getPublishmentYear();
+        throwExceptionIfNull(publishmentYear, "A book must have a publishment year");
+        if (publishmentYear.isAfter(MAX_YEAR) || publishmentYear.isBefore(MIN_YEAR)) {
+            throw new ValidationException("A book's publishment year cannot be earlier than " + MIN_YEAR + " or later than " + MAX_YEAR);
         }
 
-        if (object.getAmount() < 0) {
+        Integer amount = object.getAmount();
+        if (amount == null || amount < 0) {
             throw new ValidationException("A book's amount cannot be less than 0");
         }
     }
 
-    private boolean isNotAWord(String line) {
-        return !Pattern.matches(IS_A_WORD_REGEX, line);
-    }
 }

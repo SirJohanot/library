@@ -49,7 +49,7 @@ public class BookOrderRepositoryImplTest {
     private final Date startDate = Date.valueOf("2022-3-11");
     private final Date endDate = Date.valueOf("2022-3-16");
     private final Date returnDate = Date.valueOf("2022-3-15");
-    private final RentalType rentalType = RentalType.ON_SUBSCRIPTION;
+    private final RentalType rentalType = RentalType.OUT_OF_LIBRARY;
     private final RentalState rentalState = RentalState.BOOK_RETURNED;
 
     @Before

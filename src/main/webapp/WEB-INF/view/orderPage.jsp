@@ -13,6 +13,7 @@
 <fmt:message key="general.englishCode" var="en"/>
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
+<fmt:message key="general.dateFormat" var="dateFormat"/>
 
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
@@ -77,9 +78,9 @@
     <ctg:navigation/>
     <div id="main-content-div">
         <div class="round-bordered-subject block-container">
-            <h1>${startDate}: ${requestScope.bookOrder.startDate}</h1>
-            <p>${endDate}: ${requestScope.bookOrder.endDate}</p>
-            <p>${returnDate}: ${requestScope.bookOrder.returnDate}</p>
+            <h1>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></h1>
+            <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
+            <p>${returnDate}: <fmt:formatDate value="${requestScope.bookOrder.returnDate}" pattern="${dateFormat}"/></p>
             <p>${rentalType}: ${requestScope.bookOrder.type}</p>
             <p>${rentalState}: ${requestScope.bookOrder.state}</p>
         </div>

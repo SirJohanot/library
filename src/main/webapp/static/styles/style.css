@@ -114,7 +114,7 @@ nav {
     height: 100%;
     background-color: #b4b6c0;
     border-right: 2px solid rgb(0, 0, 0);
-    flex: 0 0 160px;
+    flex: 0 0 180px;
 }
 
 nav form {
@@ -187,6 +187,10 @@ nav form button {
 
 #pagination-form form input, #pagination-form form button {
     font-size: 20px;
+}
+
+#pagination-form form input {
+    width: 125px;
 }
 
 /* Login Form*/
@@ -332,7 +336,7 @@ nav form button {
     nav form button {
         display: block;
         padding: 0;
-        margin: 0;
+        margin: 10px;
         width: 100%;
     }
 

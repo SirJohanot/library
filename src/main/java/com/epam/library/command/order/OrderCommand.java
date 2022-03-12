@@ -2,6 +2,7 @@ package com.epam.library.command.order;
 
 import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
+import com.epam.library.command.validation.BookOrderValidator;
 import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
@@ -38,8 +39,8 @@ public class OrderCommand implements Command {
 
         String rentalTypeLine = req.getParameter(ParameterNameConstants.RENTAL_TYPE);
         RentalType rentalType = RentalType.valueOf(rentalTypeLine);
-        
-        bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId);
+
+        bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId, new BookOrderValidator());
         return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }
 }

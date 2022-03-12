@@ -69,6 +69,7 @@ public class BookRepositoryImpl implements BookRepository {
         Book book = new Book(id, title, null, Genre.ofId(savedGenreId), Publisher.ofId(savedPublisherId), publishmentYear, amount);
         Long savedBookId = bookDao.getIdOfNewOrExistingObject(book);
 
+        authorDao.deleteBookMappingsFromRelationTable(savedBookId);
         List<Author> authors = item.getAuthorList();
         saveAuthorsAndMapThemToBook(authorDao, authors, savedBookId);
 

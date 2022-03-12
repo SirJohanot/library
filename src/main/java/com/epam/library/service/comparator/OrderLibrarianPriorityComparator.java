@@ -22,9 +22,11 @@ public class OrderLibrarianPriorityComparator implements Comparator<BookOrder> {
     @Override
     public int compare(BookOrder o1, BookOrder o2) {
         RentalState firstOrderState = o1.getState();
-        RentalState secondOrderState = o2.getState();
         Integer firstPriority = librarianStatePriorityMap.get(firstOrderState);
+
+        RentalState secondOrderState = o2.getState();
         Integer secondPriority = librarianStatePriorityMap.get(secondOrderState);
-        return firstPriority - secondPriority;
+        
+        return secondPriority - firstPriority;
     }
 }

@@ -33,6 +33,7 @@
 <fmt:message key="books.delete" var="delete"/>
 <fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
 <fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
+<fmt:message key="books.commaSeparated" var="commaSeparated"/>
 
 <html>
 <head>
@@ -71,7 +72,7 @@
               action="controller?command=saveBook">
             <label for="title">${bookTitle}:</label>
             <input id="title" name="title" type="text" required="required"/>
-            <label for="authors">${authors}:</label>
+            <label for="authors">${authors}(${commaSeparated}):</label>
             <input id="authors" name="authors" type="text" required="required"/>
             <label for="genre">${genre}:</label>
             <input id="genre" name="genre" type="text" required="required"/>

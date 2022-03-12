@@ -31,7 +31,7 @@ public class ManualRequestInputFilter implements Filter {
         readerOnly.add(UserRole.READER);
 
         Set<UserRole> librarianOnly = new HashSet<>();
-        readerOnly.add(UserRole.LIBRARIAN);
+        librarianOnly.add(UserRole.LIBRARIAN);
 
         Set<UserRole> readerAndLibrarianOnly = new HashSet<>();
         readerAndLibrarianOnly.add(UserRole.READER);
@@ -85,7 +85,7 @@ public class ManualRequestInputFilter implements Filter {
         User user = (User) session.getAttribute(AttributeNameConstants.USER);
 
         String command = httpServletRequest.getParameter(ParameterNameConstants.COMMAND);
-        
+
         if (user == null && !command.equals(CommandLineConstants.SIGN_IN_PAGE) && !command.equals(CommandLineConstants.SIGN_IN) && !command.equals(CommandLineConstants.LANGUAGE_CHANGE) || commandAccessMap.get(command) == null) {
             httpServletResponse.sendRedirect(CommandInvocationConstants.SIGN_IN_PAGE);
         } else {

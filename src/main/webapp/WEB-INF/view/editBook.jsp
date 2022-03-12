@@ -33,6 +33,7 @@
 <fmt:message key="books.delete" var="delete"/>
 <fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
 <fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
+<fmt:message key="books.commaSeparated" var="commaSeparated"/>
 
 <html>
 <head>
@@ -72,7 +73,7 @@
             <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
             <label for="title">${bookTitle}:</label>
             <input id="title" name="title" type="text" value="${requestScope.book.title}" required="required"/>
-            <label for="authors">${authors}:</label>
+            <label for="authors">${authors}(${commaSeparated}):</label>
             <input id="authors" name="authors" type="text"
                    value="<c:forEach items="${requestScope.book.authorList}" var="author" varStatus="loop">${author.name}<c:if test="${!loop.last}">, </c:if></c:forEach>"
                    required="required"/>

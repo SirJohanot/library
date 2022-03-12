@@ -1,5 +1,6 @@
 package com.epam.library.service;
 
+import com.epam.library.command.validation.UserValidator;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.helper.DaoHelper;
 import com.epam.library.dao.helper.DaoHelperFactory;
@@ -7,6 +8,7 @@ import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,12 +70,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(Long id, String login, String name, String surname, UserRole role, Boolean blocked) throws ServiceException {
+    public void saveUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException {
+        User user = new User(id, login, name, surname, role, blocked);
+        try {
+            userValidator.validate(user);
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             UserDao dao = helper.createUserDao();
-            User user = new User(id, login, name, surname, role, blocked);
             dao.save(user);
 
             helper.endTransaction();
@@ -89,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
             UserDao dao = helper.createUserDao();
             dao.updateUserBlocked(id, newValue);
-            
+
             helper.endTransaction();
         } catch (DaoException e) {
             throw new ServiceException(e);

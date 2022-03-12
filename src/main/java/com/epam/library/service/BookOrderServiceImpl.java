@@ -2,6 +2,7 @@ package com.epam.library.service;
 
 import com.epam.library.command.repository.BookOrderRepository;
 import com.epam.library.command.repository.RepositoryFactory;
+import com.epam.library.command.validation.Validator;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -17,6 +18,7 @@ import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
 import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
 import com.epam.library.service.comparator.OrderReaderPriorityComparator;
 
@@ -37,7 +39,10 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public BookOrder buildPreviewOrder(int numberOfDays, RentalType type) {
+    public BookOrder buildPreviewOrder(int numberOfDays, RentalType type) throws ServiceException {
+        if (numberOfDays < 1) {
+            throw new ServiceException("Number of days for rental cannot be less than 0");
+        }
         LocalDate currentDate = LocalDate.now();
         Date dummyStartDate = Date.valueOf(currentDate);
         Calendar calendar = Calendar.getInstance();
@@ -48,11 +53,26 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId) throws ServiceException {
+    public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException {
+        BookOrder newOrder = new BookOrder(null, Book.ofId(bookId), User.ofId(userId), startDate, endDate, null, rentalType, RentalState.ORDER_PLACED);
+        try {
+            bookOrderValidator.validate(newOrder);
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrder newOrder = new BookOrder(null, Book.ofId(bookId), User.ofId(userId), startDate, endDate, null, rentalType, RentalState.ORDER_PLACED);
+            BookDao bookDao = helper.createBookDao();
+            if (bookDao.getById(bookId).isEmpty()) {
+                throw new ServiceException("Cannot place an order on a book that does not exist");
+            }
+
+            UserDao userDao = helper.createUserDao();
+            if (userDao.getById(userId).isEmpty()) {
+                throw new ServiceException("Cannot place an order for a user that does not exist");
+            }
+
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
             orderRepository.save(newOrder);
 

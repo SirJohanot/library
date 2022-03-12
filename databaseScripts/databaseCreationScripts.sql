@@ -29,7 +29,7 @@ create table book
     title            varchar(255) not null,
     genre_id         int          not null,
     publisher_id     int          not null,
-    publishment_year YEAR         not null,
+    publishment_year int          not null,
     amount           int unsigned not null,
     is_deleted       boolean      not null default false,
     foreign key (genre_id) references genre (id),

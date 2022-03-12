@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AuthorsLineParser {
 
-    private static final String AUTHOR_DELIMITER = "[ ]+,[ ]+";
+    private static final String AUTHOR_DELIMITER = " *, *";
 
     public List<Author> parse(String authors) {
         List<Author> result = new ArrayList<>();

@@ -33,12 +33,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooks() throws ServiceException {
+    public List<Book> getAllBooks() throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             BookRepository bookRepository = buildBookRepository(helper);
-
             List<Book> bookList = bookRepository.getAll();
 
             helper.endTransaction();
@@ -80,7 +79,6 @@ public class BookServiceImpl implements BookService {
             helper.startTransaction();
 
             BookRepository bookRepository = buildBookRepository(helper);
-
             bookRepository.save(newBook);
 
             helper.endTransaction();
