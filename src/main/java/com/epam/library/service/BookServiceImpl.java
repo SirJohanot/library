@@ -18,6 +18,8 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
+
+    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
 
     private final DaoHelperFactory daoHelperFactory;
     private final RepositoryFactory repositoryFactory;
@@ -70,7 +74,9 @@ public class BookServiceImpl implements BookService {
 
             Optional<Book> optionalBook = bookRepository.getById(id);
             if (optionalBook.isEmpty()) {
-                throw new ServiceException("Could not find the requested book");
+                ServiceException serviceException = new ServiceException("Could not find the requested book");
+                LOGGER.error("Book Id: " + id, serviceException);
+                throw serviceException;
             }
             Book book = optionalBook.get();
 
@@ -87,6 +93,7 @@ public class BookServiceImpl implements BookService {
         try {
             bookValidator.validate(newBook);
         } catch (ValidationException e) {
+            LOGGER.error(e);
             throw new ServiceException(e);
         }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {

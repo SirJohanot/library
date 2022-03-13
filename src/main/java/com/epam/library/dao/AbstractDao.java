@@ -3,6 +3,8 @@ package com.epam.library.dao;
 import com.epam.library.entity.Identifiable;
 import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.RowMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractDao.class);
 
     private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = ? ;";
     private static final String GET_ALL_QUERY = "SELECT * FROM %s ;";
@@ -35,6 +39,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -44,6 +49,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -52,6 +58,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -60,6 +67,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            LOGGER.error(e);
             throw new DaoException(e);
         }
     }

@@ -8,6 +8,8 @@ import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookOrderRepositoryImpl implements BookOrderRepository {
+
+    private static final Logger LOGGER = LogManager.getLogger(BookOrderRepositoryImpl.class);
 
     private final BookOrderDao bookOrderDao;
     private final BookRepository bookRepository;
@@ -81,10 +85,15 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
     }
 
     private BookOrder buildFullOrder(BookOrder shallowOrder) throws DaoException {
-        Long userId = shallowOrder.getUser().getId();
-        Optional<User> optionalUser = userDao.getById(userId);
+        Long id = shallowOrder.getId();
+
+        User shallowOrderUser = shallowOrder.getUser();
+        Long shallowOrderUserId = shallowOrderUser.getId();
+        Optional<User> optionalUser = userDao.getById(shallowOrderUserId);
         if (optionalUser.isEmpty()) {
-            throw new DaoException("Could not find a user associated with inputted shallow bookOrder");
+            DaoException daoException = new DaoException("Could not find the user associated with inputted shallow bookOrder");
+            LOGGER.error("Book Order Id: " + id + " | User Id: " + shallowOrderUserId, daoException);
+            throw daoException;
         }
         User user = optionalUser.get();
 
@@ -92,11 +101,11 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
         Long shallowOrderBookId = shallowOrderBook.getId();
         Optional<Book> optionalBook = bookRepository.getById(shallowOrderBookId);
         if (optionalBook.isEmpty()) {
-            throw new DaoException("Could not find a book associated with inputted shallow BookOrder");
+            DaoException daoException = new DaoException("Could not find the book associated with inputted shallow BookOrder");
+            LOGGER.error("Book Order Id: " + id + " | Book Id: " + shallowOrderBookId, daoException);
+            throw daoException;
         }
         Book book = optionalBook.get();
-
-        Long id = shallowOrder.getId();
 
         Date startDate = shallowOrder.getStartDate();
 

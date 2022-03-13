@@ -10,12 +10,16 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
+
+    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
 
     private final DaoHelperFactory daoHelperFactory;
 
@@ -73,7 +77,9 @@ public class UserServiceImpl implements UserService {
             UserDao dao = helper.createUserDao();
             Optional<User> user = dao.getById(id);
             if (user.isEmpty()) {
-                throw new ServiceException("The requested user does not exist");
+                ServiceException serviceException = new ServiceException("The requested user does not exist");
+                LOGGER.error("User Id: " + id, serviceException);
+                throw serviceException;
             }
 
             helper.endTransaction();
@@ -89,6 +95,7 @@ public class UserServiceImpl implements UserService {
         try {
             userValidator.validate(user);
         } catch (ValidationException e) {
+            LOGGER.error(e);
             throw new ServiceException(e);
         }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {

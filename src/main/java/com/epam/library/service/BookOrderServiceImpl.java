@@ -21,6 +21,8 @@ import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
 import com.epam.library.service.comparator.OrderReaderPriorityComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -29,6 +31,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookOrderServiceImpl implements BookOrderService {
+
+    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
 
     private final DaoHelperFactory daoHelperFactory;
     private final RepositoryFactory repositoryFactory;
@@ -41,7 +45,9 @@ public class BookOrderServiceImpl implements BookOrderService {
     @Override
     public BookOrder buildPreviewOrder(int numberOfDays, RentalType type) throws ServiceException {
         if (numberOfDays < 1) {
-            throw new ServiceException("Number of days for rental cannot be less than 0");
+            ServiceException serviceException = new ServiceException("Number of days for rental cannot be less than 0");
+            LOGGER.error(serviceException);
+            throw serviceException;
         }
         LocalDate currentDate = LocalDate.now();
         Date dummyStartDate = Date.valueOf(currentDate);
@@ -58,6 +64,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         try {
             bookOrderValidator.validate(newOrder);
         } catch (ValidationException e) {
+            LOGGER.error(e);
             throw new ServiceException(e);
         }
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
@@ -65,12 +72,16 @@ public class BookOrderServiceImpl implements BookOrderService {
 
             BookDao bookDao = helper.createBookDao();
             if (bookDao.getById(bookId).isEmpty()) {
-                throw new ServiceException("Cannot place an order on a book that does not exist");
+                ServiceException serviceException = new ServiceException("Cannot place an order on a book that does not exist");
+                LOGGER.error("Book Id: " + bookId, serviceException);
+                throw serviceException;
             }
 
             UserDao userDao = helper.createUserDao();
             if (userDao.getById(userId).isEmpty()) {
-                throw new ServiceException("Cannot place an order for a user that does not exist");
+                ServiceException serviceException = new ServiceException("Cannot place an order for a user that does not exist");
+                LOGGER.error("User Id: " + userId, serviceException);
+                throw serviceException;
             }
 
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
@@ -87,15 +98,11 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
-            Optional<BookOrder> optionalBookOrder = orderRepository.getById(orderId);
-            if (optionalBookOrder.isEmpty()) {
-                throw new ServiceException("Could not find the requested bookOrder");
-            }
-            BookOrder order = optionalBookOrder.get();
+            BookOrder order = getOrder(orderId, helper);
 
             Long bookId = order.getBook().getId();
             BookDao bookDao = helper.createBookDao();
+            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
             switch (newState) {
                 case ORDER_APPROVED:
                     bookDao.tweakAmount(bookId, -1);
@@ -119,12 +126,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
-            Optional<BookOrder> optionalBookOrder = orderRepository.getById(id);
-            if (optionalBookOrder.isEmpty()) {
-                throw new ServiceException("Could not find the requested bookOrder");
-            }
-            BookOrder order = optionalBookOrder.get();
+            BookOrder order = getOrder(id, helper);
 
             helper.endTransaction();
             return order;
@@ -171,6 +173,17 @@ public class BookOrderServiceImpl implements BookOrderService {
         PublisherDao publisherDao = helper.createPublisherDao();
 
         return repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao);
+    }
+
+    private BookOrder getOrder(Long orderId, DaoHelper helper) throws ServiceException, DaoException {
+        BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+        Optional<BookOrder> optionalBookOrder = orderRepository.getById(orderId);
+        if (optionalBookOrder.isEmpty()) {
+            ServiceException serviceException = new ServiceException("Could not find the requested bookOrder");
+            LOGGER.error("Order Id: " + orderId, serviceException);
+            throw serviceException;
+        }
+        return optionalBookOrder.get();
     }
 
 }
