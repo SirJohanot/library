@@ -9,7 +9,9 @@ import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.specification.Specification;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +51,18 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException {
+        List<User> allUsers = getAllUsers();
+        List<User> specifiedUsers = new ArrayList<>();
+        for (User user : allUsers) {
+            if (userSpecification.isSpecified(user)) {
+                specifiedUsers.add(user);
+            }
+        }
+        return specifiedUsers;
     }
 
     @Override

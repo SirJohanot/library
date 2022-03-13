@@ -4,6 +4,7 @@ import com.epam.library.command.parser.AuthorsLineParser;
 import com.epam.library.command.validation.Validator;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.specification.Specification;
 
 import java.time.Year;
 import java.util.List;
@@ -21,6 +22,8 @@ public interface BookService {
      * @throws ServiceException if a DaoException occurs
      */
     List<Book> getAllBooks() throws ServiceException;
+
+    List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException;
 
     /**
      * Gets the Book from the database
@@ -45,5 +48,11 @@ public interface BookService {
      */
     void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException;
 
+    /**
+     * Deletes a Book from the database
+     *
+     * @param bookId id of book to be deleted
+     * @throws ServiceException if a DaoException occurs
+     */
     void deleteBookById(Long bookId) throws ServiceException;
 }

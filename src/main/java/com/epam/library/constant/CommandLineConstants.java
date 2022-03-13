@@ -11,6 +11,7 @@ public class CommandLineConstants {
     public static final String MAIN_PAGE = "mainPage";
 
     public static final String BOOKS_PAGE = "booksPage";
+    public static final String SEARCH_BOOKS = "searchBooks";
     public static final String VIEW_BOOK_PAGE = "viewBook";
     public static final String EDIT_BOOK_PAGE = "editBookPage";
     public static final String SAVE_BOOK = "saveBook";
@@ -18,6 +19,7 @@ public class CommandLineConstants {
     public static final String DELETE_BOOK = "deleteBook";
 
     public static final String USERS_PAGE = "usersPage";
+    public static final String SEARCH_USERS = "searchUsers";
     public static final String VIEW_USER_PAGE = "viewUser";
     public static final String EDIT_USER_PAGE = "editUserPage";
     public static final String SAVE_USER = "saveUser";

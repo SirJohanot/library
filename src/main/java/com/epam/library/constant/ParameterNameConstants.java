@@ -11,6 +11,8 @@ public final class ParameterNameConstants {
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
 
+    public static final String SEARCH_VALUE = "searchValue";
+
     public static final String BOOK = "book";
     public static final String BOOK_ID = "bookId";
     public static final String BOOK_TITLE = "title";

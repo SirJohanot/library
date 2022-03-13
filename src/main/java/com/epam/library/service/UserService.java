@@ -4,6 +4,7 @@ import com.epam.library.command.validation.UserValidator;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.specification.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,15 @@ public interface UserService {
      * @throws ServiceException if a DaoException occurs
      */
     List<User> getAllUsers() throws ServiceException;
+
+    /**
+     * Gets all Users from the database that fit the passed specification
+     *
+     * @param userSpecification specification that all returned objects must fit
+     * @return List object containing specified Users
+     * @throws ServiceException - if a DaoException occurs
+     */
+    List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException;
 
     /**
      * Gets User by id in the database

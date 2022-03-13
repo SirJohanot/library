@@ -24,6 +24,12 @@ public class ManualRequestInputFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
 
+        Set<UserRole> anyone = new HashSet<>();
+        anyone.add(null);
+        anyone.add(UserRole.READER);
+        anyone.add(UserRole.LIBRARIAN);
+        anyone.add(UserRole.ADMIN);
+
         Set<UserRole> adminOnly = new HashSet<>();
         adminOnly.add(UserRole.ADMIN);
 
@@ -37,18 +43,20 @@ public class ManualRequestInputFilter implements Filter {
         readerAndLibrarianOnly.add(UserRole.READER);
         readerAndLibrarianOnly.add(UserRole.LIBRARIAN);
 
-        Set<UserRole> everyone = new HashSet<>();
-        everyone.add(UserRole.READER);
-        everyone.add(UserRole.LIBRARIAN);
-        everyone.add(UserRole.ADMIN);
+        Set<UserRole> anyRole = new HashSet<>();
+        anyRole.add(UserRole.READER);
+        anyRole.add(UserRole.LIBRARIAN);
+        anyRole.add(UserRole.ADMIN);
 
-        commandAccessMap.put(CommandLineConstants.SIGN_IN_PAGE, everyone);
-        commandAccessMap.put(CommandLineConstants.LANGUAGE_CHANGE, everyone);
-        commandAccessMap.put(CommandLineConstants.SIGN_IN, everyone);
-        commandAccessMap.put(CommandLineConstants.SIGN_OUT, everyone);
-        commandAccessMap.put(CommandLineConstants.MAIN_PAGE, everyone);
-        commandAccessMap.put(CommandLineConstants.BOOKS_PAGE, everyone);
-        commandAccessMap.put(CommandLineConstants.VIEW_BOOK_PAGE, everyone);
+        commandAccessMap.put(CommandLineConstants.SIGN_IN_PAGE, anyone);
+        commandAccessMap.put(CommandLineConstants.LANGUAGE_CHANGE, anyone);
+        commandAccessMap.put(CommandLineConstants.SIGN_IN, anyone);
+
+        commandAccessMap.put(CommandLineConstants.SIGN_OUT, anyRole);
+        commandAccessMap.put(CommandLineConstants.MAIN_PAGE, anyRole);
+        commandAccessMap.put(CommandLineConstants.BOOKS_PAGE, anyRole);
+        commandAccessMap.put(CommandLineConstants.SEARCH_BOOKS, anyRole);
+        commandAccessMap.put(CommandLineConstants.VIEW_BOOK_PAGE, anyRole);
 
         commandAccessMap.put(CommandLineConstants.ORDERS_PAGE, readerAndLibrarianOnly);
         commandAccessMap.put(CommandLineConstants.VIEW_ORDER, readerAndLibrarianOnly);
@@ -69,6 +77,7 @@ public class ManualRequestInputFilter implements Filter {
         commandAccessMap.put(CommandLineConstants.ADD_A_BOOK_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.SAVE_BOOK, adminOnly);
         commandAccessMap.put(CommandLineConstants.USERS_PAGE, adminOnly);
+        commandAccessMap.put(CommandLineConstants.SEARCH_USERS, adminOnly);
         commandAccessMap.put(CommandLineConstants.VIEW_USER_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.BLOCK_USER, adminOnly);
         commandAccessMap.put(CommandLineConstants.UNBLOCK_USER, adminOnly);
@@ -86,14 +95,11 @@ public class ManualRequestInputFilter implements Filter {
 
         String command = httpServletRequest.getParameter(ParameterNameConstants.COMMAND);
 
-        if (user == null && !command.equals(CommandLineConstants.SIGN_IN_PAGE) && !command.equals(CommandLineConstants.SIGN_IN) && !command.equals(CommandLineConstants.LANGUAGE_CHANGE) || commandAccessMap.get(command) == null) {
-            httpServletResponse.sendRedirect(CommandInvocationConstants.SIGN_IN_PAGE);
-        } else {
-            UserRole role = user == null ? null : user.getRole();
-            Set<UserRole> acceptedRolesForCommand = commandAccessMap.get(command);
-            if (!acceptedRolesForCommand.contains(role) && role != null) {
-                httpServletResponse.sendRedirect(CommandInvocationConstants.MAIN_PAGE);
-            }
+
+        UserRole userRole = user == null ? null : user.getRole();
+        Set<UserRole> allowedRolesForCommand = commandAccessMap.get(command);
+        if (!command.equals(CommandLineConstants.MAIN_PAGE) && allowedRolesForCommand != null && !allowedRolesForCommand.contains(userRole)) {
+            httpServletResponse.sendRedirect(CommandInvocationConstants.MAIN_PAGE);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

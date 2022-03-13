@@ -242,13 +242,13 @@ nav form button {
 }
 
 .block-container .block-parameters {
-    display: flex;
+    display: block;
     width: 100%;
 }
 
 .block-parameters * {
-    display: inline-block;
-    flex-grow: 1;
+    display: block;
+    text-align: left;
     width: 100%;
 }
 

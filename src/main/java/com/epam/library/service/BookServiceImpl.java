@@ -17,8 +17,10 @@ import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.specification.Specification;
 
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,18 @@ public class BookServiceImpl implements BookService {
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException {
+        List<Book> allBooks = getAllBooks();
+        List<Book> specifiedBooks = new ArrayList<>();
+        for (Book book : allBooks) {
+            if (bookSpecification.isSpecified(book)) {
+                specifiedBooks.add(book);
+            }
+        }
+        return specifiedBooks;
     }
 
     @Override

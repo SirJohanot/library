@@ -9,6 +9,8 @@ public final class AttributeNameConstants {
     public static final String CURRENT_PAGE = "currentPage";
     public static final String MAX_PAGE = "maxPage";
 
+    public static final String SEARCH_VALUE = "searchValue";
+
     public static final String USER = "user";
     public static final String USER_LIST = "userList";
     public static final String TARGET_USER = "targetUser";
