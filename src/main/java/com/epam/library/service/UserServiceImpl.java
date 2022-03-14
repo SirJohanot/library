@@ -43,30 +43,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() throws ServiceException {
+    public List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             UserDao dao = helper.createUserDao();
-            List<User> userList = dao.getAll();
+            List<User> allUsers = dao.getAll();
+
+            List<User> specifiedUsers = new ArrayList<>();
+            for (User user : allUsers) {
+                if (userSpecification.isSpecified(user)) {
+                    specifiedUsers.add(user);
+                }
+            }
 
             helper.endTransaction();
-            return userList;
+            return specifiedUsers;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
-    }
-
-    @Override
-    public List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException {
-        List<User> allUsers = getAllUsers();
-        List<User> specifiedUsers = new ArrayList<>();
-        for (User user : allUsers) {
-            if (userSpecification.isSpecified(user)) {
-                specifiedUsers.add(user);
-            }
-        }
-        return specifiedUsers;
     }
 
     @Override

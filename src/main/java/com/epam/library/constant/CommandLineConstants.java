@@ -27,8 +27,6 @@ public class CommandLineConstants {
     public static final String UNBLOCK_USER = "unblockUser";
 
     public static final String ORDERS_PAGE = "ordersPage";
-    public static final String USER_ORDERS_PAGE = "userOrdersPage";
-    public static final String GLOBAL_ORDERS_PAGE = "globalOrdersPage";
     public static final String VIEW_ORDER = "viewOrder";
     public static final String ORDER_TO_READING_HALL = "orderToReadingHallPage";
     public static final String ORDER_ON_SUBSCRIPTION = "orderOnSubscriptionPage";

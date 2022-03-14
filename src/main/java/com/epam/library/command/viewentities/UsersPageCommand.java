@@ -6,6 +6,7 @@ import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.pagination.Paginator;
 import com.epam.library.service.UserService;
+import com.epam.library.specification.NoSpecification;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -23,6 +24,6 @@ public class UsersPageCommand extends AbstractViewPageCommand<User> {
 
     @Override
     protected List<User> getEntitiesUsingService(HttpServletRequest req) throws ServiceException {
-        return userService.getAllUsers();
+        return userService.getAllSpecifiedUsers(new NoSpecification<>());
     }
 }

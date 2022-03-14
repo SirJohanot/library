@@ -26,14 +26,6 @@ public interface UserService {
     Optional<User> signIn(String login, String password) throws ServiceException;
 
     /**
-     * Gets all Users from the database
-     *
-     * @return List object containing all Users found in the database. May be empty
-     * @throws ServiceException if a DaoException occurs
-     */
-    List<User> getAllUsers() throws ServiceException;
-
-    /**
      * Gets all Users from the database that fit the passed specification
      *
      * @param userSpecification specification that all returned objects must fit

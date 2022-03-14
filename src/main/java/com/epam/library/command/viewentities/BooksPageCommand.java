@@ -6,6 +6,7 @@ import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.pagination.Paginator;
 import com.epam.library.service.BookService;
+import com.epam.library.specification.NoSpecification;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -23,6 +24,6 @@ public class BooksPageCommand extends AbstractViewPageCommand<Book> {
 
     @Override
     protected List<Book> getEntitiesUsingService(HttpServletRequest req) throws ServiceException {
-        return bookService.getAllBooks();
+        return bookService.getAllSpecifiedBooks(new NoSpecification<>());
     }
 }

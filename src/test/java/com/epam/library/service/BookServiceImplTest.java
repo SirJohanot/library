@@ -17,6 +17,7 @@ import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.specification.NoSpecification;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -94,13 +95,14 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void testGetAllBooksShouldReturnBooksReturnedByBookRepository() throws DaoException, ServiceException {
+    public void testGetAllSpecifiedBooksShouldReturnBooksReturnedByBookRepositoryWhenThereIsNoSpecification() throws DaoException, ServiceException {
         //given
         Book firstBook = new Book(bookId, title, null, genre, publisher, publishmentYear, amount);
         List<Book> expectedBookList = List.of(firstBook);
         when(bookRepository.getAll()).thenReturn(expectedBookList);
+
         //when
-        List<Book> actualBookList = bookService.getAllBooks();
+        List<Book> actualBookList = bookService.getAllSpecifiedBooks(new NoSpecification<>());
         //then
         Assert.assertEquals(expectedBookList, actualBookList);
     }

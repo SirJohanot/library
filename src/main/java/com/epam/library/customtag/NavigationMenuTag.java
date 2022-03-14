@@ -17,8 +17,7 @@ public class NavigationMenuTag extends TagSupport {
     private static final String BOOKS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"booksPage\">";
     private static final String ADD_A_BOOK_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"addABookPage\">";
     private static final String USERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"usersPage\">";
-    private static final String ORDERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"globalOrdersPage\">";
-    private static final String MY_ORDERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"userOrdersPage\">";
+    private static final String ORDERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"ordersPage\">";
     private static final String BUTTON_END = "</button>";
     private static final String FORM_END = "</form>";
     private static final String NAV_END = "</nav>";
@@ -49,7 +48,7 @@ public class NavigationMenuTag extends TagSupport {
                     writeMultiple(writer, ORDERS_PAGE_BUTTON_START, orders, BUTTON_END);
                     break;
                 case READER:
-                    writeMultiple(writer, MY_ORDERS_PAGE_BUTTON_START, myOrders, BUTTON_END);
+                    writeMultiple(writer, ORDERS_PAGE_BUTTON_START, myOrders, BUTTON_END);
                     break;
             }
             writer.write(FORM_END);

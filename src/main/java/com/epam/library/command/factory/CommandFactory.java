@@ -62,8 +62,6 @@ public class CommandFactory {
                 return new SetUserBlockedStatusCommand(new UserServiceImpl(daoHelperFactory), true);
             case UNBLOCK_USER:
                 return new SetUserBlockedStatusCommand(new UserServiceImpl(daoHelperFactory), false);
-            case USER_ORDERS_PAGE:
-            case GLOBAL_ORDERS_PAGE:
             case ORDERS_PAGE:
                 return new OrdersPageCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory), new Paginator<>());
             case VIEW_ORDER:

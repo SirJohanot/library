@@ -16,13 +16,12 @@ import java.util.List;
 public interface BookService {
 
     /**
-     * Gets all Books from the database
+     * Get all Books that fit the specification from the database
      *
-     * @return List object containing Books. May be empty
+     * @param bookSpecification specification to get the books by
+     * @return A List object containing the found books
      * @throws ServiceException if a DaoException occurs
      */
-    List<Book> getAllBooks() throws ServiceException;
-
     List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException;
 
     /**

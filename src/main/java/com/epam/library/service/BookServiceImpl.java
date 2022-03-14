@@ -39,30 +39,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooks() throws ServiceException {
+    public List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             BookRepository bookRepository = buildBookRepository(helper);
-            List<Book> bookList = bookRepository.getAll();
+            List<Book> allBooks = bookRepository.getAll();
 
+            List<Book> specifiedBooks = new ArrayList<>();
+            for (Book book : allBooks) {
+                if (bookSpecification.isSpecified(book)) {
+                    specifiedBooks.add(book);
+                }
+            }
             helper.endTransaction();
-            return bookList;
+            return specifiedBooks;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
-    }
-
-    @Override
-    public List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException {
-        List<Book> allBooks = getAllBooks();
-        List<Book> specifiedBooks = new ArrayList<>();
-        for (Book book : allBooks) {
-            if (bookSpecification.isSpecified(book)) {
-                specifiedBooks.add(book);
-            }
-        }
-        return specifiedBooks;
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.specification.NoSpecification;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,13 +67,13 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetAllUsersShouldDelegateToUserDaoCreatedByHelper() throws DaoException, ServiceException {
+    public void testGetAllSpecifiedUsersShouldDelegateToUserDaoCreatedByHelperWhenThereIsNoSpecification() throws DaoException, ServiceException {
         //given
         User expectedUser = new User(userId, login, name, surname, role, blocked);
         List<User> expectedUserList = List.of(expectedUser);
         when(userDao.getAll()).thenReturn(expectedUserList);
         //when
-        List<User> actualUserList = userService.getAllUsers();
+        List<User> actualUserList = userService.getAllSpecifiedUsers(new NoSpecification<>());
         //then
         Assert.assertEquals(expectedUserList, actualUserList);
     }
