@@ -14,6 +14,7 @@
 <fmt:message key="general.russianCode" var="ru"/>
 <fmt:message key="general.belarusianCode" var="bel"/>
 <fmt:message key="general.search" var="search"/>
+<fmt:message key="general.dateFormat" var="dateFormat"/>
 
 <fmt:message key="navigation.books" var="books"/>
 <fmt:message key="navigation.addABook" var="addABook"/>
@@ -21,14 +22,15 @@
 <fmt:message key="navigation.orders" var="orders"/>
 <fmt:message key="navigation.myOrders" var="myOrders"/>
 
-<fmt:message key="users.name" var="name"/>
-<fmt:message key="users.surname" var="surname"/>
-<fmt:message key="users.role" var="role"/>
-<fmt:message key="users.blocked" var="blocked"/>
+<fmt:message key="orders.startDate" var="startDate"/>
+<fmt:message key="orders.endDate" var="endDate"/>
+<fmt:message key="orders.returnDate" var="returnDate"/>
+<fmt:message key="orders.rentalType" var="rentalType"/>
+<fmt:message key="orders.rentalState" var="rentalState"/>
 
 <html>
 <head>
-    <title>${users} | ${appName}</title>
+    <title>${orders} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -59,24 +61,24 @@
 <section id="main-content">
     <ctg:navigation/>
     <div id="main-content-div">
-        <form method="post" action="controller?command=searchUsers" class="search-field">
+        <form method="post" action="controller?command=searchOrders" class="search-field">
             <input type="text" name="searchValue" placeholder="${search}"/>
         </form>
-        <form method="post" action="controller?command=viewUser">
-            <c:forEach items="${requestScope.userList}" var="targetUser">
-                <button type="submit" name="userId" value="${targetUser.id}"
-                        class="block-container round-bordered-subject">
-                    <h1>${targetUser.login}</h1>
+        <form method="post" action="controller?command=viewOrder">
+            <c:forEach items="${requestScope.orderList}" var="order">
+                <button type="submit" name="orderId" value="${order.id}" class="block-container round-bordered-subject">
+                    <h1>${order.book.title} | ${order.user.login}</h1>
                     <div class="block-parameters">
-                        <p>${name}: ${targetUser.name}</p>
-                        <p>${surname}: ${targetUser.surname}</p>
-                        <p>${role}: ${targetUser.role}</p>
-                        <p>${blocked}: ${targetUser.blocked}</p>
+                        <p>${startDate}: <fmt:formatDate value="${order.startDate}" pattern="${dateFormat}"/></p>
+                        <p>${endDate}: <fmt:formatDate value="${order.endDate}" pattern="${dateFormat}"/></p>
+                        <p>${returnDate}: <fmt:formatDate value="${order.returnDate}" pattern="${dateFormat}"/></p>
+                        <p>${rentalType}: ${order.type}</p>
+                        <p>${rentalState}: ${order.state}</p>
                     </div>
                 </button>
             </c:forEach>
         </form>
-        <ctg:pagination command="searchUsers&searchValue=${requestScope.searchValue}"/>
+        <ctg:pagination command="searchOrders&searchValue=${requestScope.searchValue}"/>
     </div>
 </section>
 </body>

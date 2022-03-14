@@ -31,6 +31,9 @@ public abstract class AbstractViewPageCommand<T extends Identifiable> implements
         List<T> allEntities = getEntitiesUsingService(req);
 
         int maxPage = paginator.getNumberOfPagesNeededToFitElements(allEntities, elementsPerPage);
+        if (maxPage <= 0) {
+            maxPage = 1;
+        }
         req.setAttribute(AttributeNameConstants.MAX_PAGE, maxPage);
 
         String pageLine = req.getParameter(ParameterNameConstants.PAGE);

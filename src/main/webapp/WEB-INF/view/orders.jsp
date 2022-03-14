@@ -61,6 +61,9 @@
 <section id="main-content">
     <ctg:navigation/>
     <div id="main-content-div">
+        <form method="post" action="controller?command=searchOrders" class="search-field">
+            <input type="text" name="searchValue" placeholder="${search}"/>
+        </form>
         <form method="post" action="controller?command=viewOrder">
             <c:forEach items="${requestScope.orderList}" var="order">
                 <button type="submit" name="orderId" value="${order.id}" class="block-container round-bordered-subject">

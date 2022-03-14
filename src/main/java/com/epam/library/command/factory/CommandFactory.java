@@ -64,6 +64,8 @@ public class CommandFactory {
                 return new SetUserBlockedStatusCommand(new UserServiceImpl(daoHelperFactory), false);
             case ORDERS_PAGE:
                 return new OrdersPageCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory), new Paginator<>());
+            case SEARCH_ORDERS:
+                return new SearchOrdersPageCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory), new Paginator<>());
             case VIEW_ORDER:
                 return new ViewOrderPage(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory));
             case ORDER_TO_READING_HALL:

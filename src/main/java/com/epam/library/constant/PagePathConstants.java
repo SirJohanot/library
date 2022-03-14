@@ -20,6 +20,7 @@ public final class PagePathConstants {
     public static final String EDIT_USER = "/WEB-INF/view/editUser.jsp";
 
     public static final String ORDERS = "/WEB-INF/view/orders.jsp";
+    public static final String SEARCH_ORDERS = "/WEB-INF/view/searchOrders.jsp";
     public static final String VIEW_ORDER = "/WEB-INF/view/orderPage.jsp";
     public static final String PLACE_ORDER = "/WEB-INF/view/placeOrder.jsp";
 

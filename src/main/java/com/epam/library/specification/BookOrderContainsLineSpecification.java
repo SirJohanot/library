@@ -23,28 +23,28 @@ public class BookOrderContainsLineSpecification extends AbstractChainedSpecifica
     protected boolean isSpecifiedByTheCurrentSpecification(BookOrder object) {
         Date startDate = object.getStartDate();
         String startDateLine = startDate.toString();
-        if (!startDateLine.contains(lineToContain)) {
-            return false;
+        if (startDateLine.contains(lineToContain)) {
+            return true;
         }
 
         Date endDate = object.getEndDate();
         String endDateLine = endDate.toString();
-        if (!endDateLine.contains(lineToContain)) {
-            return false;
+        if (endDateLine.contains(lineToContain)) {
+            return true;
         }
 
         Date returnDate = object.getReturnDate();
         if (returnDate != null) {
             String returnDateLine = returnDate.toString();
-            if (!returnDateLine.contains(lineToContain)) {
-                return false;
+            if (returnDateLine.contains(lineToContain)) {
+                return true;
             }
         }
 
         RentalType type = object.getType();
         String typeLine = type.toString();
-        if (!typeLine.contains(lineToContain)) {
-            return false;
+        if (typeLine.contains(lineToContain)) {
+            return true;
         }
 
         RentalState state = object.getState();

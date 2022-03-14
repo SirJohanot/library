@@ -58,6 +58,9 @@
 <section id="main-content">
     <ctg:navigation/>
     <div id="main-content-div">
+        <form method="post" action="controller?command=searchBooks" class="search-field">
+            <input type="text" name="searchValue" placeholder="${search}"/>
+        </form>
         <form method="post" action="controller?command=viewBook">
             <c:forEach items="${requestScope.bookList}" var="book">
                 <c:if test="${sessionScope.user.role != 'READER' || book.amount > 0}">
