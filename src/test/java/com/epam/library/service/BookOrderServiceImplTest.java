@@ -25,8 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -223,39 +221,4 @@ public class BookOrderServiceImplTest {
         Assert.assertEquals(expectedBookOrder, actualBookOrder);
     }
 
-    @Test
-    public void testGetOrdersForLibrarianShouldReturnOrdersFoundByOrderRepositorySortedByLibrarianPriority() throws ServiceException, DaoException {
-        //given
-        BookOrder firstBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.BOOK_RETURNED);
-        BookOrder secondBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_DECLINED);
-        BookOrder thirdBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.BOOK_COLLECTED);
-        BookOrder fourthBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_APPROVED);
-        BookOrder fifthBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_PLACED);
-
-        List<BookOrder> bookOrderReturnedByRepository = Arrays.asList(firstBookOrder, secondBookOrder, thirdBookOrder, fourthBookOrder, fifthBookOrder);
-        when(bookOrderRepository.getAll()).thenReturn(bookOrderReturnedByRepository);
-        List<BookOrder> expectedBookOrderList = Arrays.asList(fifthBookOrder, fourthBookOrder, thirdBookOrder, secondBookOrder, firstBookOrder);
-        //when
-        List<BookOrder> actualBookOrderList = bookOrderService.getOrdersForLibrarian();
-        //then
-        Assert.assertEquals(expectedBookOrderList, actualBookOrderList);
-    }
-
-    @Test
-    public void testGetReaderOrdersShouldReturnOrdersFoundByOrderRepositorySortedByReaderPriority() throws ServiceException, DaoException {
-        //given
-        BookOrder firstBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.BOOK_RETURNED);
-        BookOrder secondBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_DECLINED);
-        BookOrder thirdBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_PLACED);
-        BookOrder fourthBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.BOOK_COLLECTED);
-        BookOrder fifthBookOrder = new BookOrder(null, null, null, null, null, null, null, RentalState.ORDER_APPROVED);
-
-        List<BookOrder> bookOrderReturnedByRepository = Arrays.asList(firstBookOrder, secondBookOrder, thirdBookOrder, fourthBookOrder, fifthBookOrder);
-        when(bookOrderRepository.getOrdersOfUser(userId)).thenReturn(bookOrderReturnedByRepository);
-        List<BookOrder> expectedBookOrderList = Arrays.asList(fifthBookOrder, fourthBookOrder, thirdBookOrder, secondBookOrder, firstBookOrder);
-        //when
-        List<BookOrder> actualBookOrderList = bookOrderService.getReaderOrders(userId);
-        //then
-        Assert.assertEquals(expectedBookOrderList, actualBookOrderList);
-    }
 }

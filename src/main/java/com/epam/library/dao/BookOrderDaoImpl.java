@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrderDao {
@@ -48,7 +47,7 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
         valuesMap.put(BookOrder.RENTAL_TYPE_COLUMN, entity.getType().toString().toLowerCase());
 
         valuesMap.put(BookOrder.RENTAL_STATE_COLUMN, entity.getState().toString().toLowerCase());
-        
+
         return valuesMap;
     }
 
@@ -63,12 +62,6 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
         String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.TABLE_NAME, BookOrder.RETURN_DATE_COLUMN);
         String returnDateLine = sqlDateFormatter.format(returnDate);
         executeUpdate(query, returnDateLine, id);
-    }
-
-    @Override
-    public List<BookOrder> getOrdersOfUser(Long userId) throws DaoException {
-        String query = String.format(GET_ORDERS_OF_USER_QUERY, BookOrder.TABLE_NAME, BookOrder.USER_ID_COLUMN);
-        return executeQuery(query, userId);
     }
 
 }

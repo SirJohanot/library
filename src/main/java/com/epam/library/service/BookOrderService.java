@@ -5,8 +5,10 @@ import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.specification.Specification;
 
 import java.sql.Date;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -55,19 +57,13 @@ public interface BookOrderService {
     BookOrder getOrderById(Long id) throws ServiceException;
 
     /**
-     * Returns all BookOrders from the database, sorted from most priority for a Librarian for least priority
+     * Returns BookOrders from the database, which fit the passed specification, in a List sorted with the passed Comparator
      *
-     * @return List object containing BookOrders. May be empty
+     * @param bookOrderSpecification specification that the orders have to fit
+     * @param comparator             comparator that the specified orders will be sorted by
+     * @return a sorted List containing the specified orders
      * @throws ServiceException if a DaoException occurs
      */
-    List<BookOrder> getOrdersForLibrarian() throws ServiceException;
+    List<BookOrder> getSpecifiedOrders(Specification<BookOrder> bookOrderSpecification, Comparator<BookOrder> comparator) throws ServiceException;
 
-    /**
-     * Returns the User's BookOrders from the database, sorted from most priority for a Reader for least priority
-     *
-     * @param userId id of User
-     * @return sorted List object containing BookOrders. May be empty
-     * @throws ServiceException if a DaoException occurs
-     */
-    List<BookOrder> getReaderOrders(Long userId) throws ServiceException;
 }

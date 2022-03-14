@@ -30,6 +30,6 @@ public class SearchBooksPageCommand extends AbstractViewPageCommand<Book> {
         req.setAttribute(AttributeNameConstants.SEARCH_VALUE, searchValue);
         Specification<Book> bookSearchSpecification = new BookContainsLineSpecification(searchValue);
 
-        return bookService.getAllSpecifiedBooks(bookSearchSpecification);
+        return bookService.getSpecifiedBooks(bookSearchSpecification);
     }
 }

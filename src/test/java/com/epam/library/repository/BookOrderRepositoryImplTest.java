@@ -115,20 +115,6 @@ public class BookOrderRepositoryImplTest {
     }
 
     @Test
-    public void testGetOrdersOfUserShouldReturnAListOfFullOrders() throws DaoException {
-        //given
-        List<BookOrder> expectedOrders = List.of(new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState));
-        List<BookOrder> shallowList = List.of(new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState));
-        when(bookOrderDao.getOrdersOfUser(userId)).thenReturn(shallowList);
-        when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
-        //when
-        List<BookOrder> actualOrders = bookOrderRepository.getOrdersOfUser(userId);
-        //then
-        Assert.assertEquals(expectedOrders, actualOrders);
-    }
-
-    @Test
     public void testSaveShouldDelegateToBookOrderDao() throws DaoException {
         //given
         BookOrder order = new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState);

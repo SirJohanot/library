@@ -19,16 +19,13 @@ import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
-import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
-import com.epam.library.service.comparator.OrderReaderPriorityComparator;
+import com.epam.library.specification.Specification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class BookOrderServiceImpl implements BookOrderService {
 
@@ -136,29 +133,23 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public List<BookOrder> getOrdersForLibrarian() throws ServiceException {
-        List<BookOrder> results = getOrdersOfUserId(null);
-        results.sort(new OrderLibrarianPriorityComparator());
-        return results;
-    }
-
-    @Override
-    public List<BookOrder> getReaderOrders(Long userId) throws ServiceException {
-        List<BookOrder> results = getOrdersOfUserId(userId);
-        results.sort(new OrderReaderPriorityComparator());
-        return results;
-    }
-
-    private List<BookOrder> getOrdersOfUserId(Long userId) throws ServiceException {
+    public List<BookOrder> getSpecifiedOrders(Specification<BookOrder> bookOrderSpecification, Comparator<BookOrder> comparator) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
-
-            List<BookOrder> orderList = userId == null ? orderRepository.getAll() : orderRepository.getOrdersOfUser(userId);
+            List<BookOrder> allOrders = orderRepository.getAll();
 
             helper.endTransaction();
-            return orderList;
+
+            List<BookOrder> specifiedOrders = new ArrayList<>();
+            for (BookOrder bookOrder : allOrders) {
+                if (bookOrderSpecification.isSpecified(bookOrder)) {
+                    specifiedOrders.add(bookOrder);
+                }
+            }
+            specifiedOrders.sort(comparator);
+            return specifiedOrders;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

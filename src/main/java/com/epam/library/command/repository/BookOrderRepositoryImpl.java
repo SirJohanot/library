@@ -41,15 +41,6 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
     }
 
     @Override
-    public List<BookOrder> getOrdersOfUser(Long userId) throws DaoException {
-        List<BookOrder> orderList = new ArrayList<>();
-        for (BookOrder bookOrder : bookOrderDao.getOrdersOfUser(userId)) {
-            orderList.add(buildFullOrder(bookOrder));
-        }
-        return orderList;
-    }
-
-    @Override
     public Optional<BookOrder> getById(Long id) throws DaoException {
         Optional<BookOrder> shallowOrder = bookOrderDao.getById(id);
         if (shallowOrder.isEmpty()) {

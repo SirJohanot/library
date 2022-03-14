@@ -102,7 +102,7 @@ public class BookServiceImplTest {
         when(bookRepository.getAll()).thenReturn(expectedBookList);
 
         //when
-        List<Book> actualBookList = bookService.getAllSpecifiedBooks(new NoSpecification<>());
+        List<Book> actualBookList = bookService.getSpecifiedBooks(new NoSpecification<>());
         //then
         Assert.assertEquals(expectedBookList, actualBookList);
     }

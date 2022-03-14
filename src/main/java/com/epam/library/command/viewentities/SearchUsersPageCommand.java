@@ -30,6 +30,6 @@ public class SearchUsersPageCommand extends AbstractViewPageCommand<User> {
         req.setAttribute(AttributeNameConstants.SEARCH_VALUE, searchValue);
         Specification<User> userSearchSpecification = new UserContainsLineSpecification(searchValue);
 
-        return userService.getAllSpecifiedUsers(userSearchSpecification);
+        return userService.getSpecifiedUsers(userSearchSpecification);
     }
 }

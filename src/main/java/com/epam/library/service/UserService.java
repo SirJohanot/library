@@ -32,7 +32,7 @@ public interface UserService {
      * @return List object containing specified Users
      * @throws ServiceException - if a DaoException occurs
      */
-    List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException;
+    List<User> getSpecifiedUsers(Specification<User> userSpecification) throws ServiceException;
 
     /**
      * Gets User by id in the database

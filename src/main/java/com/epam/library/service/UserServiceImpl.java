@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllSpecifiedUsers(Specification<User> userSpecification) throws ServiceException {
+    public List<User> getSpecifiedUsers(Specification<User> userSpecification) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 

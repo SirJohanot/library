@@ -73,7 +73,7 @@ public class UserServiceImplTest {
         List<User> expectedUserList = List.of(expectedUser);
         when(userDao.getAll()).thenReturn(expectedUserList);
         //when
-        List<User> actualUserList = userService.getAllSpecifiedUsers(new NoSpecification<>());
+        List<User> actualUserList = userService.getSpecifiedUsers(new NoSpecification<>());
         //then
         Assert.assertEquals(expectedUserList, actualUserList);
     }

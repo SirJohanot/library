@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException {
+    public List<Book> getSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 

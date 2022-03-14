@@ -22,7 +22,7 @@ public interface BookService {
      * @return A List object containing the found books
      * @throws ServiceException if a DaoException occurs
      */
-    List<Book> getAllSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException;
+    List<Book> getSpecifiedBooks(Specification<Book> bookSpecification) throws ServiceException;
 
     /**
      * Gets the Book from the database

@@ -3,7 +3,7 @@ package com.epam.library.specification;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 
-public class UserContainsLineSpecification implements Specification<User> {
+public class UserContainsLineSpecification extends AbstractChainedSpecification<User> {
 
     private final String lineToContain;
 
@@ -11,8 +11,13 @@ public class UserContainsLineSpecification implements Specification<User> {
         this.lineToContain = lineToContain;
     }
 
+    public UserContainsLineSpecification(String lineToContain, Specification<User> successor) {
+        super(successor);
+        this.lineToContain = lineToContain;
+    }
+
     @Override
-    public boolean isSpecified(User object) {
+    protected boolean isSpecifiedByTheCurrentSpecification(User object) {
         String login = object.getLogin();
         if (login.contains(lineToContain)) {
             return true;

@@ -8,7 +8,7 @@ import com.epam.library.entity.book.Publisher;
 import java.time.Year;
 import java.util.List;
 
-public class BookContainsLineSpecification implements Specification<Book> {
+public class BookContainsLineSpecification extends AbstractChainedSpecification<Book> {
 
     private final String lineToContain;
 
@@ -16,8 +16,13 @@ public class BookContainsLineSpecification implements Specification<Book> {
         this.lineToContain = lineToContain;
     }
 
+    public BookContainsLineSpecification(String lineToContain, Specification<Book> successor) {
+        super(successor);
+        this.lineToContain = lineToContain;
+    }
+
     @Override
-    public boolean isSpecified(Book object) {
+    protected boolean isSpecifiedByTheCurrentSpecification(Book object) {
         String title = object.getTitle();
         if (title.contains(lineToContain)) {
             return true;

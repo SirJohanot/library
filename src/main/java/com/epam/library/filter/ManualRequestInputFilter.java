@@ -66,9 +66,7 @@ public class ManualRequestInputFilter implements Filter {
         commandAccessMap.put(CommandLineConstants.ORDER, readerOnly);
         commandAccessMap.put(CommandLineConstants.COLLECT_ORDER, readerOnly);
         commandAccessMap.put(CommandLineConstants.RETURN_ORDER, readerOnly);
-        commandAccessMap.put(CommandLineConstants.USER_ORDERS_PAGE, readerOnly);
 
-        commandAccessMap.put(CommandLineConstants.GLOBAL_ORDERS_PAGE, librarianOnly);
         commandAccessMap.put(CommandLineConstants.DECLINE_ORDER, librarianOnly);
         commandAccessMap.put(CommandLineConstants.APPROVE_ORDER, librarianOnly);
 

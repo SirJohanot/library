@@ -24,6 +24,6 @@ public class UsersPageCommand extends AbstractViewPageCommand<User> {
 
     @Override
     protected List<User> getEntitiesUsingService(HttpServletRequest req) throws ServiceException {
-        return userService.getAllSpecifiedUsers(new NoSpecification<>());
+        return userService.getSpecifiedUsers(new NoSpecification<>());
     }
 }

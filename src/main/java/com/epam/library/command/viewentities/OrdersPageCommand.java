@@ -7,6 +7,10 @@ import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.pagination.Paginator;
 import com.epam.library.service.BookOrderService;
+import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
+import com.epam.library.service.comparator.OrderReaderPriorityComparator;
+import com.epam.library.specification.BookOrderIsRelatedToUserId;
+import com.epam.library.specification.NoSpecification;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -28,9 +32,10 @@ public class OrdersPageCommand extends AbstractViewPageCommand<BookOrder> {
         User currentUser = (User) req.getSession().getAttribute(AttributeNameConstants.USER);
         switch (currentUser.getRole()) {
             case READER:
-                return orderService.getReaderOrders(currentUser.getId());
+                Long userId = currentUser.getId();
+                return orderService.getSpecifiedOrders(new BookOrderIsRelatedToUserId(userId), new OrderReaderPriorityComparator());
             case LIBRARIAN:
-                return orderService.getOrdersForLibrarian();
+                return orderService.getSpecifiedOrders(new NoSpecification<>(), new OrderLibrarianPriorityComparator());
             default:
                 return new ArrayList<>();
         }
