@@ -49,8 +49,10 @@ public class ManualRequestInputFilter implements Filter {
         anyRole.add(UserRole.ADMIN);
 
         commandAccessMap.put(CommandLineConstants.SIGN_IN_PAGE, anyone);
-        commandAccessMap.put(CommandLineConstants.LANGUAGE_CHANGE, anyone);
         commandAccessMap.put(CommandLineConstants.SIGN_IN, anyone);
+        commandAccessMap.put(CommandLineConstants.SIGN_UP_PAGE, anyone);
+        commandAccessMap.put(CommandLineConstants.SIGN_UP, anyone);
+        commandAccessMap.put(CommandLineConstants.LANGUAGE_CHANGE, anyone);
 
         commandAccessMap.put(CommandLineConstants.SIGN_OUT, anyRole);
         commandAccessMap.put(CommandLineConstants.MAIN_PAGE, anyRole);
@@ -73,14 +75,14 @@ public class ManualRequestInputFilter implements Filter {
         commandAccessMap.put(CommandLineConstants.EDIT_BOOK_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.DELETE_BOOK, adminOnly);
         commandAccessMap.put(CommandLineConstants.ADD_A_BOOK_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.SAVE_BOOK, adminOnly);
+        commandAccessMap.put(CommandLineConstants.ADD_BOOK, adminOnly);
         commandAccessMap.put(CommandLineConstants.USERS_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.SEARCH_USERS, adminOnly);
         commandAccessMap.put(CommandLineConstants.VIEW_USER_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.BLOCK_USER, adminOnly);
         commandAccessMap.put(CommandLineConstants.UNBLOCK_USER, adminOnly);
         commandAccessMap.put(CommandLineConstants.EDIT_USER_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.SAVE_USER, adminOnly);
+        commandAccessMap.put(CommandLineConstants.EDIT_USER, adminOnly);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.epam.library.command.parser;
+package com.epam.library.parser;
 
 import com.epam.library.entity.book.Author;
 

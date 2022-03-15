@@ -83,6 +83,7 @@
                         <c:if test="${requestScope.targetUser.role == 'LIBRARIAN'}">selected="selected"</c:if>>LIBRARIAN
                 </option>
             </select>
+            <div class="error-message">${requestScope.errorMessage}</div>
         </form>
         <form method="post" action="controller?command=usersPage" class="buttons-container">
             <button type="submit" class="red">${cancel}</button>

@@ -5,6 +5,7 @@ public final class PagePathConstants {
     public static final String ERROR = "/WEB-INF/view/errorPage.jsp";
 
     public static final String SIGN_IN = "/index.jsp";
+    public static final String SIGN_UP = "/WEB-INF/view/signUp.jsp";
 
     public static final String MAIN = "/WEB-INF/view/main.jsp";
 

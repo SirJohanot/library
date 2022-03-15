@@ -200,7 +200,7 @@ nav form button {
     padding: 20px;
 }
 
-.login-form input {
+.login-form input, .login-form button {
     width: 100%;
     padding: 5px 12px;
     line-height: 20px;

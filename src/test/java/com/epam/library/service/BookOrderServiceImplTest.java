@@ -1,8 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.repository.BookOrderRepository;
-import com.epam.library.command.repository.RepositoryFactory;
-import com.epam.library.command.validation.BookOrderValidator;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -19,6 +16,9 @@ import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.repository.BookOrderRepository;
+import com.epam.library.repository.RepositoryFactory;
+import com.epam.library.validation.BookOrderValidator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,8 +103,8 @@ public class BookOrderServiceImplTest {
         bookOrderService = null;
     }
 
-    @Test(expected = ServiceException.class)
-    public void testPlaceOrderShouldThrowServiceExceptionWhenBookOrderDidNotGetValidated() throws ValidationException, ServiceException {
+    @Test(expected = ValidationException.class)
+    public void testPlaceOrderShouldThrowValidationExceptionWhenBookOrderDidNotGetValidated() throws ValidationException, ServiceException {
         //given
         BookOrder orderToBeSaved = new BookOrder(null, book, user, startDate, endDate, null, type, state);
 
@@ -116,7 +116,7 @@ public class BookOrderServiceImplTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void testPlaceOrderShouldThrowServiceExceptionWhenBookByBookIdDoesNotExist() throws ServiceException, DaoException {
+    public void testPlaceOrderShouldThrowServiceExceptionWhenBookByBookIdDoesNotExist() throws ServiceException, DaoException, ValidationException {
         //given
         BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
 
@@ -127,7 +127,7 @@ public class BookOrderServiceImplTest {
     }
 
     @Test(expected = ServiceException.class)
-    public void testPlaceOrderShouldThrowServiceExceptionWhenUserByUserIdDoesNotExist() throws ServiceException, DaoException {
+    public void testPlaceOrderShouldThrowServiceExceptionWhenUserByUserIdDoesNotExist() throws ServiceException, DaoException, ValidationException {
         //given
         BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
 

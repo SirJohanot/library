@@ -9,6 +9,7 @@ public class User implements Identifiable, Serializable {
     public static final String TABLE_NAME = "user";
     public static final String ID_COLUMN = "id";
     public static final String LOGIN_COLUMN = "login";
+    public static final String PASSWORD_COLUMN = "password";
     public static final String NAME_COLUMN = "name";
     public static final String SURNAME_COLUMN = "surname";
     public static final String ROLE_COLUMN = "role";

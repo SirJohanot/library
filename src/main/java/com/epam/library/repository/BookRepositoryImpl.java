@@ -1,4 +1,4 @@
-package com.epam.library.command.repository;
+package com.epam.library.repository;
 
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;

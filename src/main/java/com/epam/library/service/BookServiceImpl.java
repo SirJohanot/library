@@ -1,9 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.parser.AuthorsLineParser;
-import com.epam.library.command.repository.BookRepository;
-import com.epam.library.command.repository.RepositoryFactory;
-import com.epam.library.command.validation.Validator;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;
@@ -17,7 +13,11 @@ import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.parser.AuthorsLineParser;
+import com.epam.library.repository.BookRepository;
+import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,14 +82,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException {
+    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException, ValidationException {
         Book newBook = buildBookFromParameters(id, title, authors, genre, publisher, publishmentYear, amount, authorsLineParser);
-        try {
-            bookValidator.validate(newBook);
-        } catch (ValidationException e) {
-            LOGGER.error(e);
-            throw new ServiceException(e);
-        }
+        bookValidator.validate(newBook);
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 

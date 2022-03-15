@@ -7,8 +7,8 @@ import com.epam.library.entity.User;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.pagination.Paginator;
 import com.epam.library.service.BookOrderService;
-import com.epam.library.service.comparator.OrderLibrarianPriorityComparator;
-import com.epam.library.service.comparator.OrderReaderPriorityComparator;
+import com.epam.library.comparator.OrderLibrarianPriorityComparator;
+import com.epam.library.comparator.OrderReaderPriorityComparator;
 import com.epam.library.specification.BookOrderIsRelatedToUserId;
 import com.epam.library.specification.NoSpecification;
 

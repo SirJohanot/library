@@ -1,8 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.repository.BookOrderRepository;
-import com.epam.library.command.repository.RepositoryFactory;
-import com.epam.library.command.validation.Validator;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -19,7 +16,10 @@ import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.repository.BookOrderRepository;
+import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,14 +56,9 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException {
+    public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException {
         BookOrder newOrder = new BookOrder(null, Book.ofId(bookId), User.ofId(userId), startDate, endDate, null, rentalType, RentalState.ORDER_PLACED);
-        try {
-            bookOrderValidator.validate(newOrder);
-        } catch (ValidationException e) {
-            LOGGER.error(e);
-            throw new ServiceException(e);
-        }
+        bookOrderValidator.validate(newOrder);
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 

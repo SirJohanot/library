@@ -1,6 +1,5 @@
-package com.epam.library.command.validation;
+package com.epam.library.validation;
 
-import com.epam.library.entity.Identifiable;
 import com.epam.library.exception.ValidationException;
 
 /**
@@ -8,7 +7,7 @@ import com.epam.library.exception.ValidationException;
  *
  * @param <T> type of object
  */
-public interface Validator<T extends Identifiable> {
+public interface Validator<T> {
 
     /**
      * Validates the object

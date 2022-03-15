@@ -1,28 +1,26 @@
-package com.epam.library.command.book;
+package com.epam.library.command.saving;
 
-import com.epam.library.command.Command;
-import com.epam.library.command.parser.AuthorsLineParser;
-import com.epam.library.command.result.CommandResult;
-import com.epam.library.command.validation.BookValidator;
-import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
+import com.epam.library.parser.AuthorsLineParser;
 import com.epam.library.service.BookService;
+import com.epam.library.validation.BookValidator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.Year;
 
-public class SaveBookCommand implements Command {
+public class SaveBookCommand extends AbstractSaveCommand {
 
     private final BookService bookService;
 
-    public SaveBookCommand(BookService bookService) {
+    public SaveBookCommand(String successRedirectPath, String failureForwardPath, BookService bookService) {
+        super(successRedirectPath, failureForwardPath);
         this.bookService = bookService;
     }
 
     @Override
-    public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
+    protected void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = bookIdLine == null ? null : Long.valueOf(bookIdLine);
 
@@ -38,6 +36,5 @@ public class SaveBookCommand implements Command {
         Integer amount = Integer.valueOf(amountLine);
 
         bookService.saveBook(bookId, title, authors, genre, publisher, publishmentYear, amount, new BookValidator(), new AuthorsLineParser());
-        return CommandResult.redirect(CommandInvocationConstants.BOOKS_PAGE);
     }
 }

@@ -1,46 +1,42 @@
-package com.epam.library.command.order;
+package com.epam.library.command.saving;
 
-import com.epam.library.command.Command;
-import com.epam.library.command.result.CommandResult;
-import com.epam.library.command.validation.BookOrderValidator;
 import com.epam.library.constant.AttributeNameConstants;
-import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
 import com.epam.library.service.BookOrderService;
+import com.epam.library.validation.BookOrderValidator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 
-public class OrderCommand implements Command {
+public class SaveOrderCommand extends AbstractSaveCommand {
 
     private final BookOrderService bookOrderService;
 
-    public OrderCommand(BookOrderService bookOrderService) {
+    public SaveOrderCommand(String successRedirectPath, String failureForwardPath, BookOrderService bookOrderService) {
+        super(successRedirectPath, failureForwardPath);
         this.bookOrderService = bookOrderService;
     }
 
     @Override
-    public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
+    protected void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException {
         User orderingUser = (User) req.getSession().getAttribute(AttributeNameConstants.USER);
         Long userId = orderingUser.getId();
 
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
 
-        String startDateLine = req.getParameter(ParameterNameConstants.START_DATE);
+        String startDateLine = req.getParameter(ParameterNameConstants.ORDER_START_DATE);
         Date startDate = Date.valueOf(startDateLine);
 
-        String endDateLine = req.getParameter(ParameterNameConstants.END_DATE);
+        String endDateLine = req.getParameter(ParameterNameConstants.ORDER_END_DATE);
         Date endDate = Date.valueOf(endDateLine);
 
-        String rentalTypeLine = req.getParameter(ParameterNameConstants.RENTAL_TYPE);
+        String rentalTypeLine = req.getParameter(ParameterNameConstants.ORDER_RENTAL_TYPE);
         RentalType rentalType = RentalType.valueOf(rentalTypeLine);
-
         bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId, new BookOrderValidator());
-        return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }
 }

@@ -1,8 +1,5 @@
 package com.epam.library.repository;
 
-import com.epam.library.command.repository.BookOrderRepository;
-import com.epam.library.command.repository.BookOrderRepositoryImpl;
-import com.epam.library.command.repository.BookRepository;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.entity.BookOrder;

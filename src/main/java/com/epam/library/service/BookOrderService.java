@@ -1,11 +1,12 @@
 package com.epam.library.service;
 
-import com.epam.library.command.validation.Validator;
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.Validator;
 
 import java.sql.Date;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public interface BookOrderService {
      * @param userId     id of the User in the database related to the BookOrder
      * @throws ServiceException if a DaoException occurs while saving the object to the database
      */
-    void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException;
+    void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException;
 
     /**
      * Sets new state for BookOrder in the database

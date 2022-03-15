@@ -1,6 +1,5 @@
 package com.epam.library.parser;
 
-import com.epam.library.command.parser.AuthorsLineParser;
 import com.epam.library.entity.book.Author;
 import org.junit.Assert;
 import org.junit.Test;

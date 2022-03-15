@@ -1,6 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.validation.UserValidator;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.helper.DaoHelper;
 import com.epam.library.dao.helper.DaoHelperFactory;
@@ -10,6 +9,7 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.NoSpecification;
+import com.epam.library.validation.UserValidator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -108,20 +108,20 @@ public class UserServiceImplTest {
         UserValidator userValidator = mock(UserValidator.class);
         doNothing().when(userValidator).validate(userToBeSaved);
         //when
-        userService.saveUser(userId, login, name, surname, role, blocked, userValidator);
+        userService.editUser(userId, login, name, surname, role, blocked, userValidator);
         //then
         verify(userDao, times(1)).save(userToBeSaved);
     }
 
-    @Test(expected = ServiceException.class)
-    public void testSaveUserShouldThrowServiceExceptionWhenUserIsNotValid() throws ServiceException, ValidationException {
+    @Test(expected = ValidationException.class)
+    public void testSaveUserShouldThrowValidationExceptionWhenUserIsNotValid() throws ServiceException, ValidationException {
         //given
         User userToBeSaved = new User(userId, login, name, surname, role, blocked);
 
         UserValidator userValidator = mock(UserValidator.class);
         doThrow(new ValidationException()).when(userValidator).validate(userToBeSaved);
         //when
-        userService.saveUser(userId, login, name, surname, role, blocked, userValidator);
+        userService.editUser(userId, login, name, surname, role, blocked, userValidator);
         //then
     }
 

@@ -69,7 +69,7 @@
     <ctg:navigation/>
     <div id="main-content-div">
         <form id="bookChanges" class="round-bordered-subject block-container" method="post"
-              action="controller?command=saveBook">
+              action="controller?command=addBook">
             <label for="title">${bookTitle}:</label>
             <input id="title" name="title" type="text" required="required"/>
             <label for="authors">${authors}(${commaSeparated}):</label>
@@ -83,6 +83,7 @@
                    required="required"/>
             <label for="amount">${inStock}:</label>
             <input id="amount" name="amount" type="number" min="0" step="1" required="required"/>
+            <div class="error-message">${requestScope.errorMessage}</div>
         </form>
         <form method="post" action="controller?command=booksPage" class="buttons-container">
             <button type="submit" class="red">${cancel}</button>

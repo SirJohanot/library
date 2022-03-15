@@ -1,7 +1,5 @@
 package com.epam.library.repository;
 
-import com.epam.library.command.repository.BookRepository;
-import com.epam.library.command.repository.BookRepositoryImpl;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;

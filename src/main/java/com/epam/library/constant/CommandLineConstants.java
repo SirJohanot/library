@@ -7,6 +7,8 @@ public class CommandLineConstants {
     public static final String SIGN_IN_PAGE = "signInPage";
     public static final String SIGN_IN = "signIn";
     public static final String SIGN_OUT = "signOut";
+    public static final String SIGN_UP_PAGE = "signUpPage";
+    public static final String SIGN_UP = "signUp";
 
     public static final String MAIN_PAGE = "mainPage";
 
@@ -14,7 +16,8 @@ public class CommandLineConstants {
     public static final String SEARCH_BOOKS = "searchBooks";
     public static final String VIEW_BOOK_PAGE = "viewBook";
     public static final String EDIT_BOOK_PAGE = "editBookPage";
-    public static final String SAVE_BOOK = "saveBook";
+    public static final String ADD_BOOK = "addBook";
+    public static final String EDIT_BOOK = "editBook";
     public static final String ADD_A_BOOK_PAGE = "addABookPage";
     public static final String DELETE_BOOK = "deleteBook";
 
@@ -22,7 +25,7 @@ public class CommandLineConstants {
     public static final String SEARCH_USERS = "searchUsers";
     public static final String VIEW_USER_PAGE = "viewUser";
     public static final String EDIT_USER_PAGE = "editUserPage";
-    public static final String SAVE_USER = "saveUser";
+    public static final String EDIT_USER = "editUser";
     public static final String BLOCK_USER = "blockUser";
     public static final String UNBLOCK_USER = "unblockUser";
 

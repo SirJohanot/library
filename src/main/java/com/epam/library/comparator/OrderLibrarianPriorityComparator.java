@@ -1,4 +1,4 @@
-package com.epam.library.service.comparator;
+package com.epam.library.comparator;
 
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;
@@ -26,7 +26,7 @@ public class OrderLibrarianPriorityComparator implements Comparator<BookOrder> {
 
         RentalState secondOrderState = o2.getState();
         Integer secondPriority = librarianStatePriorityMap.get(secondOrderState);
-        
+
         return secondPriority - firstPriority;
     }
 }

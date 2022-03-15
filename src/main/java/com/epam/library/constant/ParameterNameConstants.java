@@ -8,12 +8,8 @@ public final class ParameterNameConstants {
 
     public static final String PAGE = "page";
 
-    public static final String LOGIN = "login";
-    public static final String PASSWORD = "password";
-
     public static final String SEARCH_VALUE = "searchValue";
 
-    public static final String BOOK = "book";
     public static final String BOOK_ID = "bookId";
     public static final String BOOK_TITLE = "title";
     public static final String BOOK_AUTHORS = "authors";
@@ -25,6 +21,7 @@ public final class ParameterNameConstants {
     public static final String USER_ID = "userId";
     public static final String USER_LOGIN = "login";
     public static final String USER_PASSWORD = "password";
+    public static final String USER_CONFIRMED_PASSWORD = "confirmedPassword";
     public static final String USER_NAME = "name";
     public static final String USER_SURNAME = "surname";
     public static final String USER_ROLE = "role";
@@ -32,9 +29,8 @@ public final class ParameterNameConstants {
 
     public static final String DAYS = "days";
     public static final String ORDER_ID = "orderId";
-    public static final String START_DATE = "startDate";
-    public static final String END_DATE = "endDate";
-    public static final String RENTAL_TYPE = "rentalType";
-    public static final String STATE = "state";
+    public static final String ORDER_START_DATE = "startDate";
+    public static final String ORDER_END_DATE = "endDate";
+    public static final String ORDER_RENTAL_TYPE = "rentalType";
 
 }

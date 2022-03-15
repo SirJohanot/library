@@ -1,6 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.validation.UserValidator;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.helper.DaoHelper;
 import com.epam.library.dao.helper.DaoHelperFactory;
@@ -10,6 +9,8 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.UserValidator;
+import com.epam.library.validation.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +38,23 @@ public class UserServiceImpl implements UserService {
 
             helper.endTransaction();
             return user;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void signUp(String login, String password, String name, String surname, Validator<User> userValidator, Validator<String> passwordValidator) throws ServiceException, ValidationException {
+        User user = new User(null, login, name, surname, UserRole.READER, false);
+        passwordValidator.validate(password);
+        userValidator.validate(user);
+        try (DaoHelper helper = daoHelperFactory.createHelper()) {
+            helper.startTransaction();
+
+            UserDao dao = helper.createUserDao();
+            dao.saveWithPassword(user, password);
+
+            helper.endTransaction();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -85,14 +103,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException {
-        User user = new User(id, login, name, surname, role, blocked);
-        try {
-            userValidator.validate(user);
-        } catch (ValidationException e) {
-            LOGGER.error(e);
-            throw new ServiceException(e);
+    public void editUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException, ValidationException {
+        if (id == null) {
+            ServiceException serviceException = new ServiceException("Cannot edit user by null id");
+            LOGGER.error(serviceException);
+            throw serviceException;
         }
+        User user = new User(id, login, name, surname, role, blocked);
+        userValidator.validate(user);
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 

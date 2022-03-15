@@ -27,15 +27,15 @@ public class SignInCommand implements Command {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String login = req.getParameter(ParameterNameConstants.LOGIN);
-        String password = req.getParameter(ParameterNameConstants.PASSWORD);
+        String login = req.getParameter(ParameterNameConstants.USER_LOGIN);
+        String password = req.getParameter(ParameterNameConstants.USER_PASSWORD);
         Optional<User> user = userService.signIn(login, password);
         if (user.isEmpty()) {
-            req.setAttribute(AttributeNameConstants.SIGN_IN_ERROR_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
+            req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
             return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
         if (user.get().isBlocked()) {
-            req.setAttribute(AttributeNameConstants.SIGN_IN_ERROR_MESSAGE, BLOCKED_MESSAGE);
+            req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, BLOCKED_MESSAGE);
             return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
         req.getSession().setAttribute(AttributeNameConstants.USER, user.get());

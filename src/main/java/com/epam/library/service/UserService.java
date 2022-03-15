@@ -1,10 +1,12 @@
 package com.epam.library.service;
 
-import com.epam.library.command.validation.UserValidator;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.UserValidator;
+import com.epam.library.validation.Validator;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,20 @@ public interface UserService {
      * @throws ServiceException if a DaoException occurs
      */
     Optional<User> signIn(String login, String password) throws ServiceException;
+
+    /**
+     * Saves the User along with their password using DAO
+     *
+     * @param login             User's login
+     * @param password          the password
+     * @param name              User's name
+     * @param surname           User's surname
+     * @param userValidator     Validator that will be used to validate the inputted parameters apart from the password
+     * @param passwordValidator Validator that will be used to validate the password
+     * @throws ServiceException    if a DaoException occurs
+     * @throws ValidationException if the User or the password is not valid
+     */
+    void signUp(String login, String password, String name, String surname, Validator<User> userValidator, Validator<String> passwordValidator) throws ServiceException, ValidationException;
 
     /**
      * Gets all Users from the database that fit the passed specification
@@ -52,9 +68,10 @@ public interface UserService {
      * @param surname surname of User
      * @param role    role of User
      * @param blocked blocked state of User
-     * @throws ServiceException if a DaoException occurs
+     * @throws ServiceException    if a DaoException occurs
+     * @throws ValidationException if the User is not valid
      */
-    void saveUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException;
+    void editUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException, ValidationException;
 
     /**
      * Updates the User's blocked status

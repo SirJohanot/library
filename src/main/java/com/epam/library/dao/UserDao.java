@@ -21,6 +21,15 @@ public interface UserDao extends Dao<User> {
     Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException;
 
     /**
+     * Saves the user, along with the inputted password
+     *
+     * @param user     User to be saved
+     * @param password the User's password
+     * @throws DaoException if there were errors connecting to the database or while executing an SQL script
+     */
+    void saveWithPassword(User user, String password) throws DaoException;
+
+    /**
      * Sets a new value for a User in the database
      *
      * @param id       Long value representing the id of the User in the database

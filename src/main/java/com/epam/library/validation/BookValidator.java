@@ -1,4 +1,4 @@
-package com.epam.library.command.validation;
+package com.epam.library.validation;
 
 import com.epam.library.entity.book.Author;
 import com.epam.library.entity.book.Book;
@@ -25,7 +25,7 @@ public class BookValidator extends AbstractValidator<Book> {
             throw new ValidationException("A book must have at least one author");
         }
         for (Author author : authorList) {
-            throwExceptionIfNull(author, "Non of the book's authors may be null");
+            throwExceptionIfNull(author, "None of the book's authors may be null");
             String authorName = author.getName();
             throwExceptionIfNull(authorName, "An author's name must not be null");
             throwExceptionIfIsNotAWord(authorName, "An author's name must start with an alphabetical character");

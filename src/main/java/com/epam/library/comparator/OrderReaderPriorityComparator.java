@@ -1,4 +1,4 @@
-package com.epam.library.service.comparator;
+package com.epam.library.comparator;
 
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;

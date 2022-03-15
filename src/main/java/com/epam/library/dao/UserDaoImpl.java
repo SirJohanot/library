@@ -1,6 +1,7 @@
 package com.epam.library.dao;
 
 import com.epam.library.entity.User;
+import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.UserRowMapper;
 
@@ -12,6 +13,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     private static final String FIND_BY_LOGIN_AND_PASSWORD = "SELECT * FROM %s WHERE %s = ? AND password = MD5(?) ;";
     private static final String UPDATE_USER_BLOCKED_STATE_QUERY = "UPDATE %s SET %s = ? WHERE %s = ? ;";
+    private static final String SIGN_UP_QUERY = "INSERT INTO %s SET %s = ?, %s = MD5(?), %s = ?, %s = ?, %s = ? ;";
 
     public UserDaoImpl(Connection connection) {
         super(connection, new UserRowMapper(), User.TABLE_NAME);
@@ -24,6 +26,17 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 query,
                 login,
                 password);
+    }
+
+    @Override
+    public void saveWithPassword(User user, String password) throws DaoException {
+        String login = user.getLogin();
+        String name = user.getName();
+        String surname = user.getSurname();
+        UserRole role = user.getRole();
+        String roleLine = role.toString().toLowerCase();
+        String query = String.format(SIGN_UP_QUERY, User.TABLE_NAME, User.LOGIN_COLUMN, User.PASSWORD_COLUMN, User.NAME_COLUMN, User.SURNAME_COLUMN, User.ROLE_COLUMN);
+        executeUpdate(query, login, password, name, surname, roleLine);
     }
 
     @Override

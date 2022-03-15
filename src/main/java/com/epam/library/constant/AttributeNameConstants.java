@@ -15,8 +15,6 @@ public final class AttributeNameConstants {
     public static final String USER_LIST = "userList";
     public static final String TARGET_USER = "targetUser";
 
-    public static final String SIGN_IN_ERROR_MESSAGE = "signInErrorMessage";
-
     public static final String BOOK = "book";
     public static final String BOOK_LIST = "bookList";
 

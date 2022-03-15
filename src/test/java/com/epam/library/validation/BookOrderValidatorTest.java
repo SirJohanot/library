@@ -1,6 +1,5 @@
 package com.epam.library.validation;
 
-import com.epam.library.command.validation.BookOrderValidator;
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.User;
 import com.epam.library.entity.book.Book;

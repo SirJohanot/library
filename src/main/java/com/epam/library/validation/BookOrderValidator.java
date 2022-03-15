@@ -1,4 +1,4 @@
-package com.epam.library.command.validation;
+package com.epam.library.validation;
 
 import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.User;

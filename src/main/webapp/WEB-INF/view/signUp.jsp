@@ -18,10 +18,14 @@
 <fmt:message key="authorisation.signInLocale" var="signInLocale"/>
 
 <fmt:message key="userCreation.signUp" var="signUp"/>
+<fmt:message key="userCreation.confirmPassword" var="confirmPassword"/>
+
+<fmt:message key="users.name" var="name"/>
+<fmt:message key="users.surname" var="surname"/>
 
 <html>
 <head>
-    <title>${signInLocale} | ${appName}</title>
+    <title>${signUp} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
 </head>
@@ -45,11 +49,13 @@
     </div>
 </header>
 <section>
-    <form class="login-form round-bordered-subject" method="post" action="controller" autocomplete="on">
+    <form class="login-form round-bordered-subject" method="post" action="controller?command=signUp" autocomplete="on">
         <input type="text" name="login" placeholder="${loginLocale}"/>
         <input type="password" name="password" placeholder="${passwordLocale}"/>
-        <button type="submit" name="command" value="signIn">${signInLocale}</button>
-        <button type="submit" name="command" value="signUpPage">${signUp}</button>
+        <input type="password" name="confirmedPassword" placeholder="${confirmPassword}"/>
+        <input type="text" name="name" placeholder="${name}"/>
+        <input type="text" name="surname" placeholder="${surname}"/>
+        <input type="submit" value="${signUp}"/>
         <div class="error-message">${requestScope.errorMessage}</div>
     </form>
 </section>

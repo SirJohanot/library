@@ -1,11 +1,10 @@
-package com.epam.library.command.validation;
+package com.epam.library.validation;
 
-import com.epam.library.entity.Identifiable;
 import com.epam.library.exception.ValidationException;
 
 import java.util.regex.Pattern;
 
-public abstract class AbstractValidator<T extends Identifiable> implements Validator<T> {
+public abstract class AbstractValidator<T> implements Validator<T> {
 
     private static final String IS_A_WORD_REGEX = "\\p{L}+.*";
 

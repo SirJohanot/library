@@ -1,9 +1,5 @@
 package com.epam.library.service;
 
-import com.epam.library.command.parser.AuthorsLineParser;
-import com.epam.library.command.repository.BookRepository;
-import com.epam.library.command.repository.RepositoryFactory;
-import com.epam.library.command.validation.BookValidator;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;
@@ -17,7 +13,11 @@ import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
+import com.epam.library.parser.AuthorsLineParser;
+import com.epam.library.repository.BookRepository;
+import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.NoSpecification;
+import com.epam.library.validation.BookValidator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -145,8 +145,8 @@ public class BookServiceImplTest {
         verify(bookRepository, times(1)).save(bookToBeSaved);
     }
 
-    @Test(expected = ServiceException.class)
-    public void testSaveBookShouldThrowServiceExceptionWhenBookIsNotValid() throws ServiceException, ValidationException {
+    @Test(expected = ValidationException.class)
+    public void testSaveBookShouldThrowValidationExceptionWhenBookIsNotValid() throws ServiceException, ValidationException {
         Book bookToBeSaved = new Book(bookId, title, authorList, genre, publisher, publishmentYear, amount);
 
         AuthorsLineParser authorsLineParser = mock(AuthorsLineParser.class);

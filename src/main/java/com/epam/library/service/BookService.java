@@ -1,10 +1,11 @@
 package com.epam.library.service;
 
-import com.epam.library.command.parser.AuthorsLineParser;
-import com.epam.library.command.validation.Validator;
 import com.epam.library.entity.book.Book;
 import com.epam.library.exception.ServiceException;
+import com.epam.library.exception.ValidationException;
+import com.epam.library.parser.AuthorsLineParser;
 import com.epam.library.specification.Specification;
+import com.epam.library.validation.Validator;
 
 import java.time.Year;
 import java.util.List;
@@ -45,7 +46,7 @@ public interface BookService {
      * @param amount          Integer object representing the number of Book in stock
      * @throws ServiceException if a DaoException occurs
      */
-    void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException;
+    void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException, ValidationException;
 
     /**
      * Deletes a Book from the database

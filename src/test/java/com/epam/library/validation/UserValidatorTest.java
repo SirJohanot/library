@@ -1,6 +1,5 @@
 package com.epam.library.validation;
 
-import com.epam.library.command.validation.UserValidator;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ValidationException;
