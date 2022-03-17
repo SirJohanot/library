@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 
 public class PublisherDaoImpl extends AbstractDao<Publisher> implements PublisherDao {
 
-    private static final String DELETE_UNREFERENCED_PUBLISHER_ROW_QUERY = "DELETE FROM %s p WHERE NOT EXISTS (SELECT 1 FROM %s b WHERE p.%s = b.%s );";
+    private static final String DELETE_UNREFERENCED_PUBLISHER_ROWS_QUERY = "DELETE FROM publisher p WHERE NOT EXISTS (SELECT 1 FROM book b WHERE p.id = b.publisher_id );";
 
     public PublisherDaoImpl(Connection connection) {
         super(connection, new PublisherRowMapper(), Publisher.TABLE_NAME);
@@ -28,9 +28,8 @@ public class PublisherDaoImpl extends AbstractDao<Publisher> implements Publishe
     }
 
     @Override
-    public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
-        String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_PUBLISHER_ROW_QUERY, Publisher.TABLE_NAME, primaryTableName, Publisher.ID_COLUMN, primaryTableColumnName);
-        executeUpdate(deleteGenreRowQuery);
+    public void deleteRedundant() throws DaoException {
+        executeUpdate(DELETE_UNREFERENCED_PUBLISHER_ROWS_QUERY);
     }
 
 }

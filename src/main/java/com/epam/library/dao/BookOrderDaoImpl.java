@@ -9,12 +9,11 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrderDao {
 
-    private static final String SET_NEW_FIELD_VALUE_QUERY = "UPDATE %s SET %s = ? WHERE id = ? ;";
-    private static final String GET_ORDERS_OF_USER_QUERY = "SELECT * FROM %s WHERE %s = ? ;";
+    private static final String SET_NEW_FIELD_VALUE_QUERY = "UPDATE book_order SET %s = ? WHERE id = ? ;";
+
     private static final String FORMAT_OF_DATES_IN_DATABASE = "yyyy-MM-dd";
 
     private final SimpleDateFormat sqlDateFormatter = new SimpleDateFormat(FORMAT_OF_DATES_IN_DATABASE);
@@ -53,13 +52,13 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
 
     @Override
     public void setState(Long id, RentalState newState) throws DaoException {
-        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.TABLE_NAME, BookOrder.RENTAL_STATE_COLUMN);
-        executeUpdate(query, newState.toString().toLowerCase(Locale.ROOT), id);
+        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.RENTAL_STATE_COLUMN);
+        executeUpdate(query, newState.toString().toLowerCase(), id);
     }
 
     @Override
     public void setReturnDate(Long id, Date returnDate) throws DaoException {
-        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.TABLE_NAME, BookOrder.RETURN_DATE_COLUMN);
+        String query = String.format(SET_NEW_FIELD_VALUE_QUERY, BookOrder.RETURN_DATE_COLUMN);
         String returnDateLine = sqlDateFormatter.format(returnDate);
         executeUpdate(query, returnDateLine, id);
     }

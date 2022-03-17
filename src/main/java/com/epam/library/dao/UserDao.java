@@ -21,6 +21,15 @@ public interface UserDao extends Dao<User> {
     Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException;
 
     /**
+     * Searches the database for a User with the same login
+     *
+     * @param login String value representing the login to search by
+     * @return Optional.empty() if there is no such user. Otherwise, returns Optional object containing found User
+     * @throws DaoException if there were errors connecting to the database or while executing an SQL script
+     */
+    Optional<User> findUserByLogin(String login) throws DaoException;
+
+    /**
      * Saves the user, along with the inputted password
      *
      * @param user     User to be saved
@@ -37,4 +46,5 @@ public interface UserDao extends Dao<User> {
      * @throws DaoException if there were errors connecting to the database or while executing an SQL script
      */
     void updateUserBlocked(Long id, boolean newValue) throws DaoException;
+
 }

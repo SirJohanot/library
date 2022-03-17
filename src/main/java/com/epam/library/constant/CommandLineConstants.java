@@ -32,8 +32,7 @@ public class CommandLineConstants {
     public static final String ORDERS_PAGE = "ordersPage";
     public static final String SEARCH_ORDERS = "searchOrders";
     public static final String VIEW_ORDER = "viewOrder";
-    public static final String ORDER_TO_READING_HALL = "orderToReadingHallPage";
-    public static final String ORDER_ON_SUBSCRIPTION = "orderOnSubscriptionPage";
+    public static final String PLACE_ORDER_PAGE = "placeOrderPage";
     public static final String ORDER = "order";
     public static final String APPROVE_ORDER = "approveOrder";
     public static final String DECLINE_ORDER = "declineOrder";

@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
             helper.startTransaction();
 
             UserDao dao = helper.createUserDao();
+            Optional<User> sameLoginUserOptional = dao.findUserByLogin(login);
+            if (sameLoginUserOptional.isPresent()) {
+                throw new ValidationException("A User by such login already exists");
+            }
             dao.saveWithPassword(user, password);
 
             helper.endTransaction();

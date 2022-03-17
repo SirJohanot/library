@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 
 public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
 
-    private static final String DELETE_UNREFERENCED_GENRE_ROW_QUERY = "DELETE FROM %s g WHERE NOT EXISTS (SELECT 1 FROM %s b WHERE g.%s = b.%s );";
+    private static final String DELETE_UNREFERENCED_GENRE_ROWS_QUERY = "DELETE FROM genre g WHERE NOT EXISTS (SELECT 1 FROM book b WHERE g.id = b.genre_id );";
 
     public GenreDaoImpl(Connection connection) {
         super(connection, new GenreRowMapper(), Genre.TABLE_NAME);
@@ -23,14 +23,13 @@ public class GenreDaoImpl extends AbstractDao<Genre> implements GenreDao {
         valuesMap.put(Genre.ID_COLUMN, entity.getId());
 
         valuesMap.put(Genre.NAME_COLUMN, entity.getName());
-        
+
         return valuesMap;
     }
 
     @Override
-    public void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException {
-        String deleteGenreRowQuery = String.format(DELETE_UNREFERENCED_GENRE_ROW_QUERY, Genre.TABLE_NAME, primaryTableName, Genre.ID_COLUMN, primaryTableColumnName);
-        executeUpdate(deleteGenreRowQuery);
+    public void deleteRedundant() throws DaoException {
+        executeUpdate(DELETE_UNREFERENCED_GENRE_ROWS_QUERY);
     }
 
 }

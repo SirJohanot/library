@@ -11,12 +11,10 @@ import com.epam.library.exception.DaoException;
 public interface SecondaryTableDao<T extends Identifiable> extends Dao<T> {
 
     /**
-     * Deletes all objects from the related database table, which are not referenced by any objects of primaryTable
+     * Deletes all objects from the related database table, which are not referenced by any object of another table or do not reference an existing object of another table
      *
-     * @param primaryTableName       name of the table, which the deleted objects are not referenced by
-     * @param primaryTableColumnName name of column of primaryTable, which contains the ids of objects not to be deleted
      * @throws DaoException if there were errors connecting to the database or while executing an SQL script
      */
-    void deleteUnreferenced(String primaryTableName, String primaryTableColumnName) throws DaoException;
+    void deleteRedundant() throws DaoException;
 
 }

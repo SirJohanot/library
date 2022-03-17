@@ -200,9 +200,9 @@ public class BookRepositoryImplTest {
         //when
         bookRepository.save(book);
         //then
-        verify(authorDao, times(1)).deleteUnreferenced(Book.TABLE_NAME, Book.ID_COLUMN);
-        verify(genreDao, times(1)).deleteUnreferenced(Book.TABLE_NAME, Book.GENRE_ID_COLUMN);
-        verify(publisherDao, times(1)).deleteUnreferenced(Book.TABLE_NAME, Book.PUBLISHER_ID_COLUMN);
+        verify(authorDao, times(1)).deleteRedundant();
+        verify(genreDao, times(1)).deleteRedundant();
+        verify(publisherDao, times(1)).deleteRedundant();
     }
 
     @Test

@@ -15,24 +15,28 @@ import com.epam.library.service.BookService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class OrderToReadingHallCommand implements Command {
+public class PlaceOrderPageCommand implements Command {
 
     private final BookService bookService;
     private final BookOrderService bookOrderService;
 
-    public OrderToReadingHallCommand(BookService bookService, BookOrderService bookOrderService) {
+    public PlaceOrderPageCommand(BookService bookService, BookOrderService bookOrderService) {
         this.bookService = bookService;
         this.bookOrderService = bookOrderService;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        String idLine = req.getParameter(ParameterNameConstants.BOOK_ID);
-        Long id = Long.valueOf(idLine);
-        Book targetBook = bookService.getBookById(id);
-        req.setAttribute(AttributeNameConstants.BOOK, targetBook);
-        BookOrder dummyOrder = bookOrderService.buildPreviewOrder(0, RentalType.TO_READING_HALL);
+        String daysLine = req.getParameter(ParameterNameConstants.DAYS);
+        int days = Integer.parseInt(daysLine);
+        String typeLine = req.getParameter(ParameterNameConstants.ORDER_RENTAL_TYPE);
+        RentalType type = RentalType.valueOf(typeLine);
+        BookOrder dummyOrder = bookOrderService.buildPreviewOrder(days, type);
         req.setAttribute(AttributeNameConstants.BOOK_ORDER, dummyOrder);
+        String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
+        Long bookId = Long.valueOf(bookIdLine);
+        Book targetBook = bookService.getBookById(bookId);
+        req.setAttribute(AttributeNameConstants.BOOK, targetBook);
         return CommandResult.forward(PagePathConstants.PLACE_ORDER);
     }
 }

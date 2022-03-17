@@ -1,5 +1,7 @@
 package com.epam.library.command.saving;
 
+import com.epam.library.command.result.CommandResult;
+import com.epam.library.constant.CommandInvocationConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.ServiceException;
@@ -13,13 +15,12 @@ public class EditUserCommand extends AbstractSaveCommand {
 
     private final UserService userService;
 
-    public EditUserCommand(String successRedirectPath, String failureForwardPath, UserService userService) {
-        super(successRedirectPath, failureForwardPath);
+    public EditUserCommand(UserService userService) {
         this.userService = userService;
     }
 
     @Override
-    protected void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException {
+    protected void saveUsingService(HttpServletRequest req) throws ValidationException, ServiceException {
         String targetUserIdLine = req.getParameter(ParameterNameConstants.USER_ID);
         Long targetUserId = targetUserIdLine == null ? null : Long.valueOf(targetUserIdLine);
 
@@ -34,4 +35,16 @@ public class EditUserCommand extends AbstractSaveCommand {
         boolean targetUserBlocked = Boolean.parseBoolean(targetUserBlockedLine);
         userService.editUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked, new UserValidator());
     }
+
+    @Override
+    protected CommandResult getFailureResult(HttpServletRequest request) {
+        String targetUserIdLine = request.getParameter(ParameterNameConstants.USER_ID);
+        return CommandResult.redirect(CommandInvocationConstants.EDIT_USER_PAGE + "&" + ParameterNameConstants.USER_ID + "=" + targetUserIdLine);
+    }
+
+    @Override
+    protected String getSuccessRedirectPath(HttpServletRequest request) {
+        return CommandInvocationConstants.USERS_PAGE;
+    }
+
 }

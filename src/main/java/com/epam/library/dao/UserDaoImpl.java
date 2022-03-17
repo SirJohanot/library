@@ -11,9 +11,10 @@ import java.util.Optional;
 
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
-    private static final String FIND_BY_LOGIN_AND_PASSWORD = "SELECT * FROM %s WHERE %s = ? AND password = MD5(?) ;";
-    private static final String UPDATE_USER_BLOCKED_STATE_QUERY = "UPDATE %s SET %s = ? WHERE %s = ? ;";
-    private static final String SIGN_UP_QUERY = "INSERT INTO %s SET %s = ?, %s = MD5(?), %s = ?, %s = ?, %s = ? ;";
+    private static final String FIND_BY_LOGIN_AND_PASSWORD_QUERY = "SELECT * FROM user WHERE login = ? AND password = MD5(?) ;";
+    private static final String FIND_BY_LOGIN_QUERY = "SELECT * FROM user WHERE login = ? ;";
+    private static final String UPDATE_USER_BLOCKED_STATE_QUERY = "UPDATE user SET is_blocked = ? WHERE id = ? ;";
+    private static final String SIGN_UP_QUERY = "INSERT INTO user SET login = ?, password = MD5(?), name = ?, surname = ?, role = ? ;";
 
     public UserDaoImpl(Connection connection) {
         super(connection, new UserRowMapper(), User.TABLE_NAME);
@@ -21,11 +22,15 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public Optional<User> findUserByLoginAndPassword(String login, String password) throws DaoException {
-        String query = String.format(FIND_BY_LOGIN_AND_PASSWORD, User.TABLE_NAME, User.LOGIN_COLUMN);
         return executeForSingleResult(
-                query,
+                FIND_BY_LOGIN_AND_PASSWORD_QUERY,
                 login,
                 password);
+    }
+
+    @Override
+    public Optional<User> findUserByLogin(String login) throws DaoException {
+        return executeForSingleResult(FIND_BY_LOGIN_QUERY, login);
     }
 
     @Override
@@ -35,14 +40,12 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         String surname = user.getSurname();
         UserRole role = user.getRole();
         String roleLine = role.toString().toLowerCase();
-        String query = String.format(SIGN_UP_QUERY, User.TABLE_NAME, User.LOGIN_COLUMN, User.PASSWORD_COLUMN, User.NAME_COLUMN, User.SURNAME_COLUMN, User.ROLE_COLUMN);
-        executeUpdate(query, login, password, name, surname, roleLine);
+        executeUpdate(SIGN_UP_QUERY, login, password, name, surname, roleLine);
     }
 
     @Override
     public void updateUserBlocked(Long id, boolean newValue) throws DaoException {
-        String query = String.format(UPDATE_USER_BLOCKED_STATE_QUERY, User.TABLE_NAME, User.BLOCKED_COLUMN, User.ID_COLUMN);
-        executeUpdate(query, newValue, id);
+        executeUpdate(UPDATE_USER_BLOCKED_STATE_QUERY, newValue, id);
     }
 
     @Override

@@ -135,9 +135,9 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     private void deleteUnreferenced() throws DaoException {
-        authorDao.deleteUnreferenced(Book.TABLE_NAME, Book.ID_COLUMN);
-        genreDao.deleteUnreferenced(Book.TABLE_NAME, Book.GENRE_ID_COLUMN);
-        publisherDao.deleteUnreferenced(Book.TABLE_NAME, Book.PUBLISHER_ID_COLUMN);
+        authorDao.deleteRedundant();
+        genreDao.deleteRedundant();
+        publisherDao.deleteRedundant();
     }
 
     private void saveAuthorsAndMapThemToBook(AuthorDao authorDao, List<Author> authors, Long bookId) throws DaoException {

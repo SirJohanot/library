@@ -11,24 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class AbstractSaveCommand implements Command {
 
-    private final String successRedirectPath;
-    private final String failureForwardPath;
-
-    public AbstractSaveCommand(String successRedirectPath, String failureForwardPath) {
-        this.successRedirectPath = successRedirectPath;
-        this.failureForwardPath = failureForwardPath;
-    }
-
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         try {
-            saveWithService(req);
+            saveUsingService(req);
         } catch (ValidationException e) {
             req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, e.getMessage());
-            return CommandResult.forward(failureForwardPath);
+            return getFailureResult(req);
         }
-        return CommandResult.redirect(successRedirectPath);
+        return CommandResult.redirect(getSuccessRedirectPath(req));
     }
 
-    protected abstract void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException;
+    protected abstract void saveUsingService(HttpServletRequest req) throws ValidationException, ServiceException;
+
+    protected abstract CommandResult getFailureResult(HttpServletRequest request);
+
+    protected abstract String getSuccessRedirectPath(HttpServletRequest request);
 }

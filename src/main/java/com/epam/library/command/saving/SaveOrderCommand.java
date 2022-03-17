@@ -1,6 +1,9 @@
 package com.epam.library.command.saving;
 
+import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.AttributeNameConstants;
+import com.epam.library.constant.CommandInvocationConstants;
+import com.epam.library.constant.PagePathConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.RentalType;
@@ -16,13 +19,12 @@ public class SaveOrderCommand extends AbstractSaveCommand {
 
     private final BookOrderService bookOrderService;
 
-    public SaveOrderCommand(String successRedirectPath, String failureForwardPath, BookOrderService bookOrderService) {
-        super(successRedirectPath, failureForwardPath);
+    public SaveOrderCommand(BookOrderService bookOrderService) {
         this.bookOrderService = bookOrderService;
     }
 
     @Override
-    protected void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException {
+    protected void saveUsingService(HttpServletRequest req) throws ValidationException, ServiceException {
         User orderingUser = (User) req.getSession().getAttribute(AttributeNameConstants.USER);
         Long userId = orderingUser.getId();
 
@@ -38,5 +40,15 @@ public class SaveOrderCommand extends AbstractSaveCommand {
         String rentalTypeLine = req.getParameter(ParameterNameConstants.ORDER_RENTAL_TYPE);
         RentalType rentalType = RentalType.valueOf(rentalTypeLine);
         bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId, new BookOrderValidator());
+    }
+
+    @Override
+    protected CommandResult getFailureResult(HttpServletRequest request) {
+        return CommandResult.forward(PagePathConstants.ERROR);
+    }
+
+    @Override
+    protected String getSuccessRedirectPath(HttpServletRequest request) {
+        return CommandInvocationConstants.BOOKS_PAGE;
     }
 }

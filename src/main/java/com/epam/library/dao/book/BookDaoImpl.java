@@ -11,9 +11,9 @@ import java.util.List;
 
 public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
-    private static final String UPDATE_IS_DELETED_TRUE_QUERY = "UPDATE %s SET is_deleted = true WHERE id = ? ;";
-    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM %s WHERE is_deleted = false ; ";
-    private static final String TWEAK_AMOUNT_QUERY = "UPDATE %s SET amount = amount + (?) ;";
+    private static final String UPDATE_IS_DELETED_TRUE_QUERY = "UPDATE book SET is_deleted = true WHERE id = ? ;";
+    private static final String GET_ALL_NOT_DELETED_QUERY = "SELECT * FROM book WHERE is_deleted = false ; ";
+    private static final String TWEAK_AMOUNT_QUERY = "UPDATE book SET amount = amount + (?) ;";
 
     public BookDaoImpl(Connection connection) {
         super(connection, new BookRowMapper(), Book.TABLE_NAME);
@@ -33,19 +33,17 @@ public class BookDaoImpl extends AbstractDao<Book> implements BookDao {
 
     @Override
     public void removeById(Long id) throws DaoException {
-        String query = String.format(UPDATE_IS_DELETED_TRUE_QUERY, Book.TABLE_NAME);
-        executeUpdate(query, id);
-    }
-
-    @Override
-    public void tweakAmount(Long bookId, int value) throws DaoException {
-        String query = String.format(TWEAK_AMOUNT_QUERY, Book.TABLE_NAME);
-        executeUpdate(query, value);
+        executeUpdate(UPDATE_IS_DELETED_TRUE_QUERY, id);
     }
 
     @Override
     public List<Book> getAll() throws DaoException {
-        String query = String.format(GET_ALL_NOT_DELETED_QUERY, Book.TABLE_NAME);
-        return executeQuery(query);
+        return executeQuery(GET_ALL_NOT_DELETED_QUERY);
     }
+
+    @Override
+    public void tweakAmount(Long bookId, int value) throws DaoException {
+        executeUpdate(TWEAK_AMOUNT_QUERY, value);
+    }
+
 }

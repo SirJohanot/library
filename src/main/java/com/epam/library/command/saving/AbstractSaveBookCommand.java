@@ -10,17 +10,16 @@ import com.epam.library.validation.BookValidator;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Year;
 
-public class SaveBookCommand extends AbstractSaveCommand {
+public abstract class AbstractSaveBookCommand extends AbstractSaveCommand {
 
     private final BookService bookService;
 
-    public SaveBookCommand(String successRedirectPath, String failureForwardPath, BookService bookService) {
-        super(successRedirectPath, failureForwardPath);
+    public AbstractSaveBookCommand(BookService bookService) {
         this.bookService = bookService;
     }
 
     @Override
-    protected void saveWithService(HttpServletRequest req) throws ValidationException, ServiceException {
+    protected void saveUsingService(HttpServletRequest req) throws ValidationException, ServiceException {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = bookIdLine == null ? null : Long.valueOf(bookIdLine);
 
