@@ -9,25 +9,20 @@ import com.epam.library.dao.book.PublisherDao;
 import com.epam.library.dao.helper.DaoHelper;
 import com.epam.library.dao.helper.DaoHelperFactory;
 import com.epam.library.entity.BookOrder;
-import com.epam.library.entity.User;
-import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
-import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
-import com.epam.library.exception.ValidationException;
 import com.epam.library.repository.BookOrderRepository;
 import com.epam.library.repository.RepositoryFactory;
-import com.epam.library.validation.BookOrderValidator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Date;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BookOrderServiceImplTest {
 
@@ -44,14 +39,9 @@ public class BookOrderServiceImplTest {
     private RepositoryFactory repositoryFactory;
 
     private final Long userId = 3L;
-    private final User user = User.ofId(userId);
     private final Long bookId = 7L;
-    private final Book book = Book.ofId(bookId);
     private final Long orderId = 3L;
-    private final Date startDate = Date.valueOf("1978-3-12");
-    private final Date endDate = Date.valueOf("1978-3-15");
     private final RentalState state = RentalState.ORDER_PLACED;
-    private final RentalType type = RentalType.OUT_OF_LIBRARY;
 
     private BookOrderServiceImpl bookOrderService;
 
@@ -101,104 +91,6 @@ public class BookOrderServiceImplTest {
         bookOrderRepository = null;
         repositoryFactory = null;
         bookOrderService = null;
-    }
-
-    @Test(expected = ValidationException.class)
-    public void testPlaceOrderShouldThrowValidationExceptionWhenBookOrderDidNotGetValidated() throws ValidationException, ServiceException {
-        //given
-        BookOrder orderToBeSaved = new BookOrder(null, book, user, startDate, endDate, null, type, state);
-
-        BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
-        doThrow(new ValidationException()).when(bookOrderValidator).validate(orderToBeSaved);
-        //when
-        bookOrderService.placeOrder(startDate, endDate, type, bookId, userId, bookOrderValidator);
-        //then
-    }
-
-    @Test(expected = ServiceException.class)
-    public void testPlaceOrderShouldThrowServiceExceptionWhenBookByBookIdDoesNotExist() throws ServiceException, DaoException, ValidationException {
-        //given
-        BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
-
-        when(bookDao.getById(bookId)).thenReturn(Optional.empty());
-        //when
-        bookOrderService.placeOrder(startDate, endDate, type, bookId, userId, bookOrderValidator);
-        //then
-    }
-
-    @Test(expected = ServiceException.class)
-    public void testPlaceOrderShouldThrowServiceExceptionWhenUserByUserIdDoesNotExist() throws ServiceException, DaoException, ValidationException {
-        //given
-        BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
-
-        when(userDao.getById(userId)).thenReturn(Optional.empty());
-        //when
-        bookOrderService.placeOrder(startDate, endDate, type, bookId, userId, bookOrderValidator);
-        //then
-    }
-
-    @Test
-    public void testPlaceOrderShouldSaveOrderWhenBookExistsAndUserExistsAndBookOrderIsValid() throws ValidationException, ServiceException, DaoException {
-        //given
-        BookOrder orderToBeSaved = new BookOrder(null, book, user, startDate, endDate, null, type, state);
-
-        BookOrderValidator bookOrderValidator = mock(BookOrderValidator.class);
-        doNothing().when(bookOrderValidator).validate(orderToBeSaved);
-
-        when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookDao.getById(bookId)).thenReturn(Optional.of(book));
-        //when
-        bookOrderService.placeOrder(startDate, endDate, type, bookId, userId, bookOrderValidator);
-        //then
-        verify(bookOrderRepository, times(1)).save(orderToBeSaved);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void testAdvanceOrderShouldThrowExceptionWhenOrderByIdDoesNotExist() throws DaoException, ServiceException {
-        //given
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.empty());
-        //when
-        bookOrderService.advanceOrderState(orderId, state);
-        //then
-    }
-
-    @Test
-    public void testAdvanceOrderShouldSetOrderStateToNewState() throws DaoException, ServiceException {
-        //given
-        BookOrder bookOrder = new BookOrder(orderId, Book.ofId(bookId), null, null, null, null, null, null);
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.of(bookOrder));
-        //when
-        bookOrderService.advanceOrderState(orderId, state);
-        //then
-        verify(bookOrderRepository, times(1)).setState(orderId, state);
-    }
-
-    @Test
-    public void testAdvanceOrderShouldSubtractOneFromTargetBookAmountWhenNewStateIsOrderApproved() throws DaoException, ServiceException {
-        //given
-        RentalState newState = RentalState.ORDER_APPROVED;
-
-        BookOrder bookOrder = new BookOrder(orderId, Book.ofId(bookId), null, null, null, null, null, null);
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.of(bookOrder));
-        //when
-        bookOrderService.advanceOrderState(orderId, newState);
-        //then
-        verify(bookDao, times(1)).tweakAmount(bookId, -1);
-        verify(bookDao, never()).tweakAmount(bookId, 1);
-    }
-
-    @Test
-    public void testAdvanceOrderShouldAddOneToTargetBookAmountWhenNewStateIsBookReturned() throws DaoException, ServiceException {
-        //given
-        RentalState newState = RentalState.BOOK_RETURNED;
-
-        BookOrder bookOrder = new BookOrder(orderId, Book.ofId(bookId), null, null, null, null, null, null);
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.of(bookOrder));
-        //when
-        bookOrderService.advanceOrderState(orderId, newState);
-        //then
-        verify(bookDao, never()).tweakAmount(bookId, -1);
-        verify(bookDao, times(1)).tweakAmount(bookId, 1);
     }
 
     @Test(expected = ServiceException.class)

@@ -8,7 +8,6 @@ import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
 import com.epam.library.validation.Validator;
 
-import java.sql.Date;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,34 +18,26 @@ import java.util.List;
 public interface BookOrderService {
 
     /**
-     * Creates a preview order with startDate same as today and custom endDate and rentalType
-     *
-     * @param numberOfDays int value representing the gap (in days) between the desired endDate and startDate
-     * @param type         the RentalType of desired BookOrder
-     * @return BookOrder object with today's startDate, endDate numberOfDays ahead of startDate and RentalType same as type (other fields are null)
-     */
-    BookOrder buildPreviewOrder(int numberOfDays, RentalType type) throws ServiceException;
-
-    /**
      * Uses DAO objects to save the BookOrder
      *
-     * @param startDate  startDate of the BookOrder
-     * @param endDate    endDate of the BookOrder
-     * @param rentalType type of the BookOrder
-     * @param bookId     id of the Book in the database related to the BookOrder
-     * @param userId     id of the User in the database related to the BookOrder
+     * @param numberOfDays       integer representing the length of the order in days
+     * @param rentalType         type of the BookOrder
+     * @param bookId             id of the Book in the database related to the BookOrder
+     * @param userId             id of the User in the database related to the BookOrder
+     * @param bookOrderValidator Validator<BookOrder> used to validate the BookOrder before saving it with DAO
      * @throws ServiceException if a DaoException occurs while saving the object to the database
      */
-    void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException;
+    void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException;
 
     /**
      * Sets new state for BookOrder in the database
      *
      * @param orderId  id of the BookOrder in the database
+     * @param userId   id of User that is changing the state
      * @param newState state to set
      * @throws ServiceException if a DaoException occurs
      */
-    void advanceOrderState(Long orderId, RentalState newState) throws ServiceException;
+    void advanceOrderState(Long orderId, Long userId, RentalState newState) throws ServiceException;
 
     /**
      * Gets the BookOrder with the specified id

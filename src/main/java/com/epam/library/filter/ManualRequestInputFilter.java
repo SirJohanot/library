@@ -63,8 +63,10 @@ public class ManualRequestInputFilter implements Filter {
         commandAccessMap.put(CommandLineConstants.ORDERS_PAGE, readerAndLibrarianOnly);
         commandAccessMap.put(CommandLineConstants.VIEW_ORDER, readerAndLibrarianOnly);
 
-        commandAccessMap.put(CommandLineConstants.PLACE_ORDER_PAGE, readerOnly);
-        commandAccessMap.put(CommandLineConstants.ORDER, readerOnly);
+        commandAccessMap.put(CommandLineConstants.ORDER_TO_READING_HALL, readerOnly);
+        commandAccessMap.put(CommandLineConstants.ORDER_FOR_7_DAYS, readerOnly);
+        commandAccessMap.put(CommandLineConstants.ORDER_FOR_14_DAYS, readerOnly);
+        commandAccessMap.put(CommandLineConstants.ORDER_FOR_21_DAYS, readerOnly);
         commandAccessMap.put(CommandLineConstants.COLLECT_ORDER, readerOnly);
         commandAccessMap.put(CommandLineConstants.RETURN_ORDER, readerOnly);
 

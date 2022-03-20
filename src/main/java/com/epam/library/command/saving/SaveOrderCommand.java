@@ -13,14 +13,17 @@ import com.epam.library.service.BookOrderService;
 import com.epam.library.validation.BookOrderValidator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
 
 public class SaveOrderCommand extends AbstractSaveCommand {
 
     private final BookOrderService bookOrderService;
+    private final RentalType rentalType;
+    private final int days;
 
-    public SaveOrderCommand(BookOrderService bookOrderService) {
+    public SaveOrderCommand(BookOrderService bookOrderService, RentalType rentalType, int days) {
         this.bookOrderService = bookOrderService;
+        this.rentalType = rentalType;
+        this.days = days;
     }
 
     @Override
@@ -31,15 +34,7 @@ public class SaveOrderCommand extends AbstractSaveCommand {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
 
-        String startDateLine = req.getParameter(ParameterNameConstants.ORDER_START_DATE);
-        Date startDate = Date.valueOf(startDateLine);
-
-        String endDateLine = req.getParameter(ParameterNameConstants.ORDER_END_DATE);
-        Date endDate = Date.valueOf(endDateLine);
-
-        String rentalTypeLine = req.getParameter(ParameterNameConstants.ORDER_RENTAL_TYPE);
-        RentalType rentalType = RentalType.valueOf(rentalTypeLine);
-        bookOrderService.placeOrder(startDate, endDate, rentalType, bookId, userId, new BookOrderValidator());
+        bookOrderService.placeOrder(days, rentalType, bookId, userId, new BookOrderValidator());
     }
 
     @Override

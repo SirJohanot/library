@@ -40,31 +40,31 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public BookOrder buildPreviewOrder(int numberOfDays, RentalType type) throws ServiceException {
-        if (numberOfDays < 1) {
+    public void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException {
+        if (numberOfDays < 0) {
             ServiceException serviceException = new ServiceException("Number of days for rental cannot be less than 0");
             LOGGER.error(serviceException);
             throw serviceException;
         }
-        LocalDate currentDate = LocalDate.now();
-        Date dummyStartDate = Date.valueOf(currentDate);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dummyStartDate);
-        calendar.add(Calendar.DATE, numberOfDays);
-        Date dummyEndDate = new Date(calendar.getTimeInMillis());
-        return new BookOrder(null, null, null, dummyStartDate, dummyEndDate, null, type, null);
-    }
 
-    @Override
-    public void placeOrder(Date startDate, Date endDate, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException {
+        Date startDate = getCurrentDate();
+        Date endDate = getDateForwardedByDays(startDate, numberOfDays);
         BookOrder newOrder = new BookOrder(null, Book.ofId(bookId), User.ofId(userId), startDate, endDate, null, rentalType, RentalState.ORDER_PLACED);
         bookOrderValidator.validate(newOrder);
+
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             BookDao bookDao = helper.createBookDao();
-            if (bookDao.getById(bookId).isEmpty()) {
+            Optional<Book> targetBookOptional = bookDao.getById(bookId);
+            if (targetBookOptional.isEmpty()) {
                 ServiceException serviceException = new ServiceException("Cannot place an order on a book that does not exist");
+                LOGGER.error("Book Id: " + bookId, serviceException);
+                throw serviceException;
+            }
+            Book targetBook = targetBookOptional.get();
+            if (targetBook.getAmount() <= 0) {
+                ServiceException serviceException = new ServiceException("The requested book is not in stock");
                 LOGGER.error("Book Id: " + bookId, serviceException);
                 throw serviceException;
             }
@@ -86,21 +86,31 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     @Override
-    public void advanceOrderState(Long orderId, RentalState newState) throws ServiceException {
+    public void advanceOrderState(Long orderId, Long userId, RentalState newState) throws ServiceException {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
             BookOrder order = getOrder(orderId, helper);
 
-            Long bookId = order.getBook().getId();
+            RentalState oldState = order.getState();
+            throwExceptionIfTheNewStateCannotChangeTheOldState(oldState, newState);
+
+            Book orderBook = order.getBook();
+            Long bookId = orderBook.getId();
             BookDao bookDao = helper.createBookDao();
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
             switch (newState) {
                 case ORDER_APPROVED:
+                    if (orderBook.getAmount() <= 0) {
+                        ServiceException serviceException = new ServiceException("Cannot approve order on a book that is not in stock");
+                        LOGGER.error("Book Id: " + bookId, serviceException);
+                        throw serviceException;
+                    }
+
                     bookDao.tweakAmount(bookId, -1);
                     break;
                 case BOOK_RETURNED:
-                    Date currentDate = Date.valueOf(LocalDate.now());
+                    Date currentDate = getCurrentDate();
                     orderRepository.setReturnDate(orderId, currentDate);
                     bookDao.tweakAmount(bookId, 1);
                     break;
@@ -159,6 +169,38 @@ public class BookOrderServiceImpl implements BookOrderService {
         PublisherDao publisherDao = helper.createPublisherDao();
 
         return repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao);
+    }
+
+    private Date getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        return Date.valueOf(currentDate);
+    }
+
+    private Date getDateForwardedByDays(Date startDate, int numberOfDays) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.DATE, numberOfDays);
+        return new Date(calendar.getTimeInMillis());
+    }
+
+    private void throwExceptionIfTheNewStateCannotChangeTheOldState(RentalState oldState, RentalState newState) throws ServiceException {
+        ServiceException serviceException = new ServiceException("Order with state: " + oldState + " cannot be changed to " + newState);
+        switch (oldState) {
+            case ORDER_PLACED:
+                if (newState == RentalState.ORDER_APPROVED || newState == RentalState.ORDER_DECLINED) {
+                    return;
+                }
+            case BOOK_COLLECTED:
+                if (newState == RentalState.BOOK_RETURNED) {
+                    return;
+                }
+            case ORDER_APPROVED:
+                if (newState == RentalState.BOOK_COLLECTED) {
+                    return;
+                }
+        }
+        LOGGER.error(serviceException);
+        throw serviceException;
     }
 
     private BookOrder getOrder(Long orderId, DaoHelper helper) throws ServiceException, DaoException {

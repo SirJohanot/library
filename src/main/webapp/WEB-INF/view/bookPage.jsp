@@ -93,18 +93,16 @@
                     <form method="post"
                           action="controller?">
                         <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
-                        <input type="hidden" name="rentalType" value="TO_READING_HALL"/>
-                        <button type="submit" name="command" value="placeOrderPage">${orderToReadingHall}</button>
+                        <button type="submit" name="command" value="orderToReadingHall">${orderToReadingHall}</button>
                     </form>
                     <div>
                         <h1>${orderOnSubscription}:</h1>
                         <form class="buttons-container" method="post"
-                              action="controller?command=placeOrderPage">
+                              action="controller">
                             <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
-                            <input type="hidden" name="rentalType" value="OUT_OF_LIBRARY"/>
-                            <button type="submit" name="days" value="7">7 ${days}</button>
-                            <button type="submit" name="days" value="14">14 ${days}</button>
-                            <button type="submit" name="days" value="21">21 ${days}</button>
+                            <button type="submit" name="command" value="orderFor7Days">7 ${days}</button>
+                            <button type="submit" name="command" value="orderFor14Days">14 ${days}</button>
+                            <button type="submit" name="command" value="orderFor21Days">21 ${days}</button>
                         </form>
                     </div>
                 </div>
