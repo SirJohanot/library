@@ -14,6 +14,7 @@ public class SignOutCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession();
         session.invalidate();
+
         return CommandResult.redirect(CommandInvocationConstants.SIGN_IN_PAGE);
     }
 }

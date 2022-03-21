@@ -27,10 +27,6 @@ public final class ParameterNameConstants {
     public static final String USER_ROLE = "role";
     public static final String USER_BLOCKED = "blocked";
 
-    public static final String DAYS = "days";
     public static final String ORDER_ID = "orderId";
-    public static final String ORDER_START_DATE = "startDate";
-    public static final String ORDER_END_DATE = "endDate";
-    public static final String ORDER_RENTAL_TYPE = "rentalType";
 
 }

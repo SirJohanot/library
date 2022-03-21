@@ -12,6 +12,7 @@ import com.epam.library.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class SignInCommand implements Command {
@@ -29,16 +30,21 @@ public class SignInCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String login = req.getParameter(ParameterNameConstants.USER_LOGIN);
         String password = req.getParameter(ParameterNameConstants.USER_PASSWORD);
-        Optional<User> user = userService.signIn(login, password);
-        if (user.isEmpty()) {
+
+        Optional<User> userOptional = userService.signIn(login, password);
+        if (userOptional.isEmpty()) {
             req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, INVALID_CREDENTIALS_MESSAGE);
             return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
-        if (user.get().isBlocked()) {
+        if (userOptional.get().isBlocked()) {
             req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, BLOCKED_MESSAGE);
             return CommandResult.forward(PagePathConstants.SIGN_IN);
         }
-        req.getSession().setAttribute(AttributeNameConstants.USER, user.get());
+        User user = userOptional.get();
+
+        HttpSession session = req.getSession();
+        session.setAttribute(AttributeNameConstants.USER, user);
+
         return CommandResult.redirect(CommandInvocationConstants.MAIN_PAGE);
     }
 }

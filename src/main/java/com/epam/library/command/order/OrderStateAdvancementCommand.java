@@ -34,6 +34,7 @@ public class OrderStateAdvancementCommand implements Command {
         Long orderId = Long.valueOf(orderIdLine);
 
         bookOrderService.advanceOrderState(orderId, currentUserId, newState);
+
         return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }
 }

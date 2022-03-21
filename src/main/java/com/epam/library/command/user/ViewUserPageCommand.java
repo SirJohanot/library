@@ -24,8 +24,11 @@ public class ViewUserPageCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String idLine = req.getParameter(ParameterNameConstants.USER_ID);
         Long id = Long.valueOf(idLine);
+
         User user = userService.getUserById(id);
+
         req.setAttribute(AttributeNameConstants.TARGET_USER, user);
+        
         return CommandResult.forward(PagePathConstants.VIEW_USER);
     }
 }

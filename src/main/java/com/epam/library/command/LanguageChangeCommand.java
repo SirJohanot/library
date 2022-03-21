@@ -14,8 +14,10 @@ public class LanguageChangeCommand implements Command {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         String newLocale = req.getParameter(ParameterNameConstants.LOCALE);
+
         HttpSession session = req.getSession();
         session.setAttribute(AttributeNameConstants.LOCALE, newLocale);
+
         return CommandResult.redirect(CommandInvocationConstants.MAIN_PAGE);
     }
 }

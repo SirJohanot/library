@@ -16,6 +16,7 @@ public class MainPageCommand implements Command {
         if (session.getAttribute(AttributeNameConstants.USER) != null) {
             return CommandResult.forward(PagePathConstants.MAIN);
         }
+
         return CommandResult.forward(PagePathConstants.SIGN_IN);
     }
 }

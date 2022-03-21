@@ -37,14 +37,17 @@ public interface BookService {
     /**
      * Inserts or updates the Book in the database
      *
-     * @param id              id of Book. If null, the book is inserted into the database. If not null, the Book is updated in the database
-     * @param title           title of the Book
-     * @param authors         String representing authors of the Book, separated by commas
-     * @param genre           genre of the Book
-     * @param publisher       publisher of the Book
-     * @param publishmentYear Year object representing publishment year of the Book
-     * @param amount          Integer object representing the number of Book in stock
-     * @throws ServiceException if a DaoException occurs
+     * @param id                id of Book. If null, the book is inserted into the database. If not null, the Book is updated in the database
+     * @param title             title of the Book
+     * @param authors           String representing authors of the Book, separated by commas
+     * @param genre             genre of the Book
+     * @param publisher         publisher of the Book
+     * @param publishmentYear   Year object representing publishment year of the Book
+     * @param amount            Integer object representing the number of Book in stock
+     * @param bookValidator     Validator<Book> object which will be used to validate the Book before saving it
+     * @param authorsLineParser AuthorsLineParser which will be used to divide the authors line into a List of Author objects
+     * @throws ServiceException    if a DaoException occurs
+     * @throws ValidationException if the Book with the passed parameters is not deemed valid
      */
     void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException, ValidationException;
 

@@ -109,7 +109,10 @@ public class BookOrderServiceImpl implements BookOrderService {
 
                     bookDao.tweakAmount(bookId, -1);
                     break;
+                case BOOK_COLLECTED:
+                    throwExceptionIfTheOrderDoesNotBelongToUser(order, userId);
                 case BOOK_RETURNED:
+                    throwExceptionIfTheOrderDoesNotBelongToUser(order, userId);
                     Date currentDate = getCurrentDate();
                     orderRepository.setReturnDate(orderId, currentDate);
                     bookDao.tweakAmount(bookId, 1);
@@ -201,6 +204,16 @@ public class BookOrderServiceImpl implements BookOrderService {
         }
         LOGGER.error(serviceException);
         throw serviceException;
+    }
+
+    private void throwExceptionIfTheOrderDoesNotBelongToUser(BookOrder order, Long userId) throws ServiceException {
+        User orderUser = order.getUser();
+        Long orderUserId = orderUser.getId();
+        if (!userId.equals(orderUserId)) {
+            ServiceException serviceException = new ServiceException("The Order does not belong to the user");
+            LOGGER.error("Order: " + order + " User Id: " + userId, serviceException);
+            throw serviceException;
+        }
     }
 
     private BookOrder getOrder(Long orderId, DaoHelper helper) throws ServiceException, DaoException {

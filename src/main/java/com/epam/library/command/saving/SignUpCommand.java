@@ -27,6 +27,7 @@ public class SignUpCommand extends AbstractSaveCommand {
         String surname = req.getParameter(ParameterNameConstants.USER_SURNAME);
         String password = req.getParameter(ParameterNameConstants.USER_PASSWORD);
         String confirmedPassword = req.getParameter(ParameterNameConstants.USER_CONFIRMED_PASSWORD);
+
         if (password == null || !password.equals(confirmedPassword)) {
             throw new ValidationException("Passwords don't match");
         }

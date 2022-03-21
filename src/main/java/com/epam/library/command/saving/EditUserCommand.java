@@ -33,12 +33,14 @@ public class EditUserCommand extends AbstractSaveCommand {
 
         String targetUserBlockedLine = req.getParameter(ParameterNameConstants.USER_BLOCKED);
         boolean targetUserBlocked = Boolean.parseBoolean(targetUserBlockedLine);
+
         userService.editUser(targetUserId, targetUserLogin, targetUserName, targetUserSurname, targetUserRole, targetUserBlocked, new UserValidator());
     }
 
     @Override
     protected CommandResult getFailureResult(HttpServletRequest request) {
         String targetUserIdLine = request.getParameter(ParameterNameConstants.USER_ID);
+
         return CommandResult.redirect(CommandInvocationConstants.EDIT_USER_PAGE + "&" + ParameterNameConstants.USER_ID + "=" + targetUserIdLine);
     }
 

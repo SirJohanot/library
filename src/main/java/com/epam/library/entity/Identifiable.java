@@ -8,7 +8,7 @@ public interface Identifiable {
     /**
      * Gets the object's ID
      *
-     * @return Long value representing teh ID of object
+     * @return Long value representing the ID of object
      */
     Long getId();
 }

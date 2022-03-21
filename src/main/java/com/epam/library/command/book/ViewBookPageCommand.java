@@ -25,7 +25,9 @@ public class ViewBookPageCommand implements Command {
         String idLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long id = Long.valueOf(idLine);
         Book requestedBook = bookService.getBookById(id);
+
         req.setAttribute(AttributeNameConstants.BOOK, requestedBook);
+
         return CommandResult.forward(PagePathConstants.VIEW_BOOK);
     }
 }

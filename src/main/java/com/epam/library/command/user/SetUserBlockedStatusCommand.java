@@ -24,7 +24,9 @@ public class SetUserBlockedStatusCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String targetUserIdLine = req.getParameter(ParameterNameConstants.USER_ID);
         Long targetUserId = Long.valueOf(targetUserIdLine);
+
         userService.setUserBlockStatus(targetUserId, newBlocked);
+
         return CommandResult.redirect(CommandInvocationConstants.USERS_PAGE);
     }
 }

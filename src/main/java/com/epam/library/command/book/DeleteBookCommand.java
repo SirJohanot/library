@@ -22,7 +22,9 @@ public class DeleteBookCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
+
         bookService.deleteBookById(bookId);
+
         return CommandResult.redirect(CommandInvocationConstants.BOOKS_PAGE);
     }
 }

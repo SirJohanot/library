@@ -17,6 +17,7 @@ public class AddABookCommand extends AbstractSaveBookCommand {
     @Override
     protected CommandResult getFailureResult(HttpServletRequest request) {
         String bookIdLine = request.getParameter(ParameterNameConstants.BOOK_ID);
+
         return CommandResult.redirect(CommandInvocationConstants.EDIT_BOOK_PAGE + "&" + ParameterNameConstants.BOOK_ID + "=" + bookIdLine);
     }
 

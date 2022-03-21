@@ -24,7 +24,9 @@ public class EditUserPageCommand implements Command {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
         String targetUserIdLine = req.getParameter(ParameterNameConstants.USER_ID);
         Long targetUserId = Long.valueOf(targetUserIdLine);
+        
         User targetUser = userService.getUserById(targetUserId);
+
         req.setAttribute(AttributeNameConstants.TARGET_USER, targetUser);
         return CommandResult.forward(PagePathConstants.EDIT_USER);
     }

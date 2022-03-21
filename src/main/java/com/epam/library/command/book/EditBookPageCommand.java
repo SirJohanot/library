@@ -25,7 +25,9 @@ public class EditBookPageCommand implements Command {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
         Book book = bookService.getBookById(bookId);
+
         req.setAttribute(AttributeNameConstants.BOOK, book);
+
         return CommandResult.forward(PagePathConstants.EDIT_BOOK);
     }
 }

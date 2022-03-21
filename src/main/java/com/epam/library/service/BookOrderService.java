@@ -25,7 +25,8 @@ public interface BookOrderService {
      * @param bookId             id of the Book in the database related to the BookOrder
      * @param userId             id of the User in the database related to the BookOrder
      * @param bookOrderValidator Validator<BookOrder> used to validate the BookOrder before saving it with DAO
-     * @throws ServiceException if a DaoException occurs while saving the object to the database
+     * @throws ServiceException    if a DaoException occurs while saving the object to the database
+     * @throws ValidationException if the BookOrder with the passed parameters is deemed invalid
      */
     void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException;
 
