@@ -2,7 +2,6 @@ package com.epam.library.command.saving;
 
 import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.CommandInvocationConstants;
-import com.epam.library.constant.CommandLineConstants;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.service.BookService;
 
@@ -23,6 +22,6 @@ public class EditBookCommand extends AbstractSaveBookCommand {
 
     @Override
     protected String getSuccessRedirectPath(HttpServletRequest request) {
-        return CommandLineConstants.BOOKS_PAGE;
+        return CommandInvocationConstants.BOOKS_PAGE;
     }
 }

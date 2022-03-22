@@ -89,11 +89,12 @@
                 </form>
             </c:when>
             <c:when test="${sessionScope.user.role == 'READER'}">
-                <div class="buttons-container">
+                <div class="order-options-container">
                     <form method="post"
                           action="controller?">
                         <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
-                        <button type="submit" name="command" value="orderToReadingHall">${orderToReadingHall}</button>
+                        <button type="submit" name="command" value="orderToReadingHall"
+                                class="order-to-reading-hall-button">${orderToReadingHall}</button>
                     </form>
                     <div>
                         <h1>${orderOnSubscription}:</h1>

@@ -50,11 +50,11 @@
 </header>
 <section>
     <form class="login-form round-bordered-subject" method="post" action="controller?command=signUp" autocomplete="on">
-        <input type="text" name="login" placeholder="${loginLocale}"/>
-        <input type="password" name="password" placeholder="${passwordLocale}"/>
-        <input type="password" name="confirmedPassword" placeholder="${confirmPassword}"/>
-        <input type="text" name="name" placeholder="${name}"/>
-        <input type="text" name="surname" placeholder="${surname}"/>
+        <input type="text" name="login" placeholder="${loginLocale}" required="required"/>
+        <input type="password" name="password" placeholder="${passwordLocale}" required="required"/>
+        <input type="password" name="confirmedPassword" placeholder="${confirmPassword}" required="required"/>
+        <input type="text" name="name" placeholder="${name}" required="required"/>
+        <input type="text" name="surname" placeholder="${surname}" required="required"/>
         <input type="submit" value="${signUp}"/>
         <div class="error-message">${requestScope.errorMessage}</div>
     </form>

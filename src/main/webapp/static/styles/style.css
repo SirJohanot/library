@@ -52,7 +52,7 @@ button:hover, input[type="submit"]:hover {
 }
 
 #main-content {
-    display: flex;
+    display: block;
     padding: 0;
     height: 100%;
 }
@@ -111,22 +111,32 @@ header h1 {
 
 /* Navigation */
 nav {
-    height: 100%;
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
     background-color: #b4b6c0;
-    border-right: 2px solid rgb(0, 0, 0);
-    flex: 0 0 180px;
+    border-bottom: 2px solid rgba(49, 44, 44, 0.55);
 }
 
 nav form {
+    display: flex;
     margin: 0;
     padding: 0;
 }
 
 nav form button {
-    margin: 10px;
-    width: 140px;
-    font-size: 24px;
+    flex-grow: 1;
     display: block;
+    min-height: 40px;
+    background: none;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid black;
+    color: black;
+    margin: 0;
+    font-size: 24px;
 }
 
 /* Logout Button */
@@ -266,6 +276,23 @@ nav form button {
     font-size: 20px;
 }
 
+.order-options-container {
+    display: flex;
+    width: 100%;
+}
+
+.order-options-container * {
+    flex-grow: 1;
+}
+
+.order-to-reading-hall-button {
+    display: block;
+    min-width: 25%;
+    min-height: 60px;
+    margin: auto;
+    font-size: 20px;
+}
+
 /* Edit book page */
 #bookChanges {
     padding: 15px;
@@ -315,28 +342,15 @@ nav form button {
 
 @media screen and (max-width: 480px) {
 
-    /* Global */
-    #main-content {
-        display: block;
-    }
-
     /* Navigation */
-    nav {
-        display: block;
-        height: auto;
-        border-bottom: 2px solid rgba(49, 44, 44, 0.55);
-        border-right: none;
-    }
-
     nav form {
         display: block;
-        padding: 0;
     }
 
     nav form button {
-        display: block;
-        padding: 0;
-        margin: 10px;
+        border-right: none;
+        border-bottom: 1px solid black;
+        padding-bottom: 10px;
         width: 100%;
     }
 

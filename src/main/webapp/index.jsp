@@ -46,8 +46,8 @@
 </header>
 <section>
     <form class="login-form round-bordered-subject" method="post" action="controller" autocomplete="on">
-        <input type="text" name="login" placeholder="${loginLocale}"/>
-        <input type="password" name="password" placeholder="${passwordLocale}"/>
+        <input type="text" name="login" placeholder="${loginLocale}" required="required"/>
+        <input type="password" name="password" placeholder="${passwordLocale}" required="required"/>
         <button type="submit" name="command" value="signIn">${signInLocale}</button>
         <button type="submit" name="command" value="signUpPage">${signUp}</button>
         <div class="error-message">${requestScope.errorMessage}</div>

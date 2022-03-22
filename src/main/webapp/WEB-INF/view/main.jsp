@@ -55,8 +55,10 @@
 </header>
 <section id="main-content">
     <ctg:navigation/>
-    <div class="container round-bordered-subject main-page-message">
-        <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+    <div id="main-content-div">
+        <div class="container round-bordered-subject main-page-message">
+            <h1>${greetingsMessage}, ${sessionScope.user.login}</h1>
+        </div>
     </div>
 </section>
 </body>
