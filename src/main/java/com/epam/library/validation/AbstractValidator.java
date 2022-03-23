@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractValidator<T> implements Validator<T> {
 
-    private static final String IS_A_WORD_REGEX = "\\p{L}+.*";
+    private static final String IS_A_WORD_REGEX = "[\\p{L}\\w]+.*";
 
     protected void throwExceptionIfNull(Object object, String exceptionMessage) throws ValidationException {
         if (object == null) {
