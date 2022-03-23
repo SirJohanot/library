@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ManualRequestInputFilter implements Filter {
+public class AuthorisationFilter implements Filter {
 
     private final Map<String, Set<UserRole>> commandAccessMap = new HashMap<>();
 

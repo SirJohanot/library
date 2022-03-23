@@ -28,12 +28,12 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>ManualRequestInputFilter</filter-name>
-        <filter-class>com.epam.library.filter.ManualRequestInputFilter</filter-class>
+        <filter-name>AuthorisationFilter</filter-name>
+        <filter-class>com.epam.library.filter.AuthorisationFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>ManualRequestInputFilter</filter-name>
+        <filter-name>AuthorisationFilter</filter-name>
         <url-pattern>/controller</url-pattern>
     </filter-mapping>
 
