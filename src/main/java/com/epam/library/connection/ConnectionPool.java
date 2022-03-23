@@ -15,7 +15,8 @@ public class ConnectionPool {
     private final Queue<ProxyConnection> availableConnections;
     private final Queue<ProxyConnection> connectionsInUse;
 
-    private static final ReentrantLock lock = new ReentrantLock();
+    private static final ReentrantLock instanceLock = new ReentrantLock();
+    private static final ReentrantLock connectionsLock = new ReentrantLock();
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
@@ -27,7 +28,7 @@ public class ConnectionPool {
     public static ConnectionPool getInstance() throws SQLException, IOException, ClassNotFoundException {
         ConnectionPool localInstance = INSTANCE;
         if (localInstance == null) {
-            lock.lock();
+            instanceLock.lock();
             try {
                 localInstance = INSTANCE;
                 if (localInstance == null) {
@@ -35,7 +36,7 @@ public class ConnectionPool {
                     localInstance.initialiseConnections();
                 }
             } finally {
-                lock.unlock();
+                instanceLock.unlock();
             }
         }
         return localInstance;
@@ -49,25 +50,25 @@ public class ConnectionPool {
     }
 
     public ProxyConnection getConnection() {
-        lock.lock();
+        connectionsLock.lock();
         try {
             ProxyConnection connection = availableConnections.remove();
             connectionsInUse.offer(connection);
             return connection;
         } finally {
-            lock.unlock();
+            connectionsLock.unlock();
         }
     }
 
     public void returnConnection(ProxyConnection connection) {
-        lock.lock();
+        connectionsLock.lock();
         try {
             if (connectionsInUse.contains(connection)) {
                 availableConnections.offer(connection);
                 connectionsInUse.remove(connection);
             }
         } finally {
-            lock.unlock();
+            connectionsLock.unlock();
         }
     }
 
