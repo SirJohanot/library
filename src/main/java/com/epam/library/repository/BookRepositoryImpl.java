@@ -9,8 +9,6 @@ import com.epam.library.entity.book.Book;
 import com.epam.library.entity.book.Genre;
 import com.epam.library.entity.book.Publisher;
 import com.epam.library.exception.DaoException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -18,8 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookRepositoryImpl implements BookRepository {
-
-    private static final Logger LOGGER = LogManager.getLogger(BookRepositoryImpl.class);
 
     private final BookDao bookDao;
     private final AuthorDao authorDao;
@@ -110,9 +106,7 @@ public class BookRepositoryImpl implements BookRepository {
         Optional<Genre> optionalGenre = genreDao.getById(shallowBookGenreId);
 
         if (optionalGenre.isEmpty()) {
-            DaoException daoException = new DaoException("Could not find the genre associated with book id");
-            LOGGER.error("Book Id: " + id + " | Genre Id: " + shallowBookGenreId, daoException);
-            throw daoException;
+            throw new DaoException("Could not find the genre associated with book id");
         }
 
         Publisher shallowBookPublisher = shallowBook.getPublisher();
@@ -120,9 +114,7 @@ public class BookRepositoryImpl implements BookRepository {
         Optional<Publisher> optionalPublisher = publisherDao.getById(shallowBookPublisherId);
 
         if (optionalPublisher.isEmpty()) {
-            DaoException daoException = new DaoException("Could not find the publisher associated with book id");
-            LOGGER.error("Book Id: " + id + " | Publisher Id: " + shallowBookPublisherId, daoException);
-            throw daoException;
+            throw new DaoException("Could not find the publisher associated with book id");
         }
         Genre genre = optionalGenre.get();
         Publisher publisher = optionalPublisher.get();

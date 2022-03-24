@@ -3,9 +3,7 @@ package com.epam.library.command.saving;
 import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
-import com.epam.library.parser.AuthorsLineParser;
 import com.epam.library.service.BookService;
-import com.epam.library.validation.BookValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Year;
@@ -34,6 +32,6 @@ public abstract class AbstractSaveBookCommand extends AbstractSaveCommand {
         String amountLine = req.getParameter(ParameterNameConstants.BOOK_AMOUNT);
         Integer amount = Integer.valueOf(amountLine);
 
-        bookService.saveBook(bookId, title, authors, genre, publisher, publishmentYear, amount, new BookValidator(), new AuthorsLineParser());
+        bookService.saveBook(bookId, title, authors, genre, publisher, publishmentYear, amount);
     }
 }

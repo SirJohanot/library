@@ -14,6 +14,8 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.repository.BookOrderRepository;
 import com.epam.library.repository.RepositoryFactory;
+import com.epam.library.validation.BookOrderValidator;
+import com.epam.library.validation.Validator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,6 +39,8 @@ public class BookOrderServiceImplTest {
 
     private BookOrderRepository bookOrderRepository;
     private RepositoryFactory repositoryFactory;
+
+    private Validator<BookOrder> bookOrderValidator;
 
     private final Long userId = 3L;
     private final Long bookId = 7L;
@@ -71,11 +75,12 @@ public class BookOrderServiceImplTest {
         when(helperFactory.createHelper()).thenReturn(helper);
 
         bookOrderRepository = mock(BookOrderRepository.class);
-
         repositoryFactory = mock(RepositoryFactory.class);
         when(repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookOrderRepository);
 
-        bookOrderService = new BookOrderServiceImpl(helperFactory, repositoryFactory);
+        bookOrderValidator = mock(BookOrderValidator.class);
+
+        bookOrderService = new BookOrderServiceImpl(helperFactory, repositoryFactory, bookOrderValidator);
     }
 
     @After

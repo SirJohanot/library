@@ -14,9 +14,9 @@ public class BookOrderDaoImpl extends AbstractDao<BookOrder> implements BookOrde
 
     private static final String SET_NEW_FIELD_VALUE_QUERY = "UPDATE book_order SET %s = ? WHERE id = ? ;";
 
-    private static final String FORMAT_OF_DATES_IN_DATABASE = "yyyy-MM-dd";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    private final SimpleDateFormat sqlDateFormatter = new SimpleDateFormat(FORMAT_OF_DATES_IN_DATABASE);
+    private final SimpleDateFormat sqlDateFormatter = new SimpleDateFormat(DATE_FORMAT);
 
     public BookOrderDaoImpl(Connection connection) {
         super(connection, new BookOrderRowMapper(), BookOrder.TABLE_NAME);

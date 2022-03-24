@@ -10,7 +10,6 @@ import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.service.BookOrderService;
-import com.epam.library.validation.BookOrderValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +33,7 @@ public class SaveOrderCommand extends AbstractSaveCommand {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
 
-        bookOrderService.placeOrder(days, rentalType, bookId, userId, new BookOrderValidator());
+        bookOrderService.placeOrder(days, rentalType, bookId, userId);
     }
 
     @Override

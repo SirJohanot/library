@@ -18,8 +18,6 @@ import com.epam.library.repository.BookRepository;
 import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
 import com.epam.library.validation.Validator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -28,14 +26,16 @@ import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
 
-    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
-
     private final DaoHelperFactory daoHelperFactory;
     private final RepositoryFactory repositoryFactory;
+    private final Validator<Book> bookValidator;
+    private final AuthorsLineParser authorsLineParser;
 
-    public BookServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory) {
+    public BookServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) {
         this.daoHelperFactory = daoHelperFactory;
         this.repositoryFactory = repositoryFactory;
+        this.bookValidator = bookValidator;
+        this.authorsLineParser = authorsLineParser;
     }
 
     @Override
@@ -68,9 +68,7 @@ public class BookServiceImpl implements BookService {
 
             Optional<Book> optionalBook = bookRepository.getById(id);
             if (optionalBook.isEmpty()) {
-                ServiceException serviceException = new ServiceException("Could not find the requested book");
-                LOGGER.error("Book Id: " + id, serviceException);
-                throw serviceException;
+                throw new ServiceException("Could not find the requested book");
             }
             Book book = optionalBook.get();
 
@@ -82,7 +80,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) throws ServiceException, ValidationException {
+    public void saveBook(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount) throws ServiceException, ValidationException {
         Book newBook = buildBookFromParameters(id, title, authors, genre, publisher, publishmentYear, amount, authorsLineParser);
         bookValidator.validate(newBook);
         try (DaoHelper helper = daoHelperFactory.createHelper()) {

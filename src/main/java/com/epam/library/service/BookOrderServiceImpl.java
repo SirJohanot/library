@@ -20,8 +20,6 @@ import com.epam.library.repository.BookOrderRepository;
 import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
 import com.epam.library.validation.Validator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -29,22 +27,20 @@ import java.util.*;
 
 public class BookOrderServiceImpl implements BookOrderService {
 
-    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
-
     private final DaoHelperFactory daoHelperFactory;
     private final RepositoryFactory repositoryFactory;
+    private final Validator<BookOrder> bookOrderValidator;
 
-    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory) {
+    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory, Validator<BookOrder> bookOrderValidator) {
         this.daoHelperFactory = daoHelperFactory;
         this.repositoryFactory = repositoryFactory;
+        this.bookOrderValidator = bookOrderValidator;
     }
 
     @Override
-    public void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId, Validator<BookOrder> bookOrderValidator) throws ServiceException, ValidationException {
+    public void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId) throws ServiceException, ValidationException {
         if (numberOfDays < 0) {
-            ServiceException serviceException = new ServiceException("Number of days for rental cannot be less than 0");
-            LOGGER.error(serviceException);
-            throw serviceException;
+            throw new ServiceException("Number of days for rental cannot be less than 0");
         }
 
         Date startDate = getCurrentDate();
@@ -58,22 +54,16 @@ public class BookOrderServiceImpl implements BookOrderService {
             BookDao bookDao = helper.createBookDao();
             Optional<Book> targetBookOptional = bookDao.getById(bookId);
             if (targetBookOptional.isEmpty()) {
-                ServiceException serviceException = new ServiceException("Cannot place an order on a book that does not exist");
-                LOGGER.error("Book Id: " + bookId, serviceException);
-                throw serviceException;
+                throw new ServiceException("Cannot place an order on a book that does not exist");
             }
             Book targetBook = targetBookOptional.get();
             if (targetBook.getAmount() <= 0) {
-                ServiceException serviceException = new ServiceException("The requested book is not in stock");
-                LOGGER.error("Book Id: " + bookId, serviceException);
-                throw serviceException;
+                throw new ServiceException("The requested book is not in stock");
             }
 
             UserDao userDao = helper.createUserDao();
             if (userDao.getById(userId).isEmpty()) {
-                ServiceException serviceException = new ServiceException("Cannot place an order for a user that does not exist");
-                LOGGER.error("User Id: " + userId, serviceException);
-                throw serviceException;
+                throw new ServiceException("Cannot place an order for a user that does not exist");
             }
 
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
@@ -102,9 +92,7 @@ public class BookOrderServiceImpl implements BookOrderService {
             switch (newState) {
                 case ORDER_APPROVED:
                     if (orderBook.getAmount() <= 0) {
-                        ServiceException serviceException = new ServiceException("Cannot approve order on a book that is not in stock");
-                        LOGGER.error("Book Id: " + bookId, serviceException);
-                        throw serviceException;
+                        throw new ServiceException("Cannot approve order on a book that is not in stock");
                     }
 
                     bookDao.tweakAmount(bookId, -1);
@@ -187,7 +175,6 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     private void throwExceptionIfTheNewStateCannotChangeTheOldState(RentalState oldState, RentalState newState) throws ServiceException {
-        ServiceException serviceException = new ServiceException("Order with state: " + oldState + " cannot be changed to " + newState);
         switch (oldState) {
             case ORDER_PLACED:
                 if (newState == RentalState.ORDER_APPROVED || newState == RentalState.ORDER_DECLINED) {
@@ -202,17 +189,14 @@ public class BookOrderServiceImpl implements BookOrderService {
                     return;
                 }
         }
-        LOGGER.error(serviceException);
-        throw serviceException;
+        throw new ServiceException("Order with state: " + oldState + " cannot be changed to " + newState);
     }
 
     private void throwExceptionIfTheOrderDoesNotBelongToUser(BookOrder order, Long userId) throws ServiceException {
         User orderUser = order.getUser();
         Long orderUserId = orderUser.getId();
         if (!userId.equals(orderUserId)) {
-            ServiceException serviceException = new ServiceException("The Order does not belong to the user");
-            LOGGER.error("Order: " + order + " User Id: " + userId, serviceException);
-            throw serviceException;
+            throw new ServiceException("The Order does not belong to the user");
         }
     }
 
@@ -220,9 +204,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         BookOrderRepository orderRepository = buildBookOrderRepository(helper);
         Optional<BookOrder> optionalBookOrder = orderRepository.getById(orderId);
         if (optionalBookOrder.isEmpty()) {
-            ServiceException serviceException = new ServiceException("Could not find the requested bookOrder");
-            LOGGER.error("Order Id: " + orderId, serviceException);
-            throw serviceException;
+            throw new ServiceException("Could not find the requested bookOrder");
         }
         return optionalBookOrder.get();
     }

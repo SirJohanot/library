@@ -8,15 +8,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final int MAXIMUM_SIMULTANEOUS_CONNECTIONS = 10;
+    private static final int MAX_CONNECTIONS = 10;
 
     private static ConnectionPool INSTANCE;
 
     private final Queue<ProxyConnection> availableConnections;
     private final Queue<ProxyConnection> connectionsInUse;
 
-    private static final ReentrantLock instanceLock = new ReentrantLock();
-    private static final ReentrantLock connectionsLock = new ReentrantLock();
+    private static final ReentrantLock INSTANCE_LOCK = new ReentrantLock();
+    private static final ReentrantLock CONNECTIONS_LOCK = new ReentrantLock();
 
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
@@ -28,7 +28,7 @@ public class ConnectionPool {
     public static ConnectionPool getInstance() throws SQLException, IOException, ClassNotFoundException {
         ConnectionPool localInstance = INSTANCE;
         if (localInstance == null) {
-            instanceLock.lock();
+            INSTANCE_LOCK.lock();
             try {
                 localInstance = INSTANCE;
                 if (localInstance == null) {
@@ -36,39 +36,39 @@ public class ConnectionPool {
                     localInstance.initialiseConnections();
                 }
             } finally {
-                instanceLock.unlock();
+                INSTANCE_LOCK.unlock();
             }
         }
         return localInstance;
     }
 
     private void initialiseConnections() throws SQLException, IOException, ClassNotFoundException {
-        for (int i = 0; i < MAXIMUM_SIMULTANEOUS_CONNECTIONS; i++) {
+        for (int i = 0; i < MAX_CONNECTIONS; i++) {
             ProxyConnection connection = connectionFactory.create();
             availableConnections.offer(connection);
         }
     }
 
     public ProxyConnection getConnection() {
-        connectionsLock.lock();
+        CONNECTIONS_LOCK.lock();
         try {
             ProxyConnection connection = availableConnections.remove();
             connectionsInUse.offer(connection);
             return connection;
         } finally {
-            connectionsLock.unlock();
+            CONNECTIONS_LOCK.unlock();
         }
     }
 
     public void returnConnection(ProxyConnection connection) {
-        connectionsLock.lock();
+        CONNECTIONS_LOCK.lock();
         try {
             if (connectionsInUse.contains(connection)) {
                 availableConnections.offer(connection);
                 connectionsInUse.remove(connection);
             }
         } finally {
-            connectionsLock.unlock();
+            CONNECTIONS_LOCK.unlock();
         }
     }
 

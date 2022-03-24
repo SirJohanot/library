@@ -9,23 +9,23 @@ import java.util.Map;
 
 public class OrderReaderPriorityComparator implements Comparator<BookOrder> {
 
-    private static final Map<RentalState, Integer> librarianStatePriorityMap = new HashMap<>();
+    private static final Map<RentalState, Integer> READER_STATE_PRIORITY_MAP = new HashMap<>();
 
     static {
-        librarianStatePriorityMap.put(RentalState.BOOK_RETURNED, 1);
-        librarianStatePriorityMap.put(RentalState.ORDER_DECLINED, 2);
-        librarianStatePriorityMap.put(RentalState.ORDER_PLACED, 3);
-        librarianStatePriorityMap.put(RentalState.BOOK_COLLECTED, 4);
-        librarianStatePriorityMap.put(RentalState.ORDER_APPROVED, 5);
+        READER_STATE_PRIORITY_MAP.put(RentalState.BOOK_RETURNED, 1);
+        READER_STATE_PRIORITY_MAP.put(RentalState.ORDER_DECLINED, 2);
+        READER_STATE_PRIORITY_MAP.put(RentalState.ORDER_PLACED, 3);
+        READER_STATE_PRIORITY_MAP.put(RentalState.BOOK_COLLECTED, 4);
+        READER_STATE_PRIORITY_MAP.put(RentalState.ORDER_APPROVED, 5);
     }
 
     @Override
     public int compare(BookOrder o1, BookOrder o2) {
         RentalState firstOrderState = o1.getState();
-        Integer firstPriority = librarianStatePriorityMap.get(firstOrderState);
+        Integer firstPriority = READER_STATE_PRIORITY_MAP.get(firstOrderState);
 
         RentalState secondOrderState = o2.getState();
-        Integer secondPriority = librarianStatePriorityMap.get(secondOrderState);
+        Integer secondPriority = READER_STATE_PRIORITY_MAP.get(secondOrderState);
 
         return secondPriority - firstPriority;
     }

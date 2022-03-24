@@ -8,8 +8,6 @@ import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.DaoException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -17,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookOrderRepositoryImpl implements BookOrderRepository {
-
-    private static final Logger LOGGER = LogManager.getLogger(BookOrderRepositoryImpl.class);
 
     private final BookOrderDao bookOrderDao;
     private final BookRepository bookRepository;
@@ -82,9 +78,7 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
         Long shallowOrderUserId = shallowOrderUser.getId();
         Optional<User> optionalUser = userDao.getById(shallowOrderUserId);
         if (optionalUser.isEmpty()) {
-            DaoException daoException = new DaoException("Could not find the user associated with inputted shallow bookOrder");
-            LOGGER.error("Book Order Id: " + id + " | User Id: " + shallowOrderUserId, daoException);
-            throw daoException;
+            throw new DaoException("Could not find the user associated with inputted shallow bookOrder");
         }
         User user = optionalUser.get();
 
@@ -92,9 +86,7 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
         Long shallowOrderBookId = shallowOrderBook.getId();
         Optional<Book> optionalBook = bookRepository.getById(shallowOrderBookId);
         if (optionalBook.isEmpty()) {
-            DaoException daoException = new DaoException("Could not find the book associated with inputted shallow BookOrder");
-            LOGGER.error("Book Order Id: " + id + " | Book Id: " + shallowOrderBookId, daoException);
-            throw daoException;
+            throw new DaoException("Could not find the book associated with inputted shallow BookOrder");
         }
         Book book = optionalBook.get();
 

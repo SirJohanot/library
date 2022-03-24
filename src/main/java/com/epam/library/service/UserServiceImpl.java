@@ -9,10 +9,7 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.Specification;
-import com.epam.library.validation.UserValidator;
 import com.epam.library.validation.Validator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +17,14 @@ import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
-    private static final Logger LOGGER = LogManager.getLogger(UserServiceImpl.class);
-
     private final DaoHelperFactory daoHelperFactory;
+    private final Validator<User> userValidator;
+    private final Validator<String> passwordValidator;
 
-    public UserServiceImpl(DaoHelperFactory daoHelperFactory) {
+    public UserServiceImpl(DaoHelperFactory daoHelperFactory, Validator<User> userValidator, Validator<String> passwordValidator) {
         this.daoHelperFactory = daoHelperFactory;
+        this.userValidator = userValidator;
+        this.passwordValidator = passwordValidator;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUp(String login, String password, String name, String surname, Validator<User> userValidator, Validator<String> passwordValidator) throws ServiceException, ValidationException {
+    public void signUp(String login, String password, String name, String surname) throws ServiceException, ValidationException {
         User user = new User(null, login, name, surname, UserRole.READER, false);
         passwordValidator.validate(password);
         userValidator.validate(user);
@@ -94,9 +93,7 @@ public class UserServiceImpl implements UserService {
             UserDao dao = helper.createUserDao();
             Optional<User> user = dao.getById(id);
             if (user.isEmpty()) {
-                ServiceException serviceException = new ServiceException("The requested user does not exist");
-                LOGGER.error("User Id: " + id, serviceException);
-                throw serviceException;
+                throw new ServiceException("The requested user does not exist");
             }
 
             helper.endTransaction();
@@ -107,11 +104,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(Long id, String login, String name, String surname, UserRole role, boolean blocked, UserValidator userValidator) throws ServiceException, ValidationException {
+    public void editUser(Long id, String login, String name, String surname, UserRole role, boolean blocked) throws ServiceException, ValidationException {
         if (id == null) {
-            ServiceException serviceException = new ServiceException("Cannot edit user by null id");
-            LOGGER.error(serviceException);
-            throw serviceException;
+            throw new ServiceException("Cannot edit user by null id");
         }
         User user = new User(id, login, name, surname, role, blocked);
         userValidator.validate(user);

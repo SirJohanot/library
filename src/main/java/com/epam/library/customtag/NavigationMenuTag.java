@@ -12,56 +12,53 @@ import java.io.IOException;
 
 public class NavigationMenuTag extends TagSupport {
 
-    private static final String NAV_START = "<nav>";
-    private static final String FORM_START = "<form method=\"get\" action=\"controller?\">";
-    private static final String BOOKS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"booksPage\">";
-    private static final String ADD_A_BOOK_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"addABookPage\">";
-    private static final String USERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"usersPage\">";
-    private static final String ORDERS_PAGE_BUTTON_START = "<button type=\"submit\" name=\"command\" value=\"ordersPage\">";
-    private static final String BUTTON_END = "</button>";
-    private static final String FORM_END = "</form>";
-    private static final String NAV_END = "</nav>";
+    private static final String NAVIGATION_TAG_START = "<nav>" +
+            "<form method=\"get\" action=\"controller?\">";
+    private static final String BOOKS_PAGE_BUTTON = "<button type=\"submit\" name=\"command\" value=\"booksPage\">%s</button>";
+    private static final String ADD_A_BOOK_PAGE_BUTTON = "<button type=\"submit\" name=\"command\" value=\"addABookPage\">%s</button>";
+    private static final String USERS_PAGE_BUTTON = "<button type=\"submit\" name=\"command\" value=\"usersPage\">%s</button>";
+    private static final String ORDERS_PAGE_BUTTON = "<button type=\"submit\" name=\"command\" value=\"ordersPage\">%s</button>";
+    private static final String NAVIGATION_TAG_END = "</form>" +
+            "</nav>";
 
     @Override
     public int doStartTag() throws JspException {
-        String books = (String) pageContext.getAttribute(AttributeNameConstants.BOOKS_LOCALISATION);
-        String addABook = (String) pageContext.getAttribute(AttributeNameConstants.ADD_A_BOOK_LOCALISATION);
-        String users = (String) pageContext.getAttribute(AttributeNameConstants.USERS_LOCALISATION);
-        String orders = (String) pageContext.getAttribute(AttributeNameConstants.ORDERS_LOCALISATION);
-        String myOrders = (String) pageContext.getAttribute(AttributeNameConstants.MY_ORDERS_LOCALISATION);
+        StringBuilder completedNavigationTagBuilder = new StringBuilder(NAVIGATION_TAG_START);
+
+        formatStringWithLineFromAttributesAndAddToBuilder(AttributeNameConstants.BOOKS_LOCALISATION, BOOKS_PAGE_BUTTON, completedNavigationTagBuilder);
 
         HttpSession session = pageContext.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute(AttributeNameConstants.USER);
         UserRole role = user.getRole();
+        switch (role) {
+            case ADMIN:
+                formatStringWithLineFromAttributesAndAddToBuilder(AttributeNameConstants.ADD_A_BOOK_LOCALISATION, ADD_A_BOOK_PAGE_BUTTON, completedNavigationTagBuilder);
+                formatStringWithLineFromAttributesAndAddToBuilder(AttributeNameConstants.USERS_LOCALISATION, USERS_PAGE_BUTTON, completedNavigationTagBuilder);
+                break;
+            case LIBRARIAN:
+                formatStringWithLineFromAttributesAndAddToBuilder(AttributeNameConstants.ORDERS_LOCALISATION, ORDERS_PAGE_BUTTON, completedNavigationTagBuilder);
+                break;
+            case READER:
+                formatStringWithLineFromAttributesAndAddToBuilder(AttributeNameConstants.MY_ORDERS_LOCALISATION, ORDERS_PAGE_BUTTON, completedNavigationTagBuilder);
+                break;
+        }
+
+        completedNavigationTagBuilder.append(NAVIGATION_TAG_END);
+        
+        String formattedNavigationTag = completedNavigationTagBuilder.toString();
 
         JspWriter writer = pageContext.getOut();
         try {
-            writer.write(NAV_START);
-            writer.write(FORM_START);
-            writeMultiple(writer, BOOKS_PAGE_BUTTON_START, books, BUTTON_END);
-            switch (role) {
-                case ADMIN:
-                    writeMultiple(writer, ADD_A_BOOK_PAGE_BUTTON_START, addABook, BUTTON_END);
-                    writeMultiple(writer, USERS_PAGE_BUTTON_START, users, BUTTON_END);
-                    break;
-                case LIBRARIAN:
-                    writeMultiple(writer, ORDERS_PAGE_BUTTON_START, orders, BUTTON_END);
-                    break;
-                case READER:
-                    writeMultiple(writer, ORDERS_PAGE_BUTTON_START, myOrders, BUTTON_END);
-                    break;
-            }
-            writer.write(FORM_END);
-            writer.write(NAV_END);
+            writer.write(formattedNavigationTag);
         } catch (IOException e) {
             throw new JspException(e);
         }
         return SKIP_BODY;
     }
 
-    private void writeMultiple(JspWriter writer, String... lines) throws IOException {
-        for (String line : lines) {
-            writer.write(line);
-        }
+    private void formatStringWithLineFromAttributesAndAddToBuilder(String attributeName, String stringToFormat, StringBuilder builder) {
+        String lineWithWhichToFormat = (String) pageContext.getAttribute(attributeName);
+        String formattedString = String.format(stringToFormat, lineWithWhichToFormat);
+        builder.append(formattedString);
     }
 }

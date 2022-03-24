@@ -18,6 +18,7 @@ import com.epam.library.repository.BookRepository;
 import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.NoSpecification;
 import com.epam.library.validation.BookValidator;
+import com.epam.library.validation.Validator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,6 +41,10 @@ public class BookServiceImplTest {
 
     private BookRepository bookRepository;
     private RepositoryFactory repositoryFactory;
+
+    private Validator<Book> bookValidator;
+
+    private AuthorsLineParser authorsLineParser;
 
     private final Long bookId = 1L;
     private final String title = "title";
@@ -78,7 +83,11 @@ public class BookServiceImplTest {
         repositoryFactory = mock(RepositoryFactory.class);
         when(repositoryFactory.createBookRepository(bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookRepository);
 
-        bookService = new BookServiceImpl(helperFactory, repositoryFactory);
+        bookValidator = mock(BookValidator.class);
+
+        authorsLineParser = mock(AuthorsLineParser.class);
+
+        bookService = new BookServiceImpl(helperFactory, repositoryFactory, bookValidator, authorsLineParser);
     }
 
     @After
@@ -134,13 +143,11 @@ public class BookServiceImplTest {
         //given
         Book bookToBeSaved = new Book(bookId, title, authorList, genre, publisher, publishmentYear, amount);
 
-        AuthorsLineParser authorsLineParser = mock(AuthorsLineParser.class);
         when(authorsLineParser.parse(authorsLine)).thenReturn(authorList);
 
-        BookValidator bookValidator = mock(BookValidator.class);
         doNothing().when(bookValidator).validate(bookToBeSaved);
         //when
-        bookService.saveBook(bookId, title, authorsLine, genreName, publisherName, publishmentYear, amount, bookValidator, authorsLineParser);
+        bookService.saveBook(bookId, title, authorsLine, genreName, publisherName, publishmentYear, amount);
         //then
         verify(bookRepository, times(1)).save(bookToBeSaved);
     }
@@ -149,13 +156,11 @@ public class BookServiceImplTest {
     public void testSaveBookShouldThrowValidationExceptionWhenBookIsNotValid() throws ServiceException, ValidationException {
         Book bookToBeSaved = new Book(bookId, title, authorList, genre, publisher, publishmentYear, amount);
 
-        AuthorsLineParser authorsLineParser = mock(AuthorsLineParser.class);
         when(authorsLineParser.parse(authorsLine)).thenReturn(authorList);
 
-        BookValidator bookValidator = mock(BookValidator.class);
         doThrow(new ValidationException()).when(bookValidator).validate(bookToBeSaved);
         //when
-        bookService.saveBook(bookId, title, authorsLine, genreName, publisherName, publishmentYear, amount, bookValidator, authorsLineParser);
+        bookService.saveBook(bookId, title, authorsLine, genreName, publisherName, publishmentYear, amount);
         //then
     }
 

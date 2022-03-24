@@ -31,18 +31,13 @@ public abstract class AbstractViewPageCommand<T extends Identifiable> implements
         List<T> allEntities = getEntitiesUsingService(req);
 
         int maxPage = paginator.getNumberOfPagesNeededToFitElements(allEntities, elementsPerPage);
-        if (maxPage <= 0) {
-            maxPage = 1;
-        }
+        maxPage = Math.max(maxPage, 1);
         req.setAttribute(AttributeNameConstants.MAX_PAGE, maxPage);
 
         String pageLine = req.getParameter(ParameterNameConstants.PAGE);
         int page = pageLine == null ? 1 : Integer.parseInt(pageLine);
-        if (page <= 0) {
-            page = 1;
-        } else if (page > maxPage) {
-            page = maxPage;
-        }
+        page = Math.max(page, 1);
+        page = Math.min(page, maxPage);
         req.setAttribute(AttributeNameConstants.CURRENT_PAGE, page);
 
         List<T> ordersOfPage = paginator.getElementsOfPage(allEntities, page, elementsPerPage);

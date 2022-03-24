@@ -7,8 +7,6 @@ import com.epam.library.constant.ParameterNameConstants;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.service.UserService;
-import com.epam.library.validation.PasswordValidator;
-import com.epam.library.validation.UserValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,7 +30,7 @@ public class SignUpCommand extends AbstractSaveCommand {
             throw new ValidationException("Passwords don't match");
         }
 
-        userService.signUp(login, password, name, surname, new UserValidator(), new PasswordValidator());
+        userService.signUp(login, password, name, surname);
     }
 
     @Override

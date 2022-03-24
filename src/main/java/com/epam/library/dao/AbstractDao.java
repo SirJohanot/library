@@ -3,8 +3,6 @@ package com.epam.library.dao;
 import com.epam.library.entity.Identifiable;
 import com.epam.library.exception.DaoException;
 import com.epam.library.mapper.RowMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,15 +12,13 @@ import java.util.*;
 
 public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
-    private static final Logger LOGGER = LogManager.getLogger(AbstractDao.class);
-
     private static final String GET_BY_ID_QUERY = "SELECT * FROM %s WHERE id = ? ;";
     private static final String GET_ALL_QUERY = "SELECT * FROM %s ;";
     private static final String REMOVE_BY_ID_QUERY = "DELETE FROM %s WHERE id = ? ;";
     private static final String UPDATE_QUERY_BEGINNING = "UPDATE %s SET";
     private static final String UPDATE_QUERY_END = "WHERE id = ?";
     private static final String INSERT_QUERY_BEGINNING = "INSERT INTO %s SET";
-    private static final String GET_ALL_WHERE_QUERY_BEGINNING = "SELECT * FROM %s WHERE";
+    private static final String SELECT_WHERE_QUERY_BEGIN = "SELECT * FROM %s WHERE";
 
     private final Connection connection;
     private final RowMapper<T> rowMapper;
@@ -39,7 +35,6 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
         } catch (SQLException e) {
-            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -49,7 +44,6 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return extractResultsFromResultSet(resultSet);
         } catch (SQLException e) {
-            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -58,7 +52,6 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         try (PreparedStatement preparedStatement = buildPreparedStatement(query, parameters)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -67,7 +60,6 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         try (PreparedStatement preparedStatement = generatePreparedStatementFromValuesMap(query, valuesMap)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error(e);
             throw new DaoException(e);
         }
     }
@@ -94,7 +86,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
     protected Optional<T> findIdentical(T item) throws DaoException {
         Map<String, Object> valuesMap = getMapOfColumnValues(item);
         valuesMap.remove("id");
-        String getAllWhereQueryWithTableName = String.format(GET_ALL_WHERE_QUERY_BEGINNING, tableName);
+        String getAllWhereQueryWithTableName = String.format(SELECT_WHERE_QUERY_BEGIN, tableName);
         String query = buildParametrisedQuery(valuesMap, getAllWhereQueryWithTableName, "AND", "");
         List<T> results = executeQuery(query, valuesMap);
         if (results.size() == 0) {

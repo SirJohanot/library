@@ -11,6 +11,7 @@ import com.epam.library.exception.ValidationException;
 import com.epam.library.specification.UserContainsLineSpecification;
 import com.epam.library.validation.PasswordValidator;
 import com.epam.library.validation.UserValidator;
+import com.epam.library.validation.Validator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +29,10 @@ public class UserServiceImplTest {
     private DaoHelper helper;
     private UserDao userDao;
 
+    private Validator<User> userValidator;
+
+    private Validator<String> passwordValidator;
+
     private final Long userId = 1L;
     private final String login = "login";
     private final String name = "name";
@@ -44,7 +49,12 @@ public class UserServiceImplTest {
         when(helper.createUserDao()).thenReturn(userDao);
         helperFactory = mock(DaoHelperFactory.class);
         when(helperFactory.createHelper()).thenReturn(helper);
-        userService = new UserServiceImpl(helperFactory);
+
+        userValidator = mock(UserValidator.class);
+
+        passwordValidator = mock(PasswordValidator.class);
+
+        userService = new UserServiceImpl(helperFactory, userValidator, passwordValidator);
     }
 
     @After
@@ -73,17 +83,15 @@ public class UserServiceImplTest {
         //given
         String password = "Password";
 
-        PasswordValidator passwordValidator = mock(PasswordValidator.class);
         doNothing().when(passwordValidator).validate(password);
 
         User expectedUserToGetSaved = new User(null, login, name, surname, UserRole.READER, false);
-        UserValidator userValidator = mock(UserValidator.class);
         doNothing().when(userValidator).validate(expectedUserToGetSaved);
 
         Optional<User> expectedFoundSameLoginUserOptional = Optional.empty();
         when(userDao.findUserByLogin(login)).thenReturn(expectedFoundSameLoginUserOptional);
         //when
-        userService.signUp(login, password, name, surname, userValidator, passwordValidator);
+        userService.signUp(login, password, name, surname);
         //then
         verify(userDao, times(1)).saveWithPassword(expectedUserToGetSaved, password);
     }
@@ -93,17 +101,15 @@ public class UserServiceImplTest {
         //given
         String password = "Password";
 
-        PasswordValidator passwordValidator = mock(PasswordValidator.class);
         doNothing().when(passwordValidator).validate(password);
 
         User expectedUserToGetSaved = new User(null, login, name, surname, UserRole.READER, false);
-        UserValidator userValidator = mock(UserValidator.class);
         doThrow(ValidationException.class).when(userValidator).validate(expectedUserToGetSaved);
 
         Optional<User> expectedFoundSameLoginUserOptional = Optional.empty();
         when(userDao.findUserByLogin(login)).thenReturn(expectedFoundSameLoginUserOptional);
         //when
-        userService.signUp(login, password, name, surname, userValidator, passwordValidator);
+        userService.signUp(login, password, name, surname);
         //then
     }
 
@@ -112,17 +118,15 @@ public class UserServiceImplTest {
         //given
         String password = "Password";
 
-        PasswordValidator passwordValidator = mock(PasswordValidator.class);
         doThrow(ValidationException.class).when(passwordValidator).validate(password);
 
         User expectedUserToGetSaved = new User(null, login, name, surname, UserRole.READER, false);
-        UserValidator userValidator = mock(UserValidator.class);
         doNothing().when(userValidator).validate(expectedUserToGetSaved);
 
         Optional<User> expectedFoundSameLoginUserOptional = Optional.empty();
         when(userDao.findUserByLogin(login)).thenReturn(expectedFoundSameLoginUserOptional);
         //when
-        userService.signUp(login, password, name, surname, userValidator, passwordValidator);
+        userService.signUp(login, password, name, surname);
         //then
     }
 
@@ -131,17 +135,15 @@ public class UserServiceImplTest {
         //given
         String password = "Password";
 
-        PasswordValidator passwordValidator = mock(PasswordValidator.class);
         doNothing().when(passwordValidator).validate(password);
 
         User expectedUserToGetSaved = new User(null, login, name, surname, UserRole.READER, false);
-        UserValidator userValidator = mock(UserValidator.class);
         doNothing().when(userValidator).validate(expectedUserToGetSaved);
 
         Optional<User> expectedFoundSameLoginUserOptional = Optional.of(expectedUserToGetSaved);
         when(userDao.findUserByLogin(login)).thenReturn(expectedFoundSameLoginUserOptional);
         //when
-        userService.signUp(login, password, name, surname, userValidator, passwordValidator);
+        userService.signUp(login, password, name, surname);
         //then
     }
 
@@ -196,10 +198,9 @@ public class UserServiceImplTest {
         //given
         User userToBeSaved = new User(userId, login, name, surname, role, blocked);
 
-        UserValidator userValidator = mock(UserValidator.class);
         doNothing().when(userValidator).validate(userToBeSaved);
         //when
-        userService.editUser(userId, login, name, surname, role, blocked, userValidator);
+        userService.editUser(userId, login, name, surname, role, blocked);
         //then
         verify(userDao, times(1)).save(userToBeSaved);
     }
@@ -209,10 +210,9 @@ public class UserServiceImplTest {
         //given
         User userToBeSaved = new User(userId, login, name, surname, role, blocked);
 
-        UserValidator userValidator = mock(UserValidator.class);
         doThrow(ValidationException.class).when(userValidator).validate(userToBeSaved);
         //when
-        userService.editUser(userId, login, name, surname, role, blocked, userValidator);
+        userService.editUser(userId, login, name, surname, role, blocked);
         //then
     }
 

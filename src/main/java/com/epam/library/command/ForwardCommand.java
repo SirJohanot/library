@@ -1,17 +1,21 @@
-package com.epam.library.command.book;
+package com.epam.library.command;
 
-import com.epam.library.command.Command;
 import com.epam.library.command.result.CommandResult;
-import com.epam.library.constant.PagePathConstants;
 import com.epam.library.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class AddABookPageCommand implements Command {
+public class ForwardCommand implements Command {
+
+    String path;
+
+    public ForwardCommand(String path) {
+        this.path = path;
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException {
-        return CommandResult.forward(PagePathConstants.ADD_A_BOOK);
+        return CommandResult.forward(path);
     }
 }

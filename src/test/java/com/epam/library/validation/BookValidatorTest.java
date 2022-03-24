@@ -22,7 +22,7 @@ public class BookValidatorTest {
     private final BookValidator bookValidator = new BookValidator();
 
     @Test(expected = ValidationException.class)
-    public void testValidateShouldThrowValidationExceptionWhenTitleDoesNotStartWithAnAlphabeticalCharacter() throws ValidationException {
+    public void testValidateShouldThrowValidationExceptionWhenTitleDoesNotStartWithAWordCharacter() throws ValidationException {
         //given
         String title = ".,invalidTitle";
 
@@ -33,9 +33,9 @@ public class BookValidatorTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void testValidateShouldThrowValidationExceptionWhenAuthorDoesNotStartWithAnAlphabeticalCharacter() throws ValidationException {
+    public void testValidateShouldThrowValidationExceptionWhenAuthorDoesNotStartWithAWordCharacter() throws ValidationException {
         //given
-        List<Author> authorList = List.of(Author.ofName("724Author"));
+        List<Author> authorList = List.of(Author.ofName(";Author"));
 
         Book book = new Book(null, title, authorList, genre, publisher, publishmentYear, amount);
         //when
@@ -44,9 +44,9 @@ public class BookValidatorTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void testValidateShouldThrowValidationExceptionWhenGenreDoesNotStartWithAnAlphabeticalCharacter() throws ValidationException {
+    public void testValidateShouldThrowValidationExceptionWhenGenreDoesNotStartWithAWordCharacter() throws ValidationException {
         //given
-        Genre genre = Genre.ofName("236");
+        Genre genre = Genre.ofName("'genre'");
 
         Book book = new Book(null, title, authorList, genre, publisher, publishmentYear, amount);
         //when
@@ -55,7 +55,7 @@ public class BookValidatorTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void testValidateShouldThrowValidationExceptionWhenPublisherDoesNotStartWithAnAlphabeticalCharacter() throws ValidationException {
+    public void testValidateShouldThrowValidationExceptionWhenPublisherDoesNotStartWithAWordCharacter() throws ValidationException {
         //given
         Publisher publisher = Publisher.ofName("~idf");
 

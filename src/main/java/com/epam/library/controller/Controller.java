@@ -6,6 +6,8 @@ import com.epam.library.command.result.CommandResult;
 import com.epam.library.constant.AttributeNameConstants;
 import com.epam.library.constant.PagePathConstants;
 import com.epam.library.constant.ParameterNameConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -14,10 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 public class Controller extends HttpServlet {
+
+    private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,10 +42,8 @@ public class Controller extends HttpServlet {
             CommandResult commandResult = command.execute(req, resp);
             processCommandResult(commandResult, req, resp);
         } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, sw.toString());
+            LOGGER.error(e);
+            req.setAttribute(AttributeNameConstants.ERROR_MESSAGE, e);
             processCommandResult(CommandResult.forward(PagePathConstants.ERROR), req, resp);
         }
     }
