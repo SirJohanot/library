@@ -58,16 +58,17 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <form method="post" action="controller?command=searchOrders" class="search-field">
             <input type="text" name="searchValue" placeholder="${search}"/>
         </form>
         <form method="post" action="controller?command=viewOrder">
             <c:forEach items="${requestScope.orderList}" var="order">
                 <button type="submit" name="orderId" value="${order.id}" class="block-container round-bordered-subject">
-                    <h1>${order.book.title} | ${order.user.login}</h1>
+                    <h1>${order.book.title} <c:if
+                            test="${sessionScope.user.role != 'READER'}"> | ${order.user.login}</c:if></h1>
                     <div class="block-parameters">
                         <p>${startDate}: <fmt:formatDate value="${order.startDate}" pattern="${dateFormat}"/></p>
                         <p>${endDate}: <fmt:formatDate value="${order.endDate}" pattern="${dateFormat}"/></p>

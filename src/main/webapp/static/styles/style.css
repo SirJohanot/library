@@ -53,13 +53,15 @@ button:hover, input[type="submit"]:hover {
 
 #main-content {
     display: block;
+    width: 100%;
     padding: 0;
     height: 100%;
 }
 
-#main-content-div {
-    width: 100%;
+#main-content-centered-element {
+    width: 45%;
     padding: 5px;
+    margin: auto;
 }
 
 .search-field {
@@ -182,24 +184,24 @@ nav form button {
 }
 
 /* Pagination */
-#pagination-form {
-    display: inline-block;
-    width: auto;
+#pagination {
+    display: flex;
+    justify-content: center;
+    width: 95%;
     margin: 10px auto;
     padding: 5px;
 }
 
-#pagination-form form {
-    display: inline-block;
-    width: auto;
+#pagination form {
+    display: block;
     margin: 0 5px;
 }
 
-#pagination-form form input, #pagination-form form button {
+#pagination form input, #pagination form button {
     font-size: 20px;
 }
 
-#pagination-form form input {
+#pagination form input {
     width: 125px;
 }
 
@@ -259,6 +261,7 @@ nav form button {
 .block-parameters * {
     display: block;
     text-align: left;
+    font-size: 18px;
     width: 100%;
 }
 
@@ -341,6 +344,11 @@ nav form button {
 }
 
 @media screen and (max-width: 480px) {
+
+    /* General */
+    #main-content-centered-element {
+        width: 95%;
+    }
 
     /* Navigation */
     nav form {

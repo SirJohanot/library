@@ -74,9 +74,9 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <div class="round-bordered-subject block-container">
             <h1>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></h1>
             <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>

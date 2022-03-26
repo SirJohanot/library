@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class PaginationTag extends TagSupport {
 
-    private static final String PAGINATION_TAG = "<div id=\"pagination-form\" class=\"round-bordered-subject\">" +
+    private static final String PAGINATION_TAG = "<div id=\"pagination\" class=\"round-bordered-subject\">" +
             "<form method=\"post\" action=\"controller?command=%s\">" +
             "<button type=\"submit\" name=\"page\" value=\"%d\">|&lt;</button>" +
             "</form>" +

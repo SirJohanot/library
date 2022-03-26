@@ -56,9 +56,9 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <form method="post" action="controller?command=searchUsers" class="search-field">
             <input type="text" name="searchValue" placeholder="${search}"/>
         </form>

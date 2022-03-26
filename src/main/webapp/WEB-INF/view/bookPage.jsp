@@ -63,9 +63,9 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <div class="round-bordered-subject block-container">
             <h1>${bookTitle}: ${requestScope.book.title}</h1>
             <p>${authors}:

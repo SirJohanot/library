@@ -60,9 +60,9 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <form id="userChanges" class="round-bordered-subject block-container" method="post"
               action="controller?command=editUser">
             <input type="hidden" name="userId" value="${requestScope.targetUser.id}"/>

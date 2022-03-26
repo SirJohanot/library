@@ -48,7 +48,7 @@
         </h1>
     </div>
 </header>
-<section>
+<section id="main-content">
     <form class="login-form round-bordered-subject" method="post" action="controller?command=signUp" autocomplete="on">
         <input type="text" name="login" placeholder="${loginLocale}" required="required"/>
         <input type="password" name="password" placeholder="${passwordLocale}" required="required"/>

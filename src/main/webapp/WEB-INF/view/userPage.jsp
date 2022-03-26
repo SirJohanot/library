@@ -60,9 +60,9 @@
         </h1>
     </div>
 </header>
+<ctg:navigation/>
 <section id="main-content">
-    <ctg:navigation/>
-    <div id="main-content-div">
+    <div id="main-content-centered-element">
         <div class="round-bordered-subject block-container">
             <h1>${login}: ${requestScope.targetUser.login}</h1>
             <p>${name}: ${requestScope.targetUser.name}</p>
