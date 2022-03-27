@@ -70,8 +70,8 @@
                     <div class="block-parameters">
                         <p>${name}: ${targetUser.name}</p>
                         <p>${surname}: ${targetUser.surname}</p>
-                        <p>${role}: ${targetUser.role}</p>
-                        <p>${blocked}: ${targetUser.blocked}</p>
+                        <p>${role}: <fmt:message key="${targetUser.role}"/></p>
+                        <p>${blocked}: <fmt:message key="${targetUser.blocked}"/></p>
                     </div>
                 </button>
             </c:forEach>

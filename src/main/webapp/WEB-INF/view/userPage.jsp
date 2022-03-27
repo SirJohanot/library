@@ -67,8 +67,8 @@
             <h1>${login}: ${requestScope.targetUser.login}</h1>
             <p>${name}: ${requestScope.targetUser.name}</p>
             <p>${surname}: ${requestScope.targetUser.surname}</p>
-            <p>${role}: ${requestScope.targetUser.role}</p>
-            <p>${blocked}: ${requestScope.targetUser.blocked}</p>
+            <p>${role}: <fmt:message key="${requestScope.targetUser.role}"/></p>
+            <p>${blocked}: <fmt:message key="${requestScope.targetUser.blocked}"/></p>
         </div>
         <form class="buttons-container" method="post"
               action="controller?">

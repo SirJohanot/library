@@ -73,8 +73,8 @@
                         <p>${startDate}: <fmt:formatDate value="${order.startDate}" pattern="${dateFormat}"/></p>
                         <p>${endDate}: <fmt:formatDate value="${order.endDate}" pattern="${dateFormat}"/></p>
                         <p>${returnDate}: <fmt:formatDate value="${order.returnDate}" pattern="${dateFormat}"/></p>
-                        <p>${rentalType}: ${order.type}</p>
-                        <p>${rentalState}: ${order.state}</p>
+                        <p>${rentalType}: <fmt:message key="${order.type}"/></p>
+                        <p>${rentalState}: <fmt:message key="${order.state}"/></p>
                     </div>
                 </button>
             </c:forEach>

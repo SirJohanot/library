@@ -76,10 +76,10 @@
                    required="required"/>
             <label for="role">${role}:</label>
             <select id="role" name="role" required="required">
-                <option value="READER"
+                <option value="READER" label="<fmt:message key="READER"/>"
                         <c:if test="${requestScope.targetUser.role == 'READER'}">selected="selected"</c:if> >READER
                 </option>
-                <option value="LIBRARIAN"
+                <option value="LIBRARIAN" label="<fmt:message key="LIBRARIAN"/>"
                         <c:if test="${requestScope.targetUser.role == 'LIBRARIAN'}">selected="selected"</c:if>>LIBRARIAN
                 </option>
             </select>

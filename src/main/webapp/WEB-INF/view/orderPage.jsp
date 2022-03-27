@@ -81,8 +81,8 @@
             <h1>${startDate}: <fmt:formatDate value="${requestScope.bookOrder.startDate}" pattern="${dateFormat}"/></h1>
             <p>${endDate}: <fmt:formatDate value="${requestScope.bookOrder.endDate}" pattern="${dateFormat}"/></p>
             <p>${returnDate}: <fmt:formatDate value="${requestScope.bookOrder.returnDate}" pattern="${dateFormat}"/></p>
-            <p>${rentalType}: ${requestScope.bookOrder.type}</p>
-            <p>${rentalState}: ${requestScope.bookOrder.state}</p>
+            <p>${rentalType}: <fmt:message key="${requestScope.bookOrder.type}"/></p>
+            <p>${rentalState}: <fmt:message key="${requestScope.bookOrder.state}"/></p>
         </div>
         <div class="round-bordered-subject block-container">
             <h1>${bookTitle}: ${requestScope.bookOrder.book.title}</h1>
@@ -103,8 +103,8 @@
                 <h1>${login}: ${requestScope.bookOrder.user.login}</h1>
                 <p>${name}: ${requestScope.bookOrder.user.name}</p>
                 <p>${surname}: ${requestScope.bookOrder.user.surname}</p>
-                <p>${role}: ${requestScope.bookOrder.user.role}</p>
-                <p>${blocked}: ${requestScope.bookOrder.user.blocked}</p>
+                <p>${role}: <fmt:message key="${requestScope.bookOrder.user.role}"/></p>
+                <p>${blocked}: <fmt:message key="${requestScope.bookOrder.user.blocked}"/></p>
             </div>
         </c:if>
         <form class="buttons-container" method="post" action="controller?">
