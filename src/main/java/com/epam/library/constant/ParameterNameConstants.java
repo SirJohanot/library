@@ -28,5 +28,8 @@ public final class ParameterNameConstants {
     public static final String USER_BLOCKED = "blocked";
 
     public static final String ORDER_ID = "orderId";
+    public static final String DAYS = "days";
+    public static final String TYPE = "type";
+    public static final String STATE = "state";
 
 }

@@ -17,11 +17,9 @@ import javax.servlet.http.HttpSession;
 public class OrderStateAdvancementCommand implements Command {
 
     private final BookOrderService bookOrderService;
-    private final RentalState newState;
 
-    public OrderStateAdvancementCommand(BookOrderService bookOrderService, RentalState newState) {
+    public OrderStateAdvancementCommand(BookOrderService bookOrderService) {
         this.bookOrderService = bookOrderService;
-        this.newState = newState;
     }
 
     @Override
@@ -33,7 +31,10 @@ public class OrderStateAdvancementCommand implements Command {
         String orderIdLine = req.getParameter(ParameterNameConstants.ORDER_ID);
         Long orderId = Long.valueOf(orderIdLine);
 
-        bookOrderService.advanceOrderState(orderId, currentUserId, newState);
+        String stateLine = req.getParameter(ParameterNameConstants.STATE);
+        RentalState state = RentalState.valueOf(stateLine);
+
+        bookOrderService.advanceOrderState(orderId, currentUserId, state);
 
         return CommandResult.redirect(CommandInvocationConstants.ORDERS_PAGE);
     }

@@ -280,20 +280,15 @@ nav form button {
 }
 
 .order-options-container {
-    display: flex;
+    display: block;
     width: 100%;
 }
 
-.order-options-container * {
-    flex-grow: 1;
-}
-
-.order-to-reading-hall-button {
+.order-options-container button[type="submit"] {
     display: block;
-    min-width: 25%;
-    min-height: 60px;
-    margin: auto;
-    font-size: 20px;
+    margin: 10px auto;
+    width: 80%;
+    min-height: 45px;
 }
 
 /* Edit book page */

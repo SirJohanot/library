@@ -13,6 +13,7 @@ import com.epam.library.entity.User;
 import com.epam.library.entity.book.Book;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.entity.enumeration.RentalType;
+import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
@@ -41,6 +42,10 @@ public class BookOrderServiceImpl implements BookOrderService {
     public void placeOrder(int numberOfDays, RentalType rentalType, Long bookId, Long userId) throws ServiceException, ValidationException {
         if (numberOfDays < 0) {
             throw new ServiceException("Number of days for rental cannot be less than 0");
+        }
+        
+        if (rentalType == RentalType.TO_READING_HALL) {
+            numberOfDays = 0;
         }
 
         Date startDate = getCurrentDate();
@@ -88,23 +93,32 @@ public class BookOrderServiceImpl implements BookOrderService {
             Book orderBook = order.getBook();
             Long bookId = orderBook.getId();
             BookDao bookDao = helper.createBookDao();
+            UserDao userDao = helper.createUserDao();
             BookOrderRepository orderRepository = buildBookOrderRepository(helper);
             switch (newState) {
                 case ORDER_APPROVED:
+                    throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(userId, UserRole.LIBRARIAN, userDao);
                     if (orderBook.getAmount() <= 0) {
                         throw new ServiceException("Cannot approve order on a book that is not in stock");
                     }
 
                     bookDao.tweakAmount(bookId, -1);
                     break;
+                case ORDER_DECLINED:
+                    throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(userId, UserRole.LIBRARIAN, userDao);
+                    break;
                 case BOOK_COLLECTED:
+                    throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(userId, UserRole.READER, userDao);
                     throwExceptionIfTheOrderDoesNotBelongToUser(order, userId);
                 case BOOK_RETURNED:
+                    throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(userId, UserRole.READER, userDao);
                     throwExceptionIfTheOrderDoesNotBelongToUser(order, userId);
                     Date currentDate = getCurrentDate();
                     orderRepository.setReturnDate(orderId, currentDate);
                     bookDao.tweakAmount(bookId, 1);
                     break;
+                default:
+                    throw new UnsupportedOperationException("Cannot advance order to " + newState);
             }
             orderRepository.setState(orderId, newState);
 
@@ -197,6 +211,18 @@ public class BookOrderServiceImpl implements BookOrderService {
         Long orderUserId = orderUser.getId();
         if (!userId.equals(orderUserId)) {
             throw new ServiceException("The Order does not belong to the user");
+        }
+    }
+
+    private void throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(Long userId, UserRole requiredRole, UserDao userDao) throws DaoException, ServiceException {
+        Optional<User> optionalUser = userDao.getById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new ServiceException("The user does not exist in the database");
+        }
+        User user = optionalUser.get();
+        UserRole userRole = user.getRole();
+        if (userRole != requiredRole) {
+            throw new ServiceException("The user has to be a " + requiredRole + " to perform the action");
         }
     }
 

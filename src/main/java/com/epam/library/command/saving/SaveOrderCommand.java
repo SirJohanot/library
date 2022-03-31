@@ -16,13 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 public class SaveOrderCommand extends AbstractSaveCommand {
 
     private final BookOrderService bookOrderService;
-    private final RentalType rentalType;
-    private final int days;
 
-    public SaveOrderCommand(BookOrderService bookOrderService, RentalType rentalType, int days) {
+    public SaveOrderCommand(BookOrderService bookOrderService) {
         this.bookOrderService = bookOrderService;
-        this.rentalType = rentalType;
-        this.days = days;
     }
 
     @Override
@@ -33,7 +29,13 @@ public class SaveOrderCommand extends AbstractSaveCommand {
         String bookIdLine = req.getParameter(ParameterNameConstants.BOOK_ID);
         Long bookId = Long.valueOf(bookIdLine);
 
-        bookOrderService.placeOrder(days, rentalType, bookId, userId);
+        String daysLine = req.getParameter(ParameterNameConstants.DAYS);
+        int days = Integer.parseInt(daysLine);
+
+        String typeLine = req.getParameter(ParameterNameConstants.TYPE);
+        RentalType type = RentalType.valueOf(typeLine);
+
+        bookOrderService.placeOrder(days, type, bookId, userId);
     }
 
     @Override

@@ -28,7 +28,9 @@
 <fmt:message key="users.role" var="role"/>
 <fmt:message key="users.blocked" var="blocked"/>
 <fmt:message key="users.block" var="block"/>
+<fmt:message key="users.blockConfirmation" var="blockConfirmation"/>
 <fmt:message key="users.unblock" var="unblock"/>
+<fmt:message key="users.unblockConfirmation" var="unblockConfirmation"/>
 
 <html>
 <head>
@@ -77,10 +79,12 @@
                 <button type="submit" name="command" value="editUserPage">${edit}</button>
                 <c:choose>
                     <c:when test="${!requestScope.targetUser.blocked}">
-                        <button type="submit" name="command" value="blockUser" class="red">${block}</button>
+                        <button type="submit" name="command" value="blockUser"
+                                onclick="return confirm('${blockConfirmation}')" class="red">${block}</button>
                     </c:when>
                     <c:otherwise>
-                        <button type="submit" name="command" value="unblockUser" class="red">${unblock}</button>
+                        <button type="submit" name="command" value="unblockUser"
+                                onclick="return confirm('${unblockConfirmation}')" class="red">${unblock}</button>
                     </c:otherwise>
                 </c:choose>
             </c:if>

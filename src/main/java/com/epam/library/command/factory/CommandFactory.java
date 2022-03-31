@@ -14,8 +14,6 @@ import com.epam.library.command.user.*;
 import com.epam.library.command.viewentities.*;
 import com.epam.library.constant.PagePathConstants;
 import com.epam.library.dao.helper.DaoHelperFactory;
-import com.epam.library.entity.enumeration.RentalState;
-import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.pagination.Paginator;
 import com.epam.library.parser.AuthorsLineParser;
 import com.epam.library.repository.RepositoryFactory;
@@ -85,22 +83,10 @@ public class CommandFactory {
                 return new SearchOrdersPageCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), new Paginator<>());
             case VIEW_ORDER:
                 return new ViewOrderPageCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()));
-            case ORDER_TO_READING_HALL:
-                return new SaveOrderCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalType.TO_READING_HALL, 0);
-            case ORDER_FOR_7_DAYS:
-                return new SaveOrderCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalType.OUT_OF_LIBRARY, 7);
-            case ORDER_FOR_14_DAYS:
-                return new SaveOrderCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalType.OUT_OF_LIBRARY, 14);
-            case ORDER_FOR_21_DAYS:
-                return new SaveOrderCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalType.OUT_OF_LIBRARY, 21);
-            case APPROVE_ORDER:
-                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalState.ORDER_APPROVED);
-            case DECLINE_ORDER:
-                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalState.ORDER_DECLINED);
-            case COLLECT_ORDER:
-                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalState.BOOK_COLLECTED);
-            case RETURN_ORDER:
-                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()), RentalState.BOOK_RETURNED);
+            case PLACE_ORDER:
+                return new SaveOrderCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()));
+            case ADVANCE_ORDER:
+                return new OrderStateAdvancementCommand(new BookOrderServiceImpl(daoHelperFactory, repositoryFactory, new BookOrderValidator()));
             default:
                 throw new IllegalArgumentException("Unknown command = " + command);
         }

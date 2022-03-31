@@ -28,9 +28,10 @@
 <fmt:message key="books.publishmentYear" var="publishmentYear"/>
 <fmt:message key="books.inStock" var="inStock"/>
 <fmt:message key="books.delete" var="delete"/>
-<fmt:message key="books.orderToReadingHall" var="orderToReadingHall"/>
-<fmt:message key="books.orderOnSubscription" var="orderOnSubscription"/>
+<fmt:message key="books.deleteConfirmation" var="deleteConfirmation"/>
+<fmt:message key="books.order" var="order"/>
 
+<fmt:message key="orders.rentalType" var="rentalType"/>
 <fmt:message key="orders.days" var="days"/>
 
 <html>
@@ -38,6 +39,7 @@
     <title>${requestScope.book.title} | ${appName}</title>
     <link rel="stylesheet" href="static/styles/style.css"/>
     <meta name="viewport" content="width=device-width">
+    <script src="static/javaScript/daysToggling.js"></script>
 </head>
 <body>
 <header>
@@ -85,28 +87,30 @@
                 <form class="buttons-container" method="post" action="controller?">
                     <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
                     <button type="submit" name="command" value="editBookPage">${edit}</button>
-                    <button type="submit" name="command" value="deleteBook" class="red">${delete}</button>
+                    <button type="submit" name="command" value="deleteBook"
+                            onclick="return confirm('${deleteConfirmation}')" class="red">${delete}</button>
                 </form>
             </c:when>
             <c:when test="${sessionScope.user.role == 'READER'}">
-                <div class="order-options-container">
-                    <form method="post"
-                          action="controller?">
-                        <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
-                        <button type="submit" name="command" value="orderToReadingHall"
-                                class="order-to-reading-hall-button">${orderToReadingHall}</button>
-                    </form>
-                    <div>
-                        <h1>${orderOnSubscription}:</h1>
-                        <form class="buttons-container" method="post"
-                              action="controller">
-                            <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
-                            <button type="submit" name="command" value="orderFor7Days">7 ${days}</button>
-                            <button type="submit" name="command" value="orderFor14Days">14 ${days}</button>
-                            <button type="submit" name="command" value="orderFor21Days">21 ${days}</button>
-                        </form>
-                    </div>
-                </div>
+                <form method="post" class="round-bordered-subject order-options-container"
+                      action="controller?command=placeOrder">
+                    <input type="hidden" name="bookId" value="${requestScope.book.id}"/>
+                    <p>${rentalType}:</p>
+                    <input id="outOfLibrary" type="radio" name="type" value="OUT_OF_LIBRARY"
+                           onchange="setDaysRadiosDisabled(0)" checked="checked"/>
+                    <label for="outOfLibrary"><fmt:message key="OUT_OF_LIBRARY"/></label>
+                    <input id="toReadingHall" type="radio" name="type" value="TO_READING_HALL"
+                           onchange="setDaysRadiosDisabled(1)"/>
+                    <label for="toReadingHall"><fmt:message key="TO_READING_HALL"/></label>
+                    <p>${days}:</p>
+                    <input id="7" type="radio" name="days" value="7" checked="checked"/>
+                    <label for="7">7</label>
+                    <input id="14" type="radio" name="days" value="14"/>
+                    <label for="14">14</label>
+                    <input id="21" type="radio" name="days" value="21"/>
+                    <label for="21">21</label>
+                    <button type="submit">${order}</button>
+                </form>
             </c:when>
         </c:choose>
     </div>

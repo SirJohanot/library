@@ -61,17 +61,10 @@ public class AuthorisationFilter implements Filter {
         commandAccessMap.put(CommandLineConstants.VIEW_BOOK_PAGE, anyRole);
 
         commandAccessMap.put(CommandLineConstants.ORDERS_PAGE, readerAndLibrarianOnly);
+        commandAccessMap.put(CommandLineConstants.ADVANCE_ORDER, readerAndLibrarianOnly);
         commandAccessMap.put(CommandLineConstants.VIEW_ORDER, readerAndLibrarianOnly);
 
-        commandAccessMap.put(CommandLineConstants.ORDER_TO_READING_HALL, readerOnly);
-        commandAccessMap.put(CommandLineConstants.ORDER_FOR_7_DAYS, readerOnly);
-        commandAccessMap.put(CommandLineConstants.ORDER_FOR_14_DAYS, readerOnly);
-        commandAccessMap.put(CommandLineConstants.ORDER_FOR_21_DAYS, readerOnly);
-        commandAccessMap.put(CommandLineConstants.COLLECT_ORDER, readerOnly);
-        commandAccessMap.put(CommandLineConstants.RETURN_ORDER, readerOnly);
-
-        commandAccessMap.put(CommandLineConstants.DECLINE_ORDER, librarianOnly);
-        commandAccessMap.put(CommandLineConstants.APPROVE_ORDER, librarianOnly);
+        commandAccessMap.put(CommandLineConstants.PLACE_ORDER, readerOnly);
 
         commandAccessMap.put(CommandLineConstants.EDIT_BOOK_PAGE, adminOnly);
         commandAccessMap.put(CommandLineConstants.DELETE_BOOK, adminOnly);

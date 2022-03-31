@@ -107,20 +107,20 @@
                 <p>${blocked}: <fmt:message key="${requestScope.bookOrder.user.blocked}"/></p>
             </div>
         </c:if>
-        <form class="buttons-container" method="post" action="controller?">
+        <form class="buttons-container" method="post" action="controller?command=advanceOrder">
             <input type="hidden" name="orderId" value="${requestScope.bookOrder.id}"/>
             <c:choose>
                 <c:when test="${(sessionScope.user.role == 'LIBRARIAN') && (requestScope.bookOrder.state == 'ORDER_PLACED')}">
-                    <button type="submit" name="command" value="declineOrder" class="red">${declineOrder}</button>
-                    <button type="submit" name="command" value="approveOrder" class="green">${approveOrder}</button>
+                    <button type="submit" name="state" value="ORDER_DECLINED" class="red">${declineOrder}</button>
+                    <button type="submit" name="state" value="ORDER_APPROVED" class="green">${approveOrder}</button>
                 </c:when>
                 <c:when test="${(sessionScope.user.role == 'READER') && (sessionScope.user.id == requestScope.bookOrder.user.id)}">
                     <c:choose>
                         <c:when test="${requestScope.bookOrder.state == 'ORDER_APPROVED'}">
-                            <button type="submit" name="command" value="collectOrder">${collectOrder}</button>
+                            <button type="submit" name="state" value="BOOK_COLLECTED">${collectOrder}</button>
                         </c:when>
                         <c:when test="${requestScope.bookOrder.state == 'BOOK_COLLECTED'}">
-                            <button type="submit" name="command" value="returnOrder">${returnOrder}</button>
+                            <button type="submit" name="state" value="BOOK_RETURNED">${returnOrder}</button>
                         </c:when>
                     </c:choose>
                 </c:when>
