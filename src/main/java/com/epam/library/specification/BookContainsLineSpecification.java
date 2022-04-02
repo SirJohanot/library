@@ -8,23 +8,20 @@ import com.epam.library.entity.book.Publisher;
 import java.time.Year;
 import java.util.List;
 
-public class BookContainsLineSpecification extends AbstractChainedSpecification<Book> {
+public class BookContainsLineSpecification extends AbstractChainedContainsLineSpecification<Book> {
 
-    private final String lineToContain;
-
-    public BookContainsLineSpecification(String lineToContain) {
-        this.lineToContain = lineToContain;
+    public BookContainsLineSpecification(String targetLine) {
+        super(targetLine);
     }
 
-    public BookContainsLineSpecification(String lineToContain, Specification<Book> successor) {
-        super(successor);
-        this.lineToContain = lineToContain;
+    public BookContainsLineSpecification(Specification<Book> successor, String targetLine) {
+        super(successor, targetLine);
     }
 
     @Override
     protected boolean isSpecifiedByTheCurrentSpecification(Book object) {
         String title = object.getTitle();
-        if (title.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(title)) {
             return true;
         }
 
@@ -37,24 +34,24 @@ public class BookContainsLineSpecification extends AbstractChainedSpecification<
         }
         stringBuilder.setLength(stringBuilder.length() - 2);
         String authorsLine = stringBuilder.toString();
-        if (authorsLine.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(authorsLine)) {
             return true;
         }
 
         Genre genre = object.getGenre();
         String genreName = genre.getName();
-        if (genreName.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(genreName)) {
             return true;
         }
 
         Publisher publisher = object.getPublisher();
         String publisherName = publisher.getName();
-        if (publisherName.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(publisherName)) {
             return true;
         }
 
         Year publishmentYear = object.getPublishmentYear();
         String publishmentYearLine = publishmentYear.toString();
-        return publishmentYearLine.contains(lineToContain);
+        return containsTargetLineIgnoreCase(publishmentYearLine);
     }
 }

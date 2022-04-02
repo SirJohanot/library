@@ -3,44 +3,41 @@ package com.epam.library.specification;
 import com.epam.library.entity.User;
 import com.epam.library.entity.enumeration.UserRole;
 
-public class UserContainsLineSpecification extends AbstractChainedSpecification<User> {
+public class UserContainsLineSpecification extends AbstractChainedContainsLineSpecification<User> {
 
-    private final String lineToContain;
-
-    public UserContainsLineSpecification(String lineToContain) {
-        this.lineToContain = lineToContain;
+    public UserContainsLineSpecification(String targetLine) {
+        super(targetLine);
     }
 
-    public UserContainsLineSpecification(String lineToContain, Specification<User> successor) {
-        super(successor);
-        this.lineToContain = lineToContain;
+    public UserContainsLineSpecification(Specification<User> successor, String targetLine) {
+        super(successor, targetLine);
     }
 
     @Override
     protected boolean isSpecifiedByTheCurrentSpecification(User object) {
         String login = object.getLogin();
-        if (login.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(login)) {
             return true;
         }
 
         String name = object.getName();
-        if (name.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(name)) {
             return true;
         }
 
         String surname = object.getSurname();
-        if (surname.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(surname)) {
             return true;
         }
 
         UserRole role = object.getRole();
         String roleLine = role.toString();
-        if (roleLine.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(roleLine)) {
             return true;
         }
 
         boolean blocked = object.isBlocked();
         String blockedLine = Boolean.toString(blocked);
-        return blockedLine.contains(lineToContain);
+        return containsTargetLineIgnoreCase(blockedLine);
     }
 }

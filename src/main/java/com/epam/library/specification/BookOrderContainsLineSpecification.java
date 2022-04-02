@@ -6,49 +6,46 @@ import com.epam.library.entity.enumeration.RentalType;
 
 import java.sql.Date;
 
-public class BookOrderContainsLineSpecification extends AbstractChainedSpecification<BookOrder> {
+public class BookOrderContainsLineSpecification extends AbstractChainedContainsLineSpecification<BookOrder> {
 
-    private final String lineToContain;
-
-    public BookOrderContainsLineSpecification(String lineToContain) {
-        this.lineToContain = lineToContain;
+    public BookOrderContainsLineSpecification(String targetLine) {
+        super(targetLine);
     }
 
-    public BookOrderContainsLineSpecification(Specification<BookOrder> successor, String lineToContain) {
-        super(successor);
-        this.lineToContain = lineToContain;
+    public BookOrderContainsLineSpecification(Specification<BookOrder> successor, String targetLine) {
+        super(successor, targetLine);
     }
 
     @Override
     protected boolean isSpecifiedByTheCurrentSpecification(BookOrder object) {
         Date startDate = object.getStartDate();
         String startDateLine = startDate.toString();
-        if (startDateLine.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(startDateLine)) {
             return true;
         }
 
         Date endDate = object.getEndDate();
         String endDateLine = endDate.toString();
-        if (endDateLine.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(endDateLine)) {
             return true;
         }
 
         Date returnDate = object.getReturnDate();
         if (returnDate != null) {
             String returnDateLine = returnDate.toString();
-            if (returnDateLine.contains(lineToContain)) {
+            if (containsTargetLineIgnoreCase(returnDateLine)) {
                 return true;
             }
         }
 
         RentalType type = object.getType();
         String typeLine = type.toString();
-        if (typeLine.contains(lineToContain)) {
+        if (containsTargetLineIgnoreCase(typeLine)) {
             return true;
         }
 
         RentalState state = object.getState();
         String stateLine = state.toString();
-        return stateLine.contains(lineToContain);
+        return containsTargetLineIgnoreCase(stateLine);
     }
 }
