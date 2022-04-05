@@ -12,22 +12,10 @@ public class PaginatorTest {
     private final Paginator<Integer> paginator = new Paginator<>();
 
     @Test
-    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenThereAreNotEnoughElementsToCompletelyFillThePages() {
+    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenTheNumberOfElementsIsEvenAndTheNumberOfElementsPerPageIsOdd() {
         //given
-        int elementsPerPage = 4;
+        int elementsPerPage = 7;
         List<Integer> elements = Collections.nCopies(10, 5);
-        int expectedNumberOfPages = 3;
-        //when
-        int actualNumberOfPages = paginator.getNumberOfPagesNeededToFitElements(elements, elementsPerPage);
-        //then
-        Assert.assertEquals(expectedNumberOfPages, actualNumberOfPages);
-    }
-
-    @Test
-    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenThereAreEnoughElementsToCompletelyFillThePages() {
-        //given
-        int elementsPerPage = 10;
-        List<Integer> elements = Collections.nCopies(20, 5);
         int expectedNumberOfPages = 2;
         //when
         int actualNumberOfPages = paginator.getNumberOfPagesNeededToFitElements(elements, elementsPerPage);
@@ -36,15 +24,58 @@ public class PaginatorTest {
     }
 
     @Test
-    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenThereAreNotEnoughElementsToCompletelyFillOnePage() {
+    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenTheNumberOfElementsIsOddAndTheNumberOfElementsPerPageIsOdd() {
         //given
-        int elementsPerPage = 10;
+        int elementsPerPage = 15;
+        List<Integer> elements = Collections.nCopies(47, 5);
+        int expectedNumberOfPages = 4;
+        //when
+        int actualNumberOfPages = paginator.getNumberOfPagesNeededToFitElements(elements, elementsPerPage);
+        //then
+        Assert.assertEquals(expectedNumberOfPages, actualNumberOfPages);
+    }
+
+    @Test
+    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenTheNumberOfElementsIsOddAndTheNumberOfElementsPerPageIsEven() {
+        //given
+        int elementsPerPage = 2;
         List<Integer> elements = Collections.nCopies(5, 5);
+        int expectedNumberOfPages = 3;
+        //when
+        int actualNumberOfPages = paginator.getNumberOfPagesNeededToFitElements(elements, elementsPerPage);
+        //then
+        Assert.assertEquals(expectedNumberOfPages, actualNumberOfPages);
+    }
+
+    @Test
+    public void testGetNumberOfPagesNeededToFitElementsShouldReturnTheRightNumberOfPagesWhenTheNumberOfElementsIsEvenAndTheNumberOfElementsPerPageIsEven() {
+        //given
+        int elementsPerPage = 8;
+        List<Integer> elements = Collections.nCopies(4, 5);
         int expectedNumberOfPages = 1;
         //when
         int actualNumberOfPages = paginator.getNumberOfPagesNeededToFitElements(elements, elementsPerPage);
         //then
         Assert.assertEquals(expectedNumberOfPages, actualNumberOfPages);
+    }
+
+    @Test
+    public void testGetElementsOfPageShouldReturnASublistOfElementsOfRequiredPageWhenTheElementsCompletelyFillThePages() {
+        //given
+        int elementsPerPage = 5;
+        List<Integer> elements = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            elements.add(i);
+        }
+        int targetPage = 3;
+        List<Integer> expectedElementsOfTargetPage = new ArrayList<>();
+        for (int i = 10; i <= 14; i++) {
+            expectedElementsOfTargetPage.add(i);
+        }
+        //when
+        List<Integer> actualElementsOfTargetPage = paginator.getElementsOfPage(elements, targetPage, elementsPerPage);
+        //then
+        Assert.assertEquals(expectedElementsOfTargetPage, actualElementsOfTargetPage);
     }
 
     @Test
