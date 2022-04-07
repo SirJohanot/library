@@ -84,6 +84,45 @@ public class BookOrderRepositoryImplTest {
     }
 
     @Test
+    public void testGetByIdShouldReturnFullOrder() throws DaoException {
+        //given
+        Optional<BookOrder> expectedOptionalOrder = Optional.of(new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState));
+        BookOrder shallowOrder = new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
+        when(bookOrderDao.getById(orderId)).thenReturn(Optional.of(shallowOrder));
+        when(userDao.getById(userId)).thenReturn(Optional.of(user));
+        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        //when
+        Optional<BookOrder> actualOptionalOrder = bookOrderRepository.getById(orderId);
+        //then
+        Assert.assertEquals(expectedOptionalOrder, actualOptionalOrder);
+    }
+
+    @Test
+    public void testGetByIdShouldReturnOptionalEmptyWhenTheOrderCouldNotBeFound() throws DaoException {
+        //given
+        Optional<BookOrder> expectedOptionalOrder = Optional.empty();
+        when(bookOrderDao.getById(orderId)).thenReturn(Optional.empty());
+        when(userDao.getById(userId)).thenReturn(Optional.of(user));
+        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        //when
+        Optional<BookOrder> actualOptionalOrder = bookOrderRepository.getById(orderId);
+        //then
+        Assert.assertEquals(expectedOptionalOrder, actualOptionalOrder);
+    }
+
+    @Test(expected = DaoException.class)
+    public void testGetByIdShouldThrowDaoExceptionIfTheAssociatedBookCouldNotBeFound() throws DaoException {
+        //given
+        BookOrder shallowOrder = new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
+        when(bookOrderDao.getById(orderId)).thenReturn(Optional.of(shallowOrder));
+        when(userDao.getById(userId)).thenReturn(Optional.of(user));
+        when(bookRepository.getById(bookId)).thenReturn(Optional.empty());
+        //when
+        bookOrderRepository.getById(orderId);
+        //then
+    }
+
+    @Test
     public void testGetAllShouldReturnAListOfFullOrders() throws DaoException {
         //given
         List<BookOrder> expectedOrders = List.of(new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState));
@@ -97,18 +136,16 @@ public class BookOrderRepositoryImplTest {
         Assert.assertEquals(expectedOrders, actualOrders);
     }
 
-    @Test
-    public void testGetByIdShouldReturnFullOrder() throws DaoException {
+    @Test(expected = DaoException.class)
+    public void testGetAllShouldThrowDaoExceptionIfOneOfTheAssociatedUsersCouldNotBeFound() throws DaoException {
         //given
-        Optional<BookOrder> expectedOptionalOrder = Optional.of(new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState));
-        BookOrder shallowOrder = new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
-        when(bookOrderDao.getById(orderId)).thenReturn(Optional.of(shallowOrder));
-        when(userDao.getById(userId)).thenReturn(Optional.of(user));
+        List<BookOrder> shallowList = List.of(new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState));
+        when(bookOrderDao.getAll()).thenReturn(shallowList);
+        when(userDao.getById(userId)).thenReturn(Optional.empty());
         when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
         //when
-        Optional<BookOrder> actualOptionalOrder = bookOrderRepository.getById(orderId);
+        bookOrderRepository.getAll();
         //then
-        Assert.assertEquals(expectedOptionalOrder, actualOptionalOrder);
     }
 
     @Test

@@ -76,6 +76,61 @@ public class BookRepositoryImplTest {
     }
 
     @Test
+    public void testGetByIdShouldReturnAFullBookWhenThereAreObjectsRelatedToIt() throws DaoException {
+        //given
+        Book bookThatHasToBeReturnedByBookDao = new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount);
+        when(bookDao.getById(bookId)).thenReturn(Optional.of(bookThatHasToBeReturnedByBookDao));
+
+        when(authorDao.getAuthorsAssociatedWithBookId(bookId)).thenReturn(authorList);
+
+        when(genreDao.getById(genreId)).thenReturn(Optional.of(genre));
+
+        when(publisherDao.getById(publisherId)).thenReturn(Optional.of(publisher));
+
+        Optional<Book> expectedOptionalBook = Optional.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
+        //when
+        Optional<Book> actualOptionalBook = bookRepository.getById(bookId);
+        //then
+        Assert.assertEquals(expectedOptionalBook, actualOptionalBook);
+    }
+
+    @Test
+    public void testGetByIdShouldReturnOptionalEmptyWhenTheBookCouldNotBeFound() throws DaoException {
+        //given
+        when(bookDao.getById(bookId)).thenReturn(Optional.empty());
+
+        when(authorDao.getAuthorsAssociatedWithBookId(bookId)).thenReturn(authorList);
+
+        when(genreDao.getById(genreId)).thenReturn(Optional.of(genre));
+
+        when(publisherDao.getById(publisherId)).thenReturn(Optional.of(publisher));
+
+        Optional<Book> expectedOptionalBook = Optional.empty();
+        //when
+        Optional<Book> actualOptionalBook = bookRepository.getById(bookId);
+        //then
+        Assert.assertEquals(expectedOptionalBook, actualOptionalBook);
+    }
+
+    @Test(expected = DaoException.class)
+    public void testGetByIdShouldThrowDaoExceptionWhenAssociatedGenreCouldNotBeFound() throws DaoException {
+        //given
+        Book bookThatHasToBeReturnedByBookDao = new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount);
+        when(bookDao.getById(bookId)).thenReturn(Optional.of(bookThatHasToBeReturnedByBookDao));
+
+        when(authorDao.getAuthorsAssociatedWithBookId(bookId)).thenReturn(authorList);
+
+        when(genreDao.getById(genreId)).thenReturn(Optional.empty());
+
+        when(publisherDao.getById(publisherId)).thenReturn(Optional.of(publisher));
+
+        Optional<Book> expectedOptionalBook = Optional.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
+        //when
+        bookRepository.getById(bookId);
+        //then
+    }
+
+    @Test
     public void testGetAllShouldReturnAListOfFullBooks() throws DaoException {
         //given
         List<Book> booksThatHaveToBeReturnedByBookDao = List.of(new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount));
@@ -92,6 +147,24 @@ public class BookRepositoryImplTest {
         List<Book> actualBooks = bookRepository.getAll();
         //then
         Assert.assertEquals(expectedBooks, actualBooks);
+    }
+
+    @Test(expected = DaoException.class)
+    public void testGetAllShouldThrowDaoExceptionWhenOneOfTheAssociatedPublishersCouldNotBeFound() throws DaoException {
+        //given
+        List<Book> booksThatHaveToBeReturnedByBookDao = List.of(new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount));
+        when(bookDao.getAll()).thenReturn(booksThatHaveToBeReturnedByBookDao);
+
+        when(authorDao.getAuthorsAssociatedWithBookId(bookId)).thenReturn(authorList);
+
+        when(genreDao.getById(genreId)).thenReturn(Optional.of(genre));
+
+        when(publisherDao.getById(publisherId)).thenReturn(Optional.empty());
+
+        List<Book> expectedBooks = List.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
+        //when
+        bookRepository.getAll();
+        //then
     }
 
     @Test
@@ -203,25 +276,6 @@ public class BookRepositoryImplTest {
         verify(authorDao, times(1)).deleteRedundant();
         verify(genreDao, times(1)).deleteRedundant();
         verify(publisherDao, times(1)).deleteRedundant();
-    }
-
-    @Test
-    public void testGetByIdShouldReturnAFullBookWhenThereAreObjectsRelatedToIt() throws DaoException {
-        //given
-        Book bookThatHasToBeReturnedByBookDao = new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount);
-        when(bookDao.getById(bookId)).thenReturn(Optional.of(bookThatHasToBeReturnedByBookDao));
-
-        when(authorDao.getAuthorsAssociatedWithBookId(bookId)).thenReturn(authorList);
-
-        when(genreDao.getById(genreId)).thenReturn(Optional.of(genre));
-
-        when(publisherDao.getById(publisherId)).thenReturn(Optional.of(publisher));
-
-        Optional<Book> expectedOptionalBook = Optional.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
-        //when
-        Optional<Book> actualOptionalBook = bookRepository.getById(bookId);
-        //then
-        Assert.assertEquals(expectedOptionalBook, actualOptionalBook);
     }
 
     @Test
