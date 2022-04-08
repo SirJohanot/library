@@ -53,7 +53,7 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void testValidateShouldNotThrowExceptionIfLoginIsCyrillic() throws ValidationException {
+    public void testValidateShouldNotThrowExceptionForCyrillicLogin() throws ValidationException {
         //given
         String login = "Логин";
         User user = new User(id, login, name, surname, role, blocked);

@@ -8,8 +8,6 @@ import com.epam.library.entity.enumeration.RentalType;
 import com.epam.library.exception.ValidationException;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class BookOrderValidator extends AbstractValidator<BookOrder> {
 
@@ -28,8 +26,6 @@ public class BookOrderValidator extends AbstractValidator<BookOrder> {
         if (bookId == null || bookId < 1) {
             throw new ValidationException("The book of a book order must have a positive id");
         }
-
-        DateFormat dateFormat = new SimpleDateFormat();
 
         Date startDate = object.getStartDate();
         throwExceptionIfNull(startDate, "A book order's start date cannot be null");

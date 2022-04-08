@@ -87,7 +87,7 @@ public class BookOrderValidatorTest {
     }
 
     @Test
-    public void testValidateShouldNotThrowValidationExceptionWhenBookOrderIsValid() throws ValidationException {
+    public void testValidateShouldNotThrowValidationExceptionWhenOnlyIdIsNull() throws ValidationException {
         //given
         BookOrder bookOrder = new BookOrder(null, book, user, startDate, endDate, returnDate, rentalType, rentalState);
         //when

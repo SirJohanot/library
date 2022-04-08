@@ -86,7 +86,7 @@ public class BookValidatorTest {
     }
 
     @Test
-    public void testValidateShouldNotThrowValidationExceptionWhenTheTitleIsEnglish() throws ValidationException {
+    public void testValidateShouldNotThrowValidationExceptionForEnglishTitle() throws ValidationException {
         //given
         Book book = new Book(null, title, authorList, genre, publisher, publishmentYear, amount);
         //when
@@ -95,7 +95,7 @@ public class BookValidatorTest {
     }
 
     @Test
-    public void testValidateShouldNotThrowValidationExceptionWhenTheTitleIsCyrillic() throws ValidationException {
+    public void testValidateShouldNotThrowValidationExceptionForCyrillicTitle() throws ValidationException {
         //given
         String title = "Прохожий";
 
