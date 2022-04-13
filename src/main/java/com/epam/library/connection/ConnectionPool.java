@@ -1,6 +1,5 @@
 package com.epam.library.connection;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -25,7 +24,7 @@ public class ConnectionPool {
         connectionsInUse = new ArrayDeque<>();
     }
 
-    public static ConnectionPool getInstance() throws SQLException, IOException, ClassNotFoundException {
+    public static ConnectionPool getInstance() throws SQLException {
         ConnectionPool localInstance = INSTANCE;
         if (localInstance == null) {
             INSTANCE_LOCK.lock();
@@ -42,7 +41,7 @@ public class ConnectionPool {
         return localInstance;
     }
 
-    private void initialiseConnections() throws SQLException, IOException, ClassNotFoundException {
+    private void initialiseConnections() throws SQLException {
         for (int i = 0; i < MAX_CONNECTIONS; i++) {
             ProxyConnection connection = connectionFactory.create();
             availableConnections.offer(connection);

@@ -10,7 +10,9 @@ public class CharsetFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         requiredEncoding = filterConfig.getInitParameter("requestEncoding");
-        if (requiredEncoding == null) requiredEncoding = "UTF-8";
+        if (requiredEncoding == null) {
+            requiredEncoding = "UTF-8";
+        }
     }
 
     @Override

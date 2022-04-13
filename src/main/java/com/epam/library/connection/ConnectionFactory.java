@@ -1,5 +1,7 @@
 package com.epam.library.connection;
 
+import com.epam.library.exception.ConnectionFactoryInitialisationException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -15,15 +17,26 @@ public class ConnectionFactory {
     private static final String USERNAME = "db.username";
     private static final String PASSWORD = "db.password";
 
-    public ProxyConnection create() throws IOException, ClassNotFoundException, SQLException {
+    private final String databaseConnectionUrl;
+    private final String databaseUsername;
+    private final String databasePassword;
+
+    public ConnectionFactory() {
         Properties properties = new Properties();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(CONNECTION_PROPERTIES_FILE_NAME);
-        properties.load(inputStream);
-        String databaseDriverClass = properties.getProperty(DRIVER_CLASS);
-        String databaseConnectionUrl = properties.getProperty(CONNECTION_URL);
-        String databaseUsername = properties.getProperty(USERNAME);
-        String databasePassword = properties.getProperty(PASSWORD);
-        Class.forName(databaseDriverClass);
+        try {
+            properties.load(inputStream);
+            String databaseDriverClass = properties.getProperty(DRIVER_CLASS);
+            databaseConnectionUrl = properties.getProperty(CONNECTION_URL);
+            databaseUsername = properties.getProperty(USERNAME);
+            databasePassword = properties.getProperty(PASSWORD);
+            Class.forName(databaseDriverClass);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new ConnectionFactoryInitialisationException(e);
+        }
+    }
+
+    public ProxyConnection create() throws SQLException {
         Connection connection = DriverManager.getConnection(databaseConnectionUrl, databaseUsername, databasePassword);
         return new ProxyConnection(connection, ConnectionPool.getInstance());
     }

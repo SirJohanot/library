@@ -13,70 +13,76 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class AuthorisationFilter implements Filter {
 
-    private final Map<String, Set<UserRole>> commandAccessMap = new HashMap<>();
+    private final Map<UserRole, Set<String>> commandAccessMap = new HashMap<>();
+
+    private final Set<String> notSignedInCommands = Set.of(CommandLineConstants.SIGN_IN_PAGE,
+            CommandLineConstants.SIGN_IN,
+            CommandLineConstants.SIGN_UP_PAGE,
+            CommandLineConstants.SIGN_UP,
+            CommandLineConstants.LANGUAGE_CHANGE);
+
+    private final Set<String> readerCommands = Set.of(CommandLineConstants.SIGN_IN_PAGE,
+            CommandLineConstants.SIGN_IN,
+            CommandLineConstants.SIGN_UP_PAGE,
+            CommandLineConstants.SIGN_UP,
+            CommandLineConstants.LANGUAGE_CHANGE,
+            CommandLineConstants.SIGN_OUT,
+            CommandLineConstants.MAIN_PAGE,
+            CommandLineConstants.BOOKS_PAGE,
+            CommandLineConstants.SEARCH_BOOKS,
+            CommandLineConstants.VIEW_BOOK_PAGE,
+            CommandLineConstants.ORDERS_PAGE,
+            CommandLineConstants.ADVANCE_ORDER,
+            CommandLineConstants.VIEW_ORDER,
+            CommandLineConstants.PLACE_ORDER);
+
+    private final Set<String> librarianCommands = Set.of(CommandLineConstants.SIGN_IN_PAGE,
+            CommandLineConstants.SIGN_IN,
+            CommandLineConstants.SIGN_UP_PAGE,
+            CommandLineConstants.SIGN_UP,
+            CommandLineConstants.LANGUAGE_CHANGE,
+            CommandLineConstants.SIGN_OUT,
+            CommandLineConstants.MAIN_PAGE,
+            CommandLineConstants.BOOKS_PAGE,
+            CommandLineConstants.SEARCH_BOOKS,
+            CommandLineConstants.VIEW_BOOK_PAGE,
+            CommandLineConstants.ORDERS_PAGE,
+            CommandLineConstants.ADVANCE_ORDER,
+            CommandLineConstants.VIEW_ORDER);
+
+    private final Set<String> adminCommands = Set.of(CommandLineConstants.SIGN_IN_PAGE,
+            CommandLineConstants.SIGN_IN,
+            CommandLineConstants.SIGN_UP_PAGE,
+            CommandLineConstants.SIGN_UP,
+            CommandLineConstants.LANGUAGE_CHANGE,
+            CommandLineConstants.SIGN_OUT,
+            CommandLineConstants.MAIN_PAGE,
+            CommandLineConstants.BOOKS_PAGE,
+            CommandLineConstants.SEARCH_BOOKS,
+            CommandLineConstants.VIEW_BOOK_PAGE,
+            CommandLineConstants.EDIT_BOOK_PAGE,
+            CommandLineConstants.DELETE_BOOK,
+            CommandLineConstants.ADD_A_BOOK_PAGE,
+            CommandLineConstants.ADD_BOOK,
+            CommandLineConstants.USERS_PAGE,
+            CommandLineConstants.SEARCH_USERS,
+            CommandLineConstants.VIEW_USER_PAGE,
+            CommandLineConstants.BLOCK_USER,
+            CommandLineConstants.UNBLOCK_USER,
+            CommandLineConstants.EDIT_USER_PAGE,
+            CommandLineConstants.EDIT_USER);
 
     @Override
     public void init(FilterConfig filterConfig) {
-
-        Set<UserRole> anyone = new HashSet<>();
-        anyone.add(null);
-        anyone.add(UserRole.READER);
-        anyone.add(UserRole.LIBRARIAN);
-        anyone.add(UserRole.ADMIN);
-
-        Set<UserRole> adminOnly = new HashSet<>();
-        adminOnly.add(UserRole.ADMIN);
-
-        Set<UserRole> readerOnly = new HashSet<>();
-        readerOnly.add(UserRole.READER);
-
-        Set<UserRole> librarianOnly = new HashSet<>();
-        librarianOnly.add(UserRole.LIBRARIAN);
-
-        Set<UserRole> readerAndLibrarianOnly = new HashSet<>();
-        readerAndLibrarianOnly.add(UserRole.READER);
-        readerAndLibrarianOnly.add(UserRole.LIBRARIAN);
-
-        Set<UserRole> anyRole = new HashSet<>();
-        anyRole.add(UserRole.READER);
-        anyRole.add(UserRole.LIBRARIAN);
-        anyRole.add(UserRole.ADMIN);
-
-        commandAccessMap.put(CommandLineConstants.SIGN_IN_PAGE, anyone);
-        commandAccessMap.put(CommandLineConstants.SIGN_IN, anyone);
-        commandAccessMap.put(CommandLineConstants.SIGN_UP_PAGE, anyone);
-        commandAccessMap.put(CommandLineConstants.SIGN_UP, anyone);
-        commandAccessMap.put(CommandLineConstants.LANGUAGE_CHANGE, anyone);
-
-        commandAccessMap.put(CommandLineConstants.SIGN_OUT, anyRole);
-        commandAccessMap.put(CommandLineConstants.MAIN_PAGE, anyRole);
-        commandAccessMap.put(CommandLineConstants.BOOKS_PAGE, anyRole);
-        commandAccessMap.put(CommandLineConstants.SEARCH_BOOKS, anyRole);
-        commandAccessMap.put(CommandLineConstants.VIEW_BOOK_PAGE, anyRole);
-
-        commandAccessMap.put(CommandLineConstants.ORDERS_PAGE, readerAndLibrarianOnly);
-        commandAccessMap.put(CommandLineConstants.ADVANCE_ORDER, readerAndLibrarianOnly);
-        commandAccessMap.put(CommandLineConstants.VIEW_ORDER, readerAndLibrarianOnly);
-
-        commandAccessMap.put(CommandLineConstants.PLACE_ORDER, readerOnly);
-
-        commandAccessMap.put(CommandLineConstants.EDIT_BOOK_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.DELETE_BOOK, adminOnly);
-        commandAccessMap.put(CommandLineConstants.ADD_A_BOOK_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.ADD_BOOK, adminOnly);
-        commandAccessMap.put(CommandLineConstants.USERS_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.SEARCH_USERS, adminOnly);
-        commandAccessMap.put(CommandLineConstants.VIEW_USER_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.BLOCK_USER, adminOnly);
-        commandAccessMap.put(CommandLineConstants.UNBLOCK_USER, adminOnly);
-        commandAccessMap.put(CommandLineConstants.EDIT_USER_PAGE, adminOnly);
-        commandAccessMap.put(CommandLineConstants.EDIT_USER, adminOnly);
+        commandAccessMap.put(null, notSignedInCommands);
+        commandAccessMap.put(UserRole.READER, readerCommands);
+        commandAccessMap.put(UserRole.LIBRARIAN, librarianCommands);
+        commandAccessMap.put(UserRole.ADMIN, adminCommands);
     }
 
     @Override
@@ -91,9 +97,13 @@ public class AuthorisationFilter implements Filter {
 
 
         UserRole userRole = user == null ? null : user.getRole();
-        Set<UserRole> allowedRolesForCommand = commandAccessMap.get(command);
-        if (!command.equals(CommandLineConstants.MAIN_PAGE) && allowedRolesForCommand != null && !allowedRolesForCommand.contains(userRole)) {
-            httpServletResponse.sendRedirect(CommandInvocationConstants.MAIN_PAGE);
+        Set<String> allowedCommandsForRole = commandAccessMap.get(userRole);
+        if (!allowedCommandsForRole.contains(command)) {
+            if (userRole != null) {
+                httpServletResponse.sendRedirect(CommandInvocationConstants.MAIN_PAGE);
+            } else {
+                httpServletResponse.sendRedirect(CommandInvocationConstants.SIGN_IN_PAGE);
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
