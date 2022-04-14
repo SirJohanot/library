@@ -10,7 +10,7 @@ public class DaoHelperFactory {
     public DaoHelper createHelper() throws DaoException {
         try {
             return new DaoHelper(ConnectionPool.getInstance());
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             throw new DaoException(e);
         }
     }

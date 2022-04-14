@@ -15,7 +15,7 @@ public class DaoHelper implements AutoCloseable {
 
     private final ProxyConnection connection;
 
-    public DaoHelper(ConnectionPool pool) {
+    public DaoHelper(ConnectionPool pool) throws InterruptedException {
         this.connection = pool.getConnection();
     }
 
