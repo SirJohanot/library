@@ -1,4 +1,4 @@
-package com.epam.library.repository;
+package com.epam.library.assembler;
 
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookOrderRepositoryImpl implements BookOrderRepository {
+public class BookOrderAssemblerImpl implements BookOrderAssembler {
 
     private final BookOrderDao bookOrderDao;
-    private final BookRepository bookRepository;
+    private final BookAssembler bookAssembler;
     private final UserDao userDao;
 
-    public BookOrderRepositoryImpl(BookOrderDao bookOrderDao, BookRepository bookRepository, UserDao userDao) {
+    public BookOrderAssemblerImpl(BookOrderDao bookOrderDao, BookAssembler bookAssembler, UserDao userDao) {
         this.bookOrderDao = bookOrderDao;
-        this.bookRepository = bookRepository;
+        this.bookAssembler = bookAssembler;
         this.userDao = userDao;
     }
 
@@ -84,7 +84,7 @@ public class BookOrderRepositoryImpl implements BookOrderRepository {
 
         Book shallowOrderBook = shallowOrder.getBook();
         Long shallowOrderBookId = shallowOrderBook.getId();
-        Optional<Book> optionalBook = bookRepository.getById(shallowOrderBookId);
+        Optional<Book> optionalBook = bookAssembler.getById(shallowOrderBookId);
         if (optionalBook.isEmpty()) {
             throw new DaoException("Could not find the book associated with inputted shallow BookOrder");
         }

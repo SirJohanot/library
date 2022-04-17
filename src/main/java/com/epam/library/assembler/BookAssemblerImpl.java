@@ -1,4 +1,4 @@
-package com.epam.library.repository;
+package com.epam.library.assembler;
 
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepositoryImpl implements BookRepository {
+public class BookAssemblerImpl implements BookAssembler {
 
     private final BookDao bookDao;
     private final AuthorDao authorDao;
     private final GenreDao genreDao;
     private final PublisherDao publisherDao;
 
-    public BookRepositoryImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, PublisherDao publisherDao) {
+    public BookAssemblerImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, PublisherDao publisherDao) {
         this.bookDao = bookDao;
         this.authorDao = authorDao;
         this.genreDao = genreDao;

@@ -83,9 +83,7 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
         }
     }
 
-    protected Optional<T> findIdentical(T item) throws DaoException {
-        Map<String, Object> valuesMap = getMapOfColumnValues(item);
-        valuesMap.remove("id");
+    protected Optional<T> findByValues(Map<String, Object> valuesMap) throws DaoException {
         String getAllWhereQueryWithTableName = String.format(SELECT_WHERE_QUERY_BEGIN, tableName);
         String query = buildParametrisedQuery(valuesMap, getAllWhereQueryWithTableName, "AND", "");
         List<T> results = executeQuery(query, valuesMap);
@@ -129,10 +127,12 @@ public abstract class AbstractDao<T extends Identifiable> implements Dao<T> {
 
     @Override
     public Long getIdOfNewOrExistingObject(T object) throws DaoException {
-        Optional<T> optionalObject = findIdentical(object);
+        Map<String, Object> valuesMap = getMapOfColumnValues(object);
+        valuesMap.remove("id");
+        Optional<T> optionalObject = findByValues(valuesMap);
         if (optionalObject.isEmpty()) {
             save(object);
-            optionalObject = findIdentical(object);
+            optionalObject = findByValues(valuesMap);
             if (optionalObject.isEmpty()) {
                 throw new DaoException("Object could not be saved to the database or could not be found by dao");
             }

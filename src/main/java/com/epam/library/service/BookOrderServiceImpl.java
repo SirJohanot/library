@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.assembler.AssemblerFactory;
+import com.epam.library.assembler.BookOrderAssembler;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -17,8 +19,6 @@ import com.epam.library.entity.enumeration.UserRole;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
-import com.epam.library.repository.BookOrderRepository;
-import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
 import com.epam.library.validation.Validator;
 
@@ -29,12 +29,12 @@ import java.util.*;
 public class BookOrderServiceImpl implements BookOrderService {
 
     private final DaoHelperFactory daoHelperFactory;
-    private final RepositoryFactory repositoryFactory;
+    private final AssemblerFactory assemblerFactory;
     private final Validator<BookOrder> bookOrderValidator;
 
-    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory, Validator<BookOrder> bookOrderValidator) {
+    public BookOrderServiceImpl(DaoHelperFactory daoHelperFactory, AssemblerFactory assemblerFactory, Validator<BookOrder> bookOrderValidator) {
         this.daoHelperFactory = daoHelperFactory;
-        this.repositoryFactory = repositoryFactory;
+        this.assemblerFactory = assemblerFactory;
         this.bookOrderValidator = bookOrderValidator;
     }
 
@@ -43,7 +43,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         if (numberOfDays < 0) {
             throw new ServiceException("Number of days for rental cannot be less than 0");
         }
-        
+
         if (rentalType == RentalType.TO_READING_HALL) {
             numberOfDays = 0;
         }
@@ -71,7 +71,7 @@ public class BookOrderServiceImpl implements BookOrderService {
                 throw new ServiceException("Cannot place an order for a user that does not exist");
             }
 
-            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            BookOrderAssembler orderRepository = buildBookOrderAssembler(helper);
             orderRepository.save(newOrder);
 
             helper.endTransaction();
@@ -94,7 +94,7 @@ public class BookOrderServiceImpl implements BookOrderService {
             Long bookId = orderBook.getId();
             BookDao bookDao = helper.createBookDao();
             UserDao userDao = helper.createUserDao();
-            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            BookOrderAssembler orderRepository = buildBookOrderAssembler(helper);
             switch (newState) {
                 case ORDER_APPROVED:
                     throwExceptionIfTheUserDoesNotExistOrIsNotOfRole(userId, UserRole.LIBRARIAN, userDao);
@@ -147,7 +147,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+            BookOrderAssembler orderRepository = buildBookOrderAssembler(helper);
             List<BookOrder> allOrders = orderRepository.getAll();
 
             helper.endTransaction();
@@ -165,7 +165,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         }
     }
 
-    private BookOrderRepository buildBookOrderRepository(DaoHelper helper) {
+    private BookOrderAssembler buildBookOrderAssembler(DaoHelper helper) {
         BookOrderDao bookOrderDao = helper.createBookOrderDao();
         UserDao userDao = helper.createUserDao();
         BookDao bookDao = helper.createBookDao();
@@ -173,7 +173,7 @@ public class BookOrderServiceImpl implements BookOrderService {
         GenreDao genreDao = helper.createGenreDao();
         PublisherDao publisherDao = helper.createPublisherDao();
 
-        return repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao);
+        return assemblerFactory.createBookOrderAssembler(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao);
     }
 
     private Date getCurrentDate() {
@@ -227,7 +227,7 @@ public class BookOrderServiceImpl implements BookOrderService {
     }
 
     private BookOrder getOrder(Long orderId, DaoHelper helper) throws ServiceException, DaoException {
-        BookOrderRepository orderRepository = buildBookOrderRepository(helper);
+        BookOrderAssembler orderRepository = buildBookOrderAssembler(helper);
         Optional<BookOrder> optionalBookOrder = orderRepository.getById(orderId);
         if (optionalBookOrder.isEmpty()) {
             throw new ServiceException("Could not find the requested bookOrder");

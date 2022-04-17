@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.assembler.AssemblerFactory;
+import com.epam.library.assembler.BookOrderAssembler;
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
 import com.epam.library.dao.book.AuthorDao;
@@ -12,8 +14,6 @@ import com.epam.library.entity.BookOrder;
 import com.epam.library.entity.enumeration.RentalState;
 import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
-import com.epam.library.repository.BookOrderRepository;
-import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.validation.BookOrderValidator;
 import com.epam.library.validation.Validator;
 import org.junit.After;
@@ -37,8 +37,8 @@ public class BookOrderServiceImplTest {
     private DaoHelper helper;
     private DaoHelperFactory helperFactory;
 
-    private BookOrderRepository bookOrderRepository;
-    private RepositoryFactory repositoryFactory;
+    private BookOrderAssembler bookOrderAssembler;
+    private AssemblerFactory assemblerFactory;
 
     private Validator<BookOrder> bookOrderValidator;
 
@@ -74,13 +74,13 @@ public class BookOrderServiceImplTest {
         helperFactory = mock(DaoHelperFactory.class);
         when(helperFactory.createHelper()).thenReturn(helper);
 
-        bookOrderRepository = mock(BookOrderRepository.class);
-        repositoryFactory = mock(RepositoryFactory.class);
-        when(repositoryFactory.createBookOrderRepository(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookOrderRepository);
+        bookOrderAssembler = mock(BookOrderAssembler.class);
+        assemblerFactory = mock(AssemblerFactory.class);
+        when(assemblerFactory.createBookOrderAssembler(bookOrderDao, userDao, bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookOrderAssembler);
 
         bookOrderValidator = mock(BookOrderValidator.class);
 
-        bookOrderService = new BookOrderServiceImpl(helperFactory, repositoryFactory, bookOrderValidator);
+        bookOrderService = new BookOrderServiceImpl(helperFactory, assemblerFactory, bookOrderValidator);
     }
 
     @After
@@ -93,15 +93,15 @@ public class BookOrderServiceImplTest {
         publisherDao = null;
         helper = null;
         helperFactory = null;
-        bookOrderRepository = null;
-        repositoryFactory = null;
+        bookOrderAssembler = null;
+        assemblerFactory = null;
         bookOrderService = null;
     }
 
     @Test(expected = ServiceException.class)
     public void testGetOrderByIdShouldThrowServiceExceptionWhenTheOrderCouldNotBeFound() throws ServiceException, DaoException {
         //given
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.empty());
+        when(bookOrderAssembler.getById(orderId)).thenReturn(Optional.empty());
         //when
         bookOrderService.getOrderById(orderId);
         //then
@@ -111,7 +111,7 @@ public class BookOrderServiceImplTest {
     public void testGetOrderByIdShouldReturnOrderFoundByOrderRepositoryWhenTheOrderExists() throws ServiceException, DaoException {
         //given
         BookOrder expectedBookOrder = new BookOrder(orderId, null, null, null, null, null, null, null);
-        when(bookOrderRepository.getById(orderId)).thenReturn(Optional.of(expectedBookOrder));
+        when(bookOrderAssembler.getById(orderId)).thenReturn(Optional.of(expectedBookOrder));
         //when
         BookOrder actualBookOrder = bookOrderService.getOrderById(orderId);
         //then

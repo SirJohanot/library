@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.assembler.AssemblerFactory;
+import com.epam.library.assembler.BookAssembler;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;
@@ -14,8 +16,6 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.parser.AuthorsLineParser;
-import com.epam.library.repository.BookRepository;
-import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.Specification;
 import com.epam.library.validation.Validator;
 
@@ -27,13 +27,13 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private final DaoHelperFactory daoHelperFactory;
-    private final RepositoryFactory repositoryFactory;
+    private final AssemblerFactory assemblerFactory;
     private final Validator<Book> bookValidator;
     private final AuthorsLineParser authorsLineParser;
 
-    public BookServiceImpl(DaoHelperFactory daoHelperFactory, RepositoryFactory repositoryFactory, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) {
+    public BookServiceImpl(DaoHelperFactory daoHelperFactory, AssemblerFactory assemblerFactory, Validator<Book> bookValidator, AuthorsLineParser authorsLineParser) {
         this.daoHelperFactory = daoHelperFactory;
-        this.repositoryFactory = repositoryFactory;
+        this.assemblerFactory = assemblerFactory;
         this.bookValidator = bookValidator;
         this.authorsLineParser = authorsLineParser;
     }
@@ -43,8 +43,8 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookRepository bookRepository = buildBookRepository(helper);
-            List<Book> allBooks = bookRepository.getAll();
+            BookAssembler bookAssembler = buildBookAssembler(helper);
+            List<Book> allBooks = bookAssembler.getAll();
 
             List<Book> specifiedBooks = new ArrayList<>();
             for (Book book : allBooks) {
@@ -64,9 +64,9 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookRepository bookRepository = buildBookRepository(helper);
+            BookAssembler bookAssembler = buildBookAssembler(helper);
 
-            Optional<Book> optionalBook = bookRepository.getById(id);
+            Optional<Book> optionalBook = bookAssembler.getById(id);
             if (optionalBook.isEmpty()) {
                 throw new ServiceException("Could not find the requested book");
             }
@@ -86,8 +86,8 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookRepository bookRepository = buildBookRepository(helper);
-            bookRepository.save(newBook);
+            BookAssembler bookAssembler = buildBookAssembler(helper);
+            bookAssembler.save(newBook);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -100,8 +100,8 @@ public class BookServiceImpl implements BookService {
         try (DaoHelper helper = daoHelperFactory.createHelper()) {
             helper.startTransaction();
 
-            BookRepository bookRepository = buildBookRepository(helper);
-            bookRepository.removeById(bookId);
+            BookAssembler bookAssembler = buildBookAssembler(helper);
+            bookAssembler.removeById(bookId);
 
             helper.endTransaction();
         } catch (DaoException e) {
@@ -109,13 +109,13 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private BookRepository buildBookRepository(DaoHelper helper) {
+    private BookAssembler buildBookAssembler(DaoHelper helper) {
         BookDao bookDao = helper.createBookDao();
         AuthorDao authorDao = helper.createAuthorDao();
         GenreDao genreDao = helper.createGenreDao();
         PublisherDao publisherDao = helper.createPublisherDao();
 
-        return repositoryFactory.createBookRepository(bookDao, authorDao, genreDao, publisherDao);
+        return assemblerFactory.createBookAssembler(bookDao, authorDao, genreDao, publisherDao);
     }
 
     private Book buildBookFromParameters(Long id, String title, String authors, String genre, String publisher, Year publishmentYear, Integer amount, AuthorsLineParser authorsLineParser) {

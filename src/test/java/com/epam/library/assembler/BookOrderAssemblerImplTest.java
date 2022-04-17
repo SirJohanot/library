@@ -1,4 +1,4 @@
-package com.epam.library.repository;
+package com.epam.library.assembler;
 
 import com.epam.library.dao.BookOrderDao;
 import com.epam.library.dao.UserDao;
@@ -21,12 +21,12 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class BookOrderRepositoryImplTest {
+public class BookOrderAssemblerImplTest {
 
     private UserDao userDao;
     private BookOrderDao bookOrderDao;
-    private BookRepository bookRepository;
-    private BookOrderRepository bookOrderRepository;
+    private BookAssembler bookAssembler;
+    private BookOrderAssembler bookOrderAssembler;
 
     private final Long bookId = 3L;
     private final String bookTitle = "Good Book";
@@ -53,23 +53,23 @@ public class BookOrderRepositoryImplTest {
     public void setUp() {
         userDao = mock(UserDao.class);
         bookOrderDao = mock(BookOrderDao.class);
-        bookRepository = mock(BookRepository.class);
-        bookOrderRepository = new BookOrderRepositoryImpl(bookOrderDao, bookRepository, userDao);
+        bookAssembler = mock(BookAssembler.class);
+        bookOrderAssembler = new BookOrderAssemblerImpl(bookOrderDao, bookAssembler, userDao);
     }
 
     @After
     public void tearDown() {
         userDao = null;
         bookOrderDao = null;
-        bookRepository = null;
-        bookOrderRepository = null;
+        bookAssembler = null;
+        bookOrderAssembler = null;
     }
 
     @Test
     public void testSetStateShouldDelegateToBookOrderDao() throws DaoException {
         //given
         //when
-        bookOrderRepository.setState(orderId, rentalState);
+        bookOrderAssembler.setState(orderId, rentalState);
         //then
         verify(bookOrderDao, times(1)).setState(orderId, rentalState);
     }
@@ -78,7 +78,7 @@ public class BookOrderRepositoryImplTest {
     public void testSetReturnDateShouldDelegateToBookOrderDao() throws DaoException {
         //given
         //when
-        bookOrderRepository.setReturnDate(orderId, returnDate);
+        bookOrderAssembler.setReturnDate(orderId, returnDate);
         //then
         verify(bookOrderDao, times(1)).setReturnDate(orderId, returnDate);
     }
@@ -90,9 +90,9 @@ public class BookOrderRepositoryImplTest {
         BookOrder shallowOrder = new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
         when(bookOrderDao.getById(orderId)).thenReturn(Optional.of(shallowOrder));
         when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        when(bookAssembler.getById(bookId)).thenReturn(Optional.of(book));
         //when
-        Optional<BookOrder> actualOptionalOrder = bookOrderRepository.getById(orderId);
+        Optional<BookOrder> actualOptionalOrder = bookOrderAssembler.getById(orderId);
         //then
         Assert.assertEquals(expectedOptionalOrder, actualOptionalOrder);
     }
@@ -103,9 +103,9 @@ public class BookOrderRepositoryImplTest {
         Optional<BookOrder> expectedOptionalOrder = Optional.empty();
         when(bookOrderDao.getById(orderId)).thenReturn(Optional.empty());
         when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        when(bookAssembler.getById(bookId)).thenReturn(Optional.of(book));
         //when
-        Optional<BookOrder> actualOptionalOrder = bookOrderRepository.getById(orderId);
+        Optional<BookOrder> actualOptionalOrder = bookOrderAssembler.getById(orderId);
         //then
         Assert.assertEquals(expectedOptionalOrder, actualOptionalOrder);
     }
@@ -116,9 +116,9 @@ public class BookOrderRepositoryImplTest {
         BookOrder shallowOrder = new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState);
         when(bookOrderDao.getById(orderId)).thenReturn(Optional.of(shallowOrder));
         when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.getById(bookId)).thenReturn(Optional.empty());
+        when(bookAssembler.getById(bookId)).thenReturn(Optional.empty());
         //when
-        bookOrderRepository.getById(orderId);
+        bookOrderAssembler.getById(orderId);
         //then
     }
 
@@ -129,9 +129,9 @@ public class BookOrderRepositoryImplTest {
         List<BookOrder> shallowList = List.of(new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState));
         when(bookOrderDao.getAll()).thenReturn(shallowList);
         when(userDao.getById(userId)).thenReturn(Optional.of(user));
-        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        when(bookAssembler.getById(bookId)).thenReturn(Optional.of(book));
         //when
-        List<BookOrder> actualOrders = bookOrderRepository.getAll();
+        List<BookOrder> actualOrders = bookOrderAssembler.getAll();
         //then
         Assert.assertEquals(expectedOrders, actualOrders);
     }
@@ -142,9 +142,9 @@ public class BookOrderRepositoryImplTest {
         List<BookOrder> shallowList = List.of(new BookOrder(orderId, Book.ofId(bookId), User.ofId(userId), startDate, endDate, returnDate, rentalType, rentalState));
         when(bookOrderDao.getAll()).thenReturn(shallowList);
         when(userDao.getById(userId)).thenReturn(Optional.empty());
-        when(bookRepository.getById(bookId)).thenReturn(Optional.of(book));
+        when(bookAssembler.getById(bookId)).thenReturn(Optional.of(book));
         //when
-        bookOrderRepository.getAll();
+        bookOrderAssembler.getAll();
         //then
     }
 
@@ -153,7 +153,7 @@ public class BookOrderRepositoryImplTest {
         //given
         BookOrder order = new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState);
         //when
-        bookOrderRepository.save(order);
+        bookOrderAssembler.save(order);
         //then
         verify(bookOrderDao, times(1)).save(order);
     }
@@ -162,7 +162,7 @@ public class BookOrderRepositoryImplTest {
     public void testRemoveByIdShouldDelegateToBookOrderDao() throws DaoException {
         //given
         //when
-        bookOrderRepository.removeById(orderId);
+        bookOrderAssembler.removeById(orderId);
         //then
         verify(bookOrderDao, times(1)).removeById(orderId);
     }
@@ -172,7 +172,7 @@ public class BookOrderRepositoryImplTest {
         //given
         BookOrder order = new BookOrder(orderId, book, user, startDate, endDate, returnDate, rentalType, rentalState);
         //when
-        bookOrderRepository.getIdOfNewOrExistingObject(order);
+        bookOrderAssembler.getIdOfNewOrExistingObject(order);
         //then
         verify(bookOrderDao, times(1)).getIdOfNewOrExistingObject(order);
     }

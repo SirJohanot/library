@@ -1,5 +1,7 @@
 package com.epam.library.service;
 
+import com.epam.library.assembler.AssemblerFactory;
+import com.epam.library.assembler.BookAssembler;
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
 import com.epam.library.dao.book.GenreDao;
@@ -14,8 +16,6 @@ import com.epam.library.exception.DaoException;
 import com.epam.library.exception.ServiceException;
 import com.epam.library.exception.ValidationException;
 import com.epam.library.parser.AuthorsLineParser;
-import com.epam.library.repository.BookRepository;
-import com.epam.library.repository.RepositoryFactory;
 import com.epam.library.specification.NoSpecification;
 import com.epam.library.validation.BookValidator;
 import com.epam.library.validation.Validator;
@@ -39,8 +39,8 @@ public class BookServiceImplTest {
     private DaoHelper helper;
     private DaoHelperFactory helperFactory;
 
-    private BookRepository bookRepository;
-    private RepositoryFactory repositoryFactory;
+    private BookAssembler bookAssembler;
+    private AssemblerFactory assemblerFactory;
 
     private Validator<Book> bookValidator;
 
@@ -78,16 +78,16 @@ public class BookServiceImplTest {
         helperFactory = mock(DaoHelperFactory.class);
         when(helperFactory.createHelper()).thenReturn(helper);
 
-        bookRepository = mock(BookRepository.class);
+        bookAssembler = mock(BookAssembler.class);
 
-        repositoryFactory = mock(RepositoryFactory.class);
-        when(repositoryFactory.createBookRepository(bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookRepository);
+        assemblerFactory = mock(AssemblerFactory.class);
+        when(assemblerFactory.createBookAssembler(bookDao, authorDao, genreDao, publisherDao)).thenReturn(bookAssembler);
 
         bookValidator = mock(BookValidator.class);
 
         authorsLineParser = mock(AuthorsLineParser.class);
 
-        bookService = new BookServiceImpl(helperFactory, repositoryFactory, bookValidator, authorsLineParser);
+        bookService = new BookServiceImpl(helperFactory, assemblerFactory, bookValidator, authorsLineParser);
     }
 
     @After
@@ -98,8 +98,8 @@ public class BookServiceImplTest {
         publisherDao = null;
         helper = null;
         helperFactory = null;
-        bookRepository = null;
-        repositoryFactory = null;
+        bookAssembler = null;
+        assemblerFactory = null;
         bookService = null;
     }
 
@@ -108,7 +108,7 @@ public class BookServiceImplTest {
         //given
         Book firstBook = new Book(bookId, title, null, genre, publisher, publishmentYear, amount);
         List<Book> expectedBookList = List.of(firstBook);
-        when(bookRepository.getAll()).thenReturn(expectedBookList);
+        when(bookAssembler.getAll()).thenReturn(expectedBookList);
 
         //when
         List<Book> actualBookList = bookService.getSpecifiedBooks(new NoSpecification<>());
@@ -121,7 +121,7 @@ public class BookServiceImplTest {
         //given
         Book expectedBook = new Book(bookId, title, null, genre, publisher, publishmentYear, amount);
         Optional<Book> expectedBookOptional = Optional.of(expectedBook);
-        when(bookRepository.getById(bookId)).thenReturn(expectedBookOptional);
+        when(bookAssembler.getById(bookId)).thenReturn(expectedBookOptional);
         //when
         Book actualBook = bookService.getBookById(bookId);
         //then
@@ -132,7 +132,7 @@ public class BookServiceImplTest {
     public void testGetBookByIdShouldThrowServiceExceptionWhenThereIsNoSuchBook() throws DaoException, ServiceException {
         //given
         Optional<Book> bookOptionalReturnedByRepository = Optional.empty();
-        when(bookRepository.getById(bookId)).thenReturn(bookOptionalReturnedByRepository);
+        when(bookAssembler.getById(bookId)).thenReturn(bookOptionalReturnedByRepository);
         //when
         Book actualBook = bookService.getBookById(bookId);
         //then
@@ -149,7 +149,7 @@ public class BookServiceImplTest {
         //when
         bookService.saveBook(bookId, title, authorsLine, genreName, publisherName, publishmentYear, amount);
         //then
-        verify(bookRepository, times(1)).save(bookToBeSaved);
+        verify(bookAssembler, times(1)).save(bookToBeSaved);
     }
 
     @Test(expected = ValidationException.class)
@@ -171,6 +171,6 @@ public class BookServiceImplTest {
         //when
         bookService.deleteBookById(bookId);
         //then
-        verify(bookRepository, times(1)).removeById(bookId);
+        verify(bookAssembler, times(1)).removeById(bookId);
     }
 }

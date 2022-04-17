@@ -1,4 +1,4 @@
-package com.epam.library.repository;
+package com.epam.library.assembler;
 
 import com.epam.library.dao.book.AuthorDao;
 import com.epam.library.dao.book.BookDao;
@@ -22,13 +22,13 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class BookRepositoryImplTest {
+public class BookAssemblerImplTest {
 
     private BookDao bookDao;
     private AuthorDao authorDao;
     private GenreDao genreDao;
     private PublisherDao publisherDao;
-    private BookRepository bookRepository;
+    private BookAssembler bookAssembler;
 
     private final Long bookId = 3L;
     private final String bookTitle = "Good Book";
@@ -63,7 +63,7 @@ public class BookRepositoryImplTest {
         authorDao = Mockito.mock(AuthorDao.class);
         genreDao = Mockito.mock(GenreDao.class);
         publisherDao = Mockito.mock(PublisherDao.class);
-        bookRepository = new BookRepositoryImpl(bookDao, authorDao, genreDao, publisherDao);
+        bookAssembler = new BookAssemblerImpl(bookDao, authorDao, genreDao, publisherDao);
     }
 
     @After
@@ -72,7 +72,7 @@ public class BookRepositoryImplTest {
         authorDao = null;
         genreDao = null;
         publisherDao = null;
-        bookRepository = null;
+        bookAssembler = null;
     }
 
     @Test
@@ -89,7 +89,7 @@ public class BookRepositoryImplTest {
 
         Optional<Book> expectedOptionalBook = Optional.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
         //when
-        Optional<Book> actualOptionalBook = bookRepository.getById(bookId);
+        Optional<Book> actualOptionalBook = bookAssembler.getById(bookId);
         //then
         Assert.assertEquals(expectedOptionalBook, actualOptionalBook);
     }
@@ -107,7 +107,7 @@ public class BookRepositoryImplTest {
 
         Optional<Book> expectedOptionalBook = Optional.empty();
         //when
-        Optional<Book> actualOptionalBook = bookRepository.getById(bookId);
+        Optional<Book> actualOptionalBook = bookAssembler.getById(bookId);
         //then
         Assert.assertEquals(expectedOptionalBook, actualOptionalBook);
     }
@@ -126,7 +126,7 @@ public class BookRepositoryImplTest {
 
         Optional<Book> expectedOptionalBook = Optional.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
         //when
-        bookRepository.getById(bookId);
+        bookAssembler.getById(bookId);
         //then
     }
 
@@ -144,7 +144,7 @@ public class BookRepositoryImplTest {
 
         List<Book> expectedBooks = List.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
         //when
-        List<Book> actualBooks = bookRepository.getAll();
+        List<Book> actualBooks = bookAssembler.getAll();
         //then
         Assert.assertEquals(expectedBooks, actualBooks);
     }
@@ -163,7 +163,7 @@ public class BookRepositoryImplTest {
 
         List<Book> expectedBooks = List.of(new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount));
         //when
-        bookRepository.getAll();
+        bookAssembler.getAll();
         //then
     }
 
@@ -177,7 +177,7 @@ public class BookRepositoryImplTest {
 
         when(publisherDao.getIdOfNewOrExistingObject(publisher)).thenReturn(publisherId);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(bookDao, times(1)).getIdOfNewOrExistingObject(shallowCopy);
     }
@@ -187,7 +187,7 @@ public class BookRepositoryImplTest {
         //given
         Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(genreDao, times(1)).getIdOfNewOrExistingObject(genre);
     }
@@ -197,7 +197,7 @@ public class BookRepositoryImplTest {
         //given
         Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(publisherDao, times(1)).getIdOfNewOrExistingObject(publisher);
     }
@@ -207,7 +207,7 @@ public class BookRepositoryImplTest {
         //given
         Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(authorDao, times(1)).getIdOfNewOrExistingObject(firstAuthor);
 
@@ -235,7 +235,7 @@ public class BookRepositoryImplTest {
 
         when(bookDao.getIdOfNewOrExistingObject(shallowCopy)).thenReturn(bookId);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(authorDao, times(1)).deleteBookMappingsFromRelationTable(bookId);
     }
@@ -259,7 +259,7 @@ public class BookRepositoryImplTest {
 
         when(bookDao.getIdOfNewOrExistingObject(shallowCopy)).thenReturn(bookId);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(authorDao, times(1)).mapAuthorToBookInRelationTable(firstAuthorId, bookId);
         verify(authorDao, never()).mapAuthorToBookInRelationTable(secondAuthorId, bookId);
@@ -271,7 +271,7 @@ public class BookRepositoryImplTest {
         //given
         Book book = new Book(bookId, bookTitle, authorList, genre, publisher, bookPublishmentYear, bookAmount);
         //when
-        bookRepository.save(book);
+        bookAssembler.save(book);
         //then
         verify(authorDao, times(1)).deleteRedundant();
         verify(genreDao, times(1)).deleteRedundant();
@@ -283,7 +283,7 @@ public class BookRepositoryImplTest {
         //given
         doNothing().when(bookDao).removeById(bookId);
         //when
-        bookRepository.removeById(bookId);
+        bookAssembler.removeById(bookId);
         //then
         verify(bookDao, times(1)).removeById(bookId);
     }
@@ -294,7 +294,7 @@ public class BookRepositoryImplTest {
         Book book = new Book(bookId, bookTitle, null, Genre.ofId(genreId), Publisher.ofId(publisherId), bookPublishmentYear, bookAmount);
         when(bookDao.getIdOfNewOrExistingObject(book)).thenReturn(bookId);
         //when
-        Long actualBookId = bookRepository.getIdOfNewOrExistingObject(book);
+        Long actualBookId = bookAssembler.getIdOfNewOrExistingObject(book);
         //then
         Assert.assertEquals(bookId, actualBookId);
     }
@@ -305,7 +305,7 @@ public class BookRepositoryImplTest {
         int amountToTweakBy = 1;
         doNothing().when(bookDao).tweakAmount(bookId, amountToTweakBy);
         //when
-        bookRepository.tweakAmount(bookId, amountToTweakBy);
+        bookAssembler.tweakAmount(bookId, amountToTweakBy);
         //then
         verify(bookDao, times(1)).tweakAmount(bookId, amountToTweakBy);
     }
