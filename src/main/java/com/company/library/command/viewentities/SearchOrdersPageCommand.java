@@ -1,0 +1,49 @@
+package com.company.library.command.viewentities;
+
+import com.company.library.constant.ParameterNameConstants;
+import com.company.library.entity.User;
+import com.company.library.constant.AttributeNameConstants;
+import com.company.library.constant.PagePathConstants;
+import com.company.library.entity.BookOrder;
+import com.company.library.exception.ServiceException;
+import com.company.library.pagination.Paginator;
+import com.company.library.service.BookOrderService;
+import com.company.library.comparator.OrderLibrarianPriorityComparator;
+import com.company.library.comparator.OrderReaderPriorityComparator;
+import com.company.library.specification.BookOrderContainsLineSpecification;
+import com.company.library.specification.BookOrderIsRelatedToUserId;
+import com.company.library.specification.Specification;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchOrdersPageCommand extends AbstractViewPageCommand<BookOrder> {
+
+    private static final int ORDERS_PER_PAGE = 5;
+
+    private final BookOrderService bookOrderService;
+
+    public SearchOrdersPageCommand(BookOrderService bookOrderService, Paginator<BookOrder> bookOrderPaginator) {
+        super(bookOrderPaginator, ORDERS_PER_PAGE, AttributeNameConstants.ORDER_LIST, PagePathConstants.SEARCH_ORDERS);
+        this.bookOrderService = bookOrderService;
+    }
+
+    @Override
+    protected List<BookOrder> getEntitiesUsingService(HttpServletRequest req) throws ServiceException {
+        String searchValue = req.getParameter(ParameterNameConstants.SEARCH_VALUE);
+        req.setAttribute(AttributeNameConstants.SEARCH_VALUE, searchValue);
+        Specification<BookOrder> bookOrderSearchSpecification = new BookOrderContainsLineSpecification(searchValue);
+        User currentUser = (User) req.getSession().getAttribute(AttributeNameConstants.USER);
+        switch (currentUser.getRole()) {
+            case READER:
+                Long userId = currentUser.getId();
+                Specification<BookOrder> bookOrderIsRelatedToUserSpecification = new BookOrderIsRelatedToUserId(bookOrderSearchSpecification, userId);
+                return bookOrderService.getSpecifiedOrders(bookOrderIsRelatedToUserSpecification, new OrderReaderPriorityComparator());
+            case LIBRARIAN:
+                return bookOrderService.getSpecifiedOrders(bookOrderSearchSpecification, new OrderLibrarianPriorityComparator());
+            default:
+                return new ArrayList<>();
+        }
+    }
+}

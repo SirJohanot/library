@@ -11,13 +11,13 @@
 
     <tag>
         <name>navigation</name>
-        <tag-class>com.epam.library.customtag.NavigationMenuTag</tag-class>
+        <tag-class>com.company.library.customtag.NavigationMenuTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 
     <tag>
         <name>pagination</name>
-        <tag-class>com.epam.library.customtag.PaginationTag</tag-class>
+        <tag-class>com.company.library.customtag.PaginationTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>command</name>
