@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.epam.library.connection.ConnectionFactoryTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.104 s <<< FAILURE! - in com.epam.library.connection.ConnectionFactoryTest
-testCreate(com.epam.library.connection.ConnectionFactoryTest)  Time elapsed: 0.017 s  <<< ERROR!
-java.io.FileNotFoundException: static\properties\databaseConnection.properties (The system cannot find the path specified)
-	at com.epam.library.connection.ConnectionFactoryTest.testCreate(ConnectionFactoryTest.java:14)
-
