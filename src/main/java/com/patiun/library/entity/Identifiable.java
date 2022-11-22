@@ -1,12 +1,12 @@
 package com.patiun.library.entity;
 
 /**
- * Identifiable classes have IDs that are required to perform operations in the database
+ * Identifiable classes have IDs that are required to perform queries in the database
  */
 public interface Identifiable {
 
     /**
-     * Gets the object's ID
+     * Returns the object's ID
      *
      * @return Long value representing the ID of object
      */

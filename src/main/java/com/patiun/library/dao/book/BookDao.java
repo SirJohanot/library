@@ -11,7 +11,7 @@ import com.patiun.library.exception.DaoException;
 public interface BookDao extends Dao<Book> {
 
     /**
-     * Changes Book's amount in the database based on inputted value
+     * Changes a Book's amount column value in the database based on the inputted value
      *
      * @param bookId id of the Book in the database
      * @param value  what number to change the amount by. May be negative to subtract from the amount

@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 public interface Command {
 
     /**
-     * Uses Service objects to execute a specific task using data got from HttpServletRequest and HttpServletResponse objects
+     * Uses Service objects to execute a specific task using data from HttpServletRequest and HttpServletResponse objects
      *
      * @param req  HttpServletRequest, which contains data that needs to be processed
      * @param resp HttpServletResponse, which can be used to manipulate the response the client receives
-     * @return CommandResult object, which field values determine the page to forward/redirect to and whether to forward or redirect
+     * @return CommandResult object, the field values of which determine the page to forward/redirect to and whether to forward or redirect
      * @throws ServiceException if a ServiceException is thrown by a Service object's method
      */
     CommandResult execute(HttpServletRequest req, HttpServletResponse resp) throws ServiceException;
