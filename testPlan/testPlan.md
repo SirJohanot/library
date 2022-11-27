@@ -46,8 +46,10 @@ are available for this project.
 
 ## Item pass/fail criteria
 
-A feature will be considered to have passed the test on the condition that the application
+A feature tested by system testing will be considered to have passed the test on the condition that the application
 server returns an HTTP Response with either the 2xx or the 3xx code.
+
+A features tested by unit testing will have to define their own criteria for success and failure.
 
 ## Suspension criteria and resumption requirements
 
@@ -57,8 +59,6 @@ server returns an HTTP Response with either the 2xx or the 3xx code.
   the database connectivity issue is resolved and the application can once again correctly communicate with the database
 
 ## Test deliverables
-
-## Testing tasks
 
 * Unit tests documentation
 * System test plan
