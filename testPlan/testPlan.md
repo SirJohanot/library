@@ -73,3 +73,7 @@ The following is a list of the prerequisites for the test environment during tes
 * A running instance of Apache Tomcat V9.0
 * A running instance of a MySQL80 database
 * A web browser
+
+## Approvals
+
+I approve of this test plan, very nice!
