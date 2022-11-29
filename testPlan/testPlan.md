@@ -21,10 +21,10 @@ The following is a list of the areas to be focused on during testing of the appl
 
 * Authentication
 * Account creation
-* Books management (for librarian and admin)
-* Users management (for admin)
-* Orders management (for librarian)
-* Book renting (for reader)
+* Books management (for the admin role)
+* Users management (for the admin role)
+* Book orders management (for the librarian role)
+* Book renting (for the reader role)
 * Search items filtering
 * Localisation
 * UI/UX
