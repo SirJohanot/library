@@ -74,6 +74,12 @@ The following is a list of the prerequisites for the test environment during tes
 * A running instance of a MySQL80 database
 * A web browser
 
+## Responsibilities
+
+* Me - Developer, QA, Business Analyst
+
+  Is responsible for testing the product, delivering test result reports and fixing the detected problems
+
 ## Approvals
 
 I approve of this test plan, very nice!
