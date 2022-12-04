@@ -80,6 +80,16 @@ The following is a list of the prerequisites for the test environment during tes
 
   Is responsible for testing the product, delivering test result reports and fixing the detected problems
 
+## Staffing and training needs
+
+* UNIT testing
+
+  Requires knowledge of Java testing frameworks and the Maven build tool
+
+* System testing
+
+  Requires basic knowledge of web browser usage, databases and the http protocol
+
 ## Approvals
 
 I approve of this test plan, very nice!
