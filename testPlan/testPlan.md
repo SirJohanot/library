@@ -90,6 +90,20 @@ The following is a list of the prerequisites for the test environment during tes
 
   Requires basic knowledge of web browser usage, databases and the http protocol
 
+## Schedule
+
+* 22.11.2022
+
+  UNIT tests development
+
+* 29.11.2022
+
+  UNIT testing
+
+* 06.12.2022
+
+  System testing
+
 ## Approvals
 
 I approve of this test plan, very nice!
