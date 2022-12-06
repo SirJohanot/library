@@ -31,31 +31,34 @@ The following is a list of the areas to be focused on during testing of the appl
 
 ## Approach
 
-The testing for the Library project will consist of Unit and System
+The testing for the Library project will consist of UNIT and System
 test levels. It is hoped that there will be at least one full time
 independent test person for system testing.
 
-UNIT Testing will be done automatically via
-a testing framework. The developers working on the Library project
-will have to create automatic Unit tests for the appropriate project design entities.
-The tests should cover as much test cases as possible.
+* UNIT Testing will be done automatically via
+  a testing framework. The developers working on the Library project
+  will have to create automatic Unit tests for the appropriate project design entities.
+  The tests should cover as much test cases as possible.
 
-SYSTEM Testing will be performed by the test manager and development
-team leader with assistance from the individual developers as required. No specific test tools
-are available for this project.
+* SYSTEM Testing will be performed by the test manager and development
+  team leader with assistance from the individual developers as required. No specific test tools
+  are available for this project.
 
 ## Item pass/fail criteria
 
-A feature tested by system testing will be considered to have passed the test on the condition that the application
+The test process will be completed once all the item's features pass the tests.
+
+Feature tested by system testing will
+be considered to have passed the test on the condition that the application
 server returns an HTTP Response with either the 2xx or the 3xx code.
 
-A features tested by unit testing will have to define their own criteria for success and failure.
+Features tested by unit testing will have to define their own criteria for success and failure.
 
 ## Suspension criteria and resumption requirements
 
 * SQL database connection error
 
-  If the above condition occurs, any testing processes should be immediately stopped. The testing may continue only if
+  Any testing processes must be immediately stopped. The testing may continue only if
   the database connectivity issue is resolved and the application can once again correctly communicate with the database
 
 ## Test deliverables
@@ -76,34 +79,58 @@ The following is a list of the prerequisites for the test environment during tes
 
 ## Responsibilities
 
-* Me - Developer, QA, Business Analyst
-
-  Is responsible for testing the product, delivering test result reports and fixing the detected problems
+|                                               | Dev Team |
+|-----------------------------------------------|:--------:|
+| Acceptance test Documentation & Execution     |    X     |
+| System/Integration test Documentation & Exec. |    X     |
+| Unit test documentation & execution           |    X     |
+| System Design Reviews                         |    X     |
+| Detail Design Reviews                         |    X     |
+| Test procedures and rules                     |    X     |
+| Screen & Report prototype reviews             |    X     |
+| Change Control and regression testing         |    X     |
 
 ## Staffing and training needs
 
-* UNIT testing
+It is preferred that there will be at least one (1) full time tester assigned to the project
+for the system/integration and acceptance testing phases of the project. This will
+require assignment of a person part-time at the beginning of the project to participate
+in reviews etc... and approximately four months into the project they would be
+assigned full time. If a separate test person is not available the project manager/test
+manager will assume this role.
 
-  Requires knowledge of Java testing frameworks and the Maven build tool
+In order to provide complete and proper testing the following areas need to be addressed in
+terms of training.
 
-* System testing
+* Personnel responsible for UNIT testing should possess the knowledge of Java testing frameworks and the Maven build
+  tool
 
-  Requires basic knowledge of web browser usage, databases and the http protocol
+* Personnel responsible for System testing should possess basic knowledge of web browser usage, databases and the http
+  protocol
 
 ## Schedule
 
-* 22.11.2022
+Time has been allocated within the project plan for the following testing activities. The
+specific dates and times for each activity are defined in the project plan timeline. The persons
+required for each process are detailed in the project timeline and plan as well. Coordination
+of the personnel required for each task, test team, development team, management and
+customer will be handled by the project manager in conjunction with the development and test
+team leaders.
 
-  UNIT tests development
+* Review of Requirements document by test team personnel (with other team members) and initial creation of Inventory
+  classes, subclasses and objectives.
 
-* 29.11.2022
+* Development of Master test plan by test manager and test with time allocated for at least two reviews of the plan.
 
-  UNIT testing
+* Development of System test plan
 
-* 06.12.2022
+* Development of UNIT test plan, as well as the UNIT tests themselves
 
-  System testing
+* UNIT test time within the development process
+
+* Time allocated for System test processes.
 
 ## Approvals
 
-I approve of this test plan, very nice!
+| Project Developer - SirJohanot |     |
+|--------------------------------|-----|
